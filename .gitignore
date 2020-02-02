@@ -7,6 +7,7 @@
 
 # output files
 out/
+data/
 
 # macOS bullshit
 .DS_Store
