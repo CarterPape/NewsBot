@@ -8,8 +8,6 @@
 import logging
 import NewsBot.items
 import NewsBot.spiders
-import NewsBot.item_pipelines
-import scrapy.mail
 import scrapy.settings
 import environment
 import string
@@ -58,8 +56,8 @@ class DispatchEmailer(object):
             requests.post(
                 f"https://api.mailgun.net/v3/{environment.EMAIL_SENDER_DOMAIN}/messages",
                 auth = ("api", keyring.get_password(
-                    service_name    = environment.EMAIL_SERVICE_NAME,
-                    username        = environment.API_USER,
+                    service_name    = "api.mailgun.net",
+                    username        = environment.MAILGUN_API_USER,
                 )),
                 files = [
                     ("attachment", (
@@ -79,7 +77,7 @@ class DispatchEmailer(object):
     
     def _get_email_subject(self):
         return f"New {self._current_item['dispatched_agency']} call " \
-            f"at {self._current_item['dispatch_datetime'].strftime('%l:%M %p')}"
+            f"{self._current_item['dispatch_datetime'].strftime('%A at %l:%M %p')}"
     
     def _get_email_body(self):
         with open(self._email_template_path) as template_file:
@@ -87,7 +85,7 @@ class DispatchEmailer(object):
         return self._email_body.safe_substitute({
             "email_subject":    self._get_email_subject(),
             "dispatch_time":    self._current_item["dispatch_datetime"].strftime("%H:%M:%S"),
-            "dispatch_date":    self._current_item["dispatch_datetime"].strftime("%b. %d"),
+            "dispatch_date":    self._current_item["dispatch_datetime"].strftime("%A, %b. %e"),
             "dispatched_agency":    self._current_item["dispatched_agency"],
             "dispatch_audio_url":   self._current_item["audio_URL"],
         })

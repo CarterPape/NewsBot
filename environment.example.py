@@ -7,12 +7,8 @@
 
 ENVIRONMENT = "production"
 
-EMAIL_RECIPIENT     = "me@my.domain.com"
-EMAIL_SENDER        = "robot@the.robot.domain.com"
+EMAIL_RECIPIENT     = "Your Name <your@email.address>"
+EMAIL_SENDER        = "Your NewsBot <your-newsbot@your.newsbot.domain>"
+EMAIL_SENDER_DOMAIN = "your.newsbot.domain"
 
-SMTP_HOST           = "smtp.mailgun.com"
-SMTP_PORT           = 465
-EMAIL_SERVICE_NAME  = SMTP_HOST
-
-USE_STARTTLS_WITH_MAIL  = True
-USE_SSL_WITH_MAIL       = True
+MAILGUN_API_USER    = "your@mailgun.username"

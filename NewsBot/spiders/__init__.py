@@ -5,9 +5,25 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-# This package will contain the spiders of your Scrapy project
-#
-# Please refer to the documentation for information on how to create and manage
-# your spiders.
+import os.path
+import glob
+import pape.utilities
 
-from NewsBot.spiders.dispatch_call_log_spider import DispatchCallLogSpider
+_submodules = glob.glob(os.path.join(os.path.dirname(__file__), "*.py"))
+
+for each_file in _submodules:
+    if os.path.isfile(each_file) and (os.path.basename(each_file) != '__init__.py'):
+        each_module = __import__(
+            name = 
+                f"{__name__}."
+                f"""{
+                    pape.utilities.strip_file_extension(
+                        from_path = each_file,
+                        basename_only = True,
+                    )
+                }""",
+            fromlist = ["*"],
+        )
+        for symbol in dir(each_module):
+            if not symbol in locals():
+                locals()[symbol] = getattr(each_module, symbol)

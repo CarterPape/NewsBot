@@ -9,4 +9,4 @@ scrapy
 keyring
 pape
 twisted
-magic
+python-magic

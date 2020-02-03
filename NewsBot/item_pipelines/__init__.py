@@ -9,13 +9,13 @@ import os.path
 import glob
 import pape.utilities
 
-submodules = glob.glob(os.path.join(os.path.dirname(__file__), "*.py"))
+_submodules = glob.glob(os.path.join(os.path.dirname(__file__), "*.py"))
 
-for each_file in submodules:
+for each_file in _submodules:
     if os.path.isfile(each_file) and (os.path.basename(each_file) != '__init__.py'):
         each_module = __import__(
             name = 
-                "NewsBot.item_pipelines."
+                f"{__name__}."
                 f"""{
                     pape.utilities.strip_file_extension(
                         from_path = each_file,
@@ -25,4 +25,5 @@ for each_file in submodules:
             fromlist = ["*"],
         )
         for symbol in dir(each_module):
-            locals()[symbol] = getattr(each_module, symbol)
+            if not symbol in locals():
+                locals()[symbol] = getattr(each_module, symbol)

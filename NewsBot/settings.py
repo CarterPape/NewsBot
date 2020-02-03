@@ -18,9 +18,10 @@ import scrapy.utils.conf
 import os
 import os.path
 import keyring
+import NewsBot.log_formatter
 
 BOT_NAME    = "NewsBot"
-_BOT_VERSION = "0.0.1"
+_BOT_VERSION = "0.0.2"
 
 SPIDER_MODULES      = ["NewsBot.spiders"]
 NEWSPIDER_MODULE    = "NewsBot.spiders"
@@ -110,6 +111,7 @@ LOG_FILE = \
         )
     )
 LOG_LEVEL = "WARNING"
+LOG_FORMATTER = "NewsBot.log_formatter.NewsBotLogFormatter"
 
 # MAIL_FROM   = environment.EMAIL_SENDER
 # MAIL_HOST   = environment.SMTP_HOST
