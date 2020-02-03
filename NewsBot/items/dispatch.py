@@ -16,4 +16,5 @@ class Dispatch(scrapy.Item):
     audio_URL           = scrapy.Field()
     audio_file_path     = scrapy.Field()
     dispatched_agency   = scrapy.Field()
-    time_string         = scrapy.Field()
+    dispatch_date_string    = scrapy.Field()
+    dispatch_datetime   = scrapy.Field() 

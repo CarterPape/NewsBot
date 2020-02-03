@@ -6,18 +6,27 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import scrapy
+import scrapy.http
 import NewsBot.items.dispatch
 
 
 class DispatchCallLogSpider(scrapy.Spider):
-    name            = 'DispatchCallLogSpider'
-    allowed_domains = ['edispatches.com']
+    name            = "DispatchCallLogSpider"
+    allowed_domains = ["edispatches.com"]
+    custom_settings = {
+        "ITEM_PIPELINES": {
+            "NewsBot.item_pipelines.DispatchAudioDownloader"    : 100,
+            "NewsBot.item_pipelines.DispatchDatetimeCruncher"   : 200,
+            "NewsBot.item_pipelines.DispatchEmailer"            : 500,
+        }
+    }
+    
     _DISPATCH_LOG_ROW           = "//*[@id='call-log-info']//table/tr"
     _DISPATCH_AUDIO_RELATIVE_XPATH      = "./td[1]/audio/@src"
     _DISPATCHED_AGENCY_RELATIVE_XPATH   = "./td[2]/text()"
     _DISPATCH_TIME_RELATIVE_XPATH       = "./td[4]/text()"
     
-    def start_requests(self):
+    def start_requests(self) -> [scrapy.http.Request]:
         return [
             scrapy.FormRequest(
                 "https://www.edispatches.com/call-log/index.php",
@@ -31,13 +40,13 @@ class DispatchCallLogSpider(scrapy.Spider):
             )
         ]
 
-    def parse_call_log(self, response: scrapy.http.HtmlResponse):
+    def parse_call_log(self, response: scrapy.http.HtmlResponse) -> [NewsBot.items.Dispatch]:
         allDispatchLogRows = response.xpath(self._DISPATCH_LOG_ROW)
         allDispatches = [
             NewsBot.items.Dispatch(
                 audio_URL           = oneRow.xpath(self._DISPATCH_AUDIO_RELATIVE_XPATH).get(),
                 dispatched_agency   = oneRow.xpath(self._DISPATCHED_AGENCY_RELATIVE_XPATH).get(),
-                time_string         = oneRow.xpath(self._DISPATCH_TIME_RELATIVE_XPATH).get(),
+                dispatch_date_string    = oneRow.xpath(self._DISPATCH_TIME_RELATIVE_XPATH).get(),
             )
             for oneRow in allDispatchLogRows
         ]

@@ -13,15 +13,17 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+import environment
 import scrapy.utils.conf
 import os
 import os.path
+import keyring
 
 BOT_NAME    = "NewsBot"
 _BOT_VERSION = "0.0.1"
 
-SPIDER_MODULES      = ['NewsBot.spiders']
-NEWSPIDER_MODULE    = 'NewsBot.spiders'
+SPIDER_MODULES      = ["NewsBot.spiders"]
+NEWSPIDER_MODULE    = "NewsBot.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -49,43 +51,76 @@ COOKIES_ENABLED = True
 
 # Override the default request headers:
 #DEFAULT_REQUEST_HEADERS = {
-#   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-#   'Accept-Language': 'en',
+#   "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+#   "Accept-Language": "en",
 #}
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'NewsBot.middlewares.NewsbotSpiderMiddleware': 543,
+#    "NewsBot.middlewares.NewsbotSpiderMiddleware": 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'NewsBot.middlewares.NewsbotDownloaderMiddleware': 543,
+#    "NewsBot.middlewares.NewsbotDownloaderMiddleware": 543,
 #}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
 #EXTENSIONS = {
-#    'scrapy.extensions.telnet.TelnetConsole': None,
+#    "scrapy.extensions.telnet.TelnetConsole": None,
 #}
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'NewsBot.item_pipelines.DispatchAudioDownloader': 1,
+    
 }
+
+_PROJECT_ROOT_DIRECTORY = \
+    os.path.dirname(
+        scrapy.utils.conf.closest_scrapy_cfg()
+    )
+
 _DATA_DIRECTORY = \
     os.path.abspath(
         os.path.join(
-            os.path.dirname(
-                scrapy.utils.conf.closest_scrapy_cfg()
-            ),
-            'data/',
+            _PROJECT_ROOT_DIRECTORY,
+            "data/",
         )
     )
 os.makedirs(_DATA_DIRECTORY, exist_ok = True)
+
+_LOG_DIRECTORY = \
+    os.path.abspath(
+        os.path.join(
+            _PROJECT_ROOT_DIRECTORY,
+            "log/",
+        )
+    )
+os.makedirs(_LOG_DIRECTORY, exist_ok = True)
+
+LOG_FILE = \
+    os.path.abspath(
+        os.path.join(
+            _LOG_DIRECTORY,
+            f"{BOT_NAME}-{_BOT_VERSION}.log",
+        )
+    )
+LOG_LEVEL = "WARNING"
+
+# MAIL_FROM   = environment.EMAIL_SENDER
+# MAIL_HOST   = environment.SMTP_HOST
+# MAIL_PORT   = environment.SMTP_PORT
+# MAIL_USER   = environment.EMAIL_SENDER
+# MAIL_PASS   = keyring.get_password(
+#     service_name    = environment.EMAIL_SERVICE_NAME,
+#     username        = MAIL_USER,
+# )
+# MAIL_TLS    = environment.USE_STARTTLS_WITH_MAIL
+# MAIL_SSL    = environment.USE_SSL_WITH_MAIL
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -103,6 +138,6 @@ AUTOTHROTTLE_DEBUG = True
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
 #HTTPCACHE_ENABLED = True
 #HTTPCACHE_EXPIRATION_SECS = 0
-#HTTPCACHE_DIR = 'httpcache'
+#HTTPCACHE_DIR = "httpcache"
 #HTTPCACHE_IGNORE_HTTP_CODES = []
-#HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+#HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"

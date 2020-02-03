@@ -9,6 +9,9 @@
 out/
 data/
 
+# environment-specific configuration
+environment.py
+
 # macOS bullshit
 .DS_Store
 
