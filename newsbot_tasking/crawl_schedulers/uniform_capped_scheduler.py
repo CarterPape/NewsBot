@@ -24,14 +24,16 @@ class UniformCappedScheduler(crawl_schedulers.CrawlScheduler):
             if maximum_interval is None else
             maximum_interval
         )
-        self._minimum_interval = \
+        self._minimum_interval = (
             self._maximum_interval * (
                 1.0 - UniformCappedScheduler._UNIFORM_RELATIVE_DEVIATION
             )
+        )
     
     def get_pause_time_in_seconds(self):
-        return \
+        return (
             random.uniform(
                 self._minimum_interval,
                 self._maximum_interval,
             ).total_seconds()
+        )

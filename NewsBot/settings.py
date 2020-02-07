@@ -83,37 +83,41 @@ ITEM_PIPELINES = {
     
 }
 
-_PROJECT_ROOT_DIRECTORY = \
+_PROJECT_ROOT_DIRECTORY = (
     os.path.dirname(
         scrapy.utils.conf.closest_scrapy_cfg()
     )
+)
 
-_DATA_DIRECTORY = \
+_DATA_DIRECTORY = (
     os.path.abspath(
         os.path.join(
             _PROJECT_ROOT_DIRECTORY,
             "data/",
         )
     )
+)
 os.makedirs(_DATA_DIRECTORY, exist_ok = True)
 
 
-_LOG_DIRECTORY = \
+_LOG_DIRECTORY = (
     os.path.abspath(
         os.path.join(
             _PROJECT_ROOT_DIRECTORY,
             "log/",
         )
     )
+)
 os.makedirs(_LOG_DIRECTORY, exist_ok = True)
 
-LOG_FILE = \
+LOG_FILE = (
     os.path.abspath(
         os.path.join(
             _LOG_DIRECTORY,
             f"{BOT_NAME}-{_BOT_VERSION}.log",
         )
     )
+)
 
 if os.getenv("ENVIRONMENT") == "development":
     LOG_LEVEL = "INFO"

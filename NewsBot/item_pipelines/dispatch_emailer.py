@@ -36,13 +36,14 @@ class DispatchEmailer(object):
         self._current_item:     NewsBot.items.Dispatch
         self._current_spider:   NewsBot.spiders.DispatchCallLogSpider
         
-        self._email_template_path = \
+        self._email_template_path = (
             os.path.abspath(
                 os.path.join(
                     os.path.dirname(__file__),
                     "email.template.html",
                 )
             )
+        )
         self._email_body: string.Template
         
         dotenv.load_dotenv(dotenv.find_dotenv())
@@ -80,8 +81,10 @@ class DispatchEmailer(object):
         return item
     
     def _get_email_subject(self):
-        return f"New {self._current_item['dispatched_agency']} call " \
+        return (
+            f"New {self._current_item['dispatched_agency']} call "
             f"{self._current_item['dispatch_datetime'].strftime('%A at %l:%M %p')}"
+        )
     
     def _get_email_body(self):
         with open(self._email_template_path) as template_file:

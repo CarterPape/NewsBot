@@ -16,19 +16,19 @@ class NewsBotJobRegistry(object):
     def __init__(self, *,
         from_spider_classes: [type],
     ):
-        self._runner: scrapy.crawler.CrawlerRunner = \
+        self._runner: scrapy.crawler.CrawlerRunner = (
             scrapy.crawler.CrawlerRunner(
                 settings = scrapy.utils.project.get_project_settings()
             )
+        )
         
-        self._jobs: [newsbot_tasking.CrawlJob] = \
-            [
-                newsbot_tasking.CrawlJob(
-                    from_runner =       self._runner,
-                    spider_class =      each_spider_class
-                )
-                for each_spider_class in from_spider_classes
-            ]
+        self._jobs: [newsbot_tasking.CrawlJob] = [
+            newsbot_tasking.CrawlJob(
+                from_runner =       self._runner,
+                spider_class =      each_spider_class
+            )
+            for each_spider_class in from_spider_classes
+        ]
     
     def schedule_all_jobs(self):
         for job in self._jobs:
