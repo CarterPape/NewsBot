@@ -13,18 +13,21 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-import environment
+import dotenv
 import scrapy.utils.conf
 import os
 import os.path
 import keyring
 import NewsBot.log_formatter
+import datetime
 
-BOT_NAME    = "NewsBot"
-_BOT_VERSION = "0.0.2"
+dotenv.load_dotenv(dotenv.find_dotenv())
 
-SPIDER_MODULES      = ["NewsBot.spiders"]
-NEWSPIDER_MODULE    = "NewsBot.spiders"
+BOT_NAME =      "NewsBot"
+_BOT_VERSION =  "0.1.0"
+
+SPIDER_MODULES =    ["NewsBot.spiders"]
+NEWSPIDER_MODULE =  "NewsBot.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -34,45 +37,45 @@ USER_AGENT = f"{BOT_NAME}/{_BOT_VERSION} (+https://github.com/carterpape/newsbot
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-#CONCURRENT_REQUESTS = 32
+# CONCURRENT_REQUESTS = 32
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+# DOWNLOAD_DELAY = 3
 # The download delay setting will honor only one of:
-#CONCURRENT_REQUESTS_PER_DOMAIN = 16
-#CONCURRENT_REQUESTS_PER_IP = 16
+# CONCURRENT_REQUESTS_PER_DOMAIN = 16
+# CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = True
 
 # Disable Telnet Console (enabled by default)
-#TELNETCONSOLE_ENABLED = False
+# TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
-#DEFAULT_REQUEST_HEADERS = {
-#   "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-#   "Accept-Language": "en",
-#}
+# DEFAULT_REQUEST_HEADERS = {
+#     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+#     "Accept-Language": "en",
+# }
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    "NewsBot.middlewares.NewsbotSpiderMiddleware": 543,
-#}
+# SPIDER_MIDDLEWARES = {
+#     "NewsBot.middlewares.NewsbotSpiderMiddleware": 543,
+# }
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    "NewsBot.middlewares.NewsbotDownloaderMiddleware": 543,
-#}
+# DOWNLOADER_MIDDLEWARES = {
+#     "NewsBot.middlewares.NewsbotDownloaderMiddleware": 543,
+# }
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
-#EXTENSIONS = {
-#    "scrapy.extensions.telnet.TelnetConsole": None,
-#}
+# EXTENSIONS = {
+#     "scrapy.extensions.telnet.TelnetConsole": None,
+# }
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
@@ -94,6 +97,7 @@ _DATA_DIRECTORY = \
     )
 os.makedirs(_DATA_DIRECTORY, exist_ok = True)
 
+
 _LOG_DIRECTORY = \
     os.path.abspath(
         os.path.join(
@@ -110,8 +114,18 @@ LOG_FILE = \
             f"{BOT_NAME}-{_BOT_VERSION}.log",
         )
     )
-LOG_LEVEL = "WARNING"
+
+if os.getenv("ENVIRONMENT") == "development":
+    LOG_LEVEL = "INFO"
+else:
+    LOG_LEVEL = "WARNING"
+
 LOG_FORMATTER = "NewsBot.log_formatter.NewsBotLogFormatter"
+
+if os.getenv("ENVIRONMENT") == "development":
+    _DEFAULT_MAXIMUM_INTERVAL = datetime.timedelta(seconds = 5)
+else:
+    _DEFAULT_MAXIMUM_INTERVAL = datetime.timedelta(minutes = 30)
 
 # MAIL_FROM   = environment.EMAIL_SENDER
 # MAIL_HOST   = environment.SMTP_HOST
@@ -138,8 +152,8 @@ AUTOTHROTTLE_DEBUG = True
 
 # Enable and configure HTTP caching (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
-#HTTPCACHE_ENABLED = True
-#HTTPCACHE_EXPIRATION_SECS = 0
-#HTTPCACHE_DIR = "httpcache"
-#HTTPCACHE_IGNORE_HTTP_CODES = []
-#HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"
+# HTTPCACHE_ENABLED = True
+# HTTPCACHE_EXPIRATION_SECS = 0
+# HTTPCACHE_DIR = "httpcache"
+# HTTPCACHE_IGNORE_HTTP_CODES = []
+# HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"

@@ -10,7 +10,7 @@ out/
 data/
 
 # environment-specific configuration
-environment.py
+.vscode/
 
 # macOS bullshit
 .DS_Store

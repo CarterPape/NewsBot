@@ -9,12 +9,14 @@ import logging
 import NewsBot.items
 import NewsBot.spiders
 import scrapy.settings
-import environment
+import os
 import string
 import os.path
 import magic
 import requests
 import keyring
+import dotenv
+
 
 class DispatchEmailer(object):
     
@@ -27,9 +29,9 @@ class DispatchEmailer(object):
     def __init__(self, *,
         settings: scrapy.settings.Settings = None
     ):
-        self._settings      = settings
-        self._logger        = logging.getLogger(__name__)
-        self.mail_sender    = scrapy.mail.MailSender.from_settings(self._settings)
+        self._settings =    settings
+        self._logger =      logging.getLogger(__name__)
+        self.mail_sender =  scrapy.mail.MailSender.from_settings(self._settings)
         
         self._current_item:     NewsBot.items.Dispatch
         self._current_spider:   NewsBot.spiders.DispatchCallLogSpider
@@ -43,21 +45,23 @@ class DispatchEmailer(object):
             )
         self._email_body: string.Template
         
+        dotenv.load_dotenv(dotenv.find_dotenv())
+        
     def process_item(
         self,
         item: NewsBot.items.Dispatch,
         spider: NewsBot.spiders.DispatchCallLogSpider
     ) -> NewsBot.items.Dispatch:
         
-        self._current_item      = item
-        self._current_spider    = spider
+        self._current_item =    item
+        self._current_spider =  spider
         
         self._logger.info(
             requests.post(
-                f"https://api.mailgun.net/v3/{environment.EMAIL_SENDER_DOMAIN}/messages",
+                f"https://api.mailgun.net/v3/{os.getenv('EMAIL_SENDER_DOMAIN')}/messages",
                 auth = ("api", keyring.get_password(
-                    service_name    = "api.mailgun.net",
-                    username        = environment.MAILGUN_API_USER,
+                    service_name =  "api.mailgun.net",
+                    username =      os.getenv("MAILGUN_API_USER"),
                 )),
                 files = [
                     ("attachment", (
@@ -66,8 +70,8 @@ class DispatchEmailer(object):
                     )),
                 ],
                 data = {
-                    "from": environment.EMAIL_SENDER,
-                    "to": environment.EMAIL_RECIPIENT,
+                    "from": os.getenv("EMAIL_SENDER"),
+                    "to": os.getenv("EMAIL_RECIPIENT"),
                     "subject": self._get_email_subject(),
                     "html": self._get_email_body(),
                 }

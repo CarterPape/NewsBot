@@ -5,9 +5,9 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-scrapy
-keyring
-pape
-twisted
-python-magic
-python-dotenv
+import typing_extensions
+
+
+class CrawlScheduler(typing_extensions.Protocol):
+    def get_pause_time_in_seconds(self) -> float:
+        raise NotImplementedError

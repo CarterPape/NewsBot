@@ -7,36 +7,39 @@
 
 import scrapy
 import scrapy.http
+import NewsBot.spiders as spiders
 import NewsBot.items.dispatch
+import newsbot_tasking.crawl_schedulers
 
 
-class DispatchCallLogSpider(scrapy.Spider):
-    name            = "DispatchCallLogSpider"
-    allowed_domains = ["edispatches.com"]
+class DispatchCallLogSpider(scrapy.Spider, spiders.SelfScheduling):
+    name =              "DispatchCallLogSpider"
+    allowed_domains =   ["edispatches.com"]
     custom_settings = {
         "ITEM_PIPELINES": {
-            "NewsBot.item_pipelines.DispatchAudioDownloader"    : 100,
-            "NewsBot.item_pipelines.DispatchDatetimeCruncher"   : 200,
-            "NewsBot.item_pipelines.DispatchEmailer"            : 500,
+            "NewsBot.item_pipelines.DispatchAudioDownloader":   100,
+            "NewsBot.item_pipelines.DispatchDatetimeCruncher":  200,
+            "NewsBot.item_pipelines.DispatchEmailer":           500,
         }
     }
+    _crawl_scheduler =   newsbot_tasking.crawl_schedulers.UniformCappedScheduler()
     
-    _DISPATCH_LOG_ROW           = "//*[@id='call-log-info']//table/tr"
-    _DISPATCH_AUDIO_RELATIVE_XPATH      = "./td[1]/audio/@src"
-    _DISPATCHED_AGENCY_RELATIVE_XPATH   = "./td[2]/text()"
-    _DISPATCH_TIME_RELATIVE_XPATH       = "./td[4]/text()"
+    _DISPATCH_LOG_ROW =                 "//*[@id='call-log-info']//table/tr"
+    _DISPATCH_AUDIO_RELATIVE_XPATH =    "./td[1]/audio/@src"
+    _DISPATCHED_AGENCY_RELATIVE_XPATH = "./td[2]/text()"
+    _DISPATCH_TIME_RELATIVE_XPATH =     "./td[4]/text()"
     
     def start_requests(self) -> [scrapy.http.Request]:
         return [
             scrapy.FormRequest(
                 "https://www.edispatches.com/call-log/index.php",
-                formdata    = {
+                formdata = {
                     "ddl-state":    "UT",
                     "ddl-county":   "Grand",
                     "ddl-company":  "ALL",
                     "ddl-limit":    "ALL",
                 },
-                callback    = self.parse_call_log,
+                callback = self.parse_call_log,
             )
         ]
 
@@ -44,10 +47,14 @@ class DispatchCallLogSpider(scrapy.Spider):
         allDispatchLogRows = response.xpath(self._DISPATCH_LOG_ROW)
         allDispatches = [
             NewsBot.items.Dispatch(
-                audio_URL           = oneRow.xpath(self._DISPATCH_AUDIO_RELATIVE_XPATH).get(),
-                dispatched_agency   = oneRow.xpath(self._DISPATCHED_AGENCY_RELATIVE_XPATH).get(),
-                dispatch_date_string    = oneRow.xpath(self._DISPATCH_TIME_RELATIVE_XPATH).get(),
+                audio_URL =             oneRow.xpath(self._DISPATCH_AUDIO_RELATIVE_XPATH).get(),
+                dispatched_agency =     oneRow.xpath(self._DISPATCHED_AGENCY_RELATIVE_XPATH).get(),
+                dispatch_date_string =  oneRow.xpath(self._DISPATCH_TIME_RELATIVE_XPATH).get(),
             )
             for oneRow in allDispatchLogRows
         ]
         return allDispatches
+    
+    @staticmethod
+    def get_scheduler() -> newsbot_tasking.crawl_schedulers.CrawlScheduler:
+        return DispatchCallLogSpider._crawl_scheduler

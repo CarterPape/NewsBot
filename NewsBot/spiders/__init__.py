@@ -25,5 +25,5 @@ for each_file in _submodules:
             fromlist = ["*"],
         )
         for symbol in dir(each_module):
-            if not symbol in locals():
+            if symbol not in locals():
                 locals()[symbol] = getattr(each_module, symbol)

@@ -8,6 +8,7 @@
 import logging
 import scrapy.logformatter
 
+
 class NewsBotLogFormatter(scrapy.logformatter.LogFormatter):
     def dropped(self, item, exception, response, spider):
         return {

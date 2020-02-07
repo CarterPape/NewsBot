@@ -15,6 +15,7 @@ import urllib.parse
 import logging
 import twisted.internet.defer
 
+
 class DispatchAudioDownloader(object):
     _DOWNLOAD_DIRECTORY = os.path.join(NewsBot.settings._DATA_DIRECTORY, "dispatch-audio/")
     
@@ -24,7 +25,7 @@ class DispatchAudioDownloader(object):
     def process_item(
         self,
         item: NewsBot.items.Dispatch,
-        spider: NewsBot.spiders.DispatchCallLogSpider
+        spider: NewsBot.spiders.dispatch_call_log_spider.DispatchCallLogSpider
     ) -> twisted.internet.defer.Deferred:
         
         item["audio_file_path"] = self._save_location(of_dispatch = item)
@@ -57,8 +58,8 @@ class DispatchAudioDownloader(object):
         return item
     
     def _save_location(self, *, of_dispatch: NewsBot.items.Dispatch) -> str:
-        dispatch    = of_dispatch
-        parsed_url  = urllib.parse.urlparse(dispatch["audio_URL"])
+        dispatch =      of_dispatch
+        parsed_url =    urllib.parse.urlparse(dispatch["audio_URL"])
         return os.path.join(
             self._DOWNLOAD_DIRECTORY,
             parsed_url.netloc,
