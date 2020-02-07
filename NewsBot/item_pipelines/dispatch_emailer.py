@@ -16,6 +16,7 @@ import magic
 import requests
 import keyring
 import dotenv
+import pape.utilities
 
 
 class DispatchEmailer(object):
@@ -31,7 +32,6 @@ class DispatchEmailer(object):
     ):
         self._settings =    settings
         self._logger =      logging.getLogger(__name__)
-        self.mail_sender =  scrapy.mail.MailSender.from_settings(self._settings)
         
         self._current_item:     NewsBot.items.Dispatch
         self._current_spider:   NewsBot.spiders.DispatchCallLogSpider
@@ -40,7 +40,12 @@ class DispatchEmailer(object):
             os.path.abspath(
                 os.path.join(
                     os.path.dirname(__file__),
-                    "email.template.html",
+                    f"""{
+                        pape.utilities.strip_file_extension(
+                            from_path = __file__,
+                            basename_only = True,
+                        )
+                    }.template.html""",
                 )
             )
         )
