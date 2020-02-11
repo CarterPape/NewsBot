@@ -19,7 +19,7 @@ class DispatchCallLogSpider(scrapy.Spider, spiders.SelfScheduling):
         "ITEM_PIPELINES": {
             "NewsBot.item_pipelines.DispatchAudioDownloader":   100,
             "NewsBot.item_pipelines.DispatchDatetimeCruncher":  200,
-            "NewsBot.item_pipelines.DispatchEmailer":           500,
+            "NewsBot.item_pipelines.ItemEmailer":               500,
         }
     }
     _crawl_scheduler =   newsbot_tasking.crawl_schedulers.UniformCappedScheduler()
