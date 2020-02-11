@@ -83,32 +83,42 @@ ITEM_PIPELINES = {
     
 }
 
-_PROJECT_ROOT_DIRECTORY = (
+if os.getenv("ENVIRONMENT") == "development":
+    LOG_LEVEL = "INFO"
+else:
+    LOG_LEVEL = "WARNING"
+
+_PROJECT_DIRECTORY = (
     os.path.dirname(
-        scrapy.utils.conf.closest_scrapy_cfg()
+        scrapy.utils.conf.closest_scrapy_cfg(path = __file__)
     )
 )
 
-_DATA_DIRECTORY = (
-    os.path.abspath(
-        os.path.join(
-            _PROJECT_ROOT_DIRECTORY,
-            "data/",
+LOG_FORMATTER = "NewsBot.log_formatter.NewsBotLogFormatter"
+
+_DATA_DIRECTORY = os.getenv("STATE_DIRECTORY")
+if _DATA_DIRECTORY is None:
+    _DATA_DIRECTORY = (
+        os.path.abspath(
+            os.path.join(
+                _PROJECT_DIRECTORY,
+                "data/",
+            )
         )
     )
-)
-os.makedirs(_DATA_DIRECTORY, exist_ok = True)
+    os.makedirs(_DATA_DIRECTORY, exist_ok = True)
 
-
-_LOG_DIRECTORY = (
-    os.path.abspath(
-        os.path.join(
-            _PROJECT_ROOT_DIRECTORY,
-            "log/",
+_LOG_DIRECTORY = os.getenv("LOGS_DIRECTORY")
+if _LOG_DIRECTORY is None:
+    _LOG_DIRECTORY = (
+        os.path.abspath(
+            os.path.join(
+                _PROJECT_DIRECTORY,
+                "log/",
+            )
         )
     )
-)
-os.makedirs(_LOG_DIRECTORY, exist_ok = True)
+    os.makedirs(_LOG_DIRECTORY, exist_ok = True)
 
 LOG_FILE = (
     os.path.abspath(
@@ -118,13 +128,6 @@ LOG_FILE = (
         )
     )
 )
-
-if os.getenv("ENVIRONMENT") == "development":
-    LOG_LEVEL = "INFO"
-else:
-    LOG_LEVEL = "WARNING"
-
-LOG_FORMATTER = "NewsBot.log_formatter.NewsBotLogFormatter"
 
 if os.getenv("ENVIRONMENT") == "development":
     _DEFAULT_MAXIMUM_INTERVAL = datetime.timedelta(seconds = 5)
