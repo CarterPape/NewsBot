@@ -90,7 +90,9 @@ else:
 
 _PROJECT_DIRECTORY = (
     os.path.dirname(
-        scrapy.utils.conf.closest_scrapy_cfg(path = __file__)
+        scrapy.utils.conf.closest_scrapy_cfg(
+            path = os.path.realpath(__file__)
+        )
     )
 )
 
