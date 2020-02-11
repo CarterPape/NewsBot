@@ -7,12 +7,12 @@
 
 import scrapy
 import scrapy.http
-import NewsBot.spiders as spiders
+import NewsBot.spiders as NewsBotSpiders
 import NewsBot.items.dispatch
 import newsbot_tasking.crawl_schedulers
 
 
-class DispatchCallLogSpider(scrapy.Spider, spiders.SelfScheduling):
+class DispatchCallLogSpider(scrapy.Spider, NewsBotSpiders.SelfScheduling):
     name =              "DispatchCallLogSpider"
     allowed_domains =   ["edispatches.com"]
     custom_settings = {

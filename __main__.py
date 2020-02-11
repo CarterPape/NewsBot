@@ -19,7 +19,3 @@ registry = newsbot_tasking.NewsBotJobRegistry(
 
 registry.schedule_all_jobs()
 twisted.internet.reactor.run()
-
-# process = scrapy.crawler.CrawlerProcess(scrapy.utils.project.get_project_settings())
-# process.crawl(NewsBot.spiders.DispatchCallLogSpider)
-# process.start() # the script will block here until all crawling jobs are finished
