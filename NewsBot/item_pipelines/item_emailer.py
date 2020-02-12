@@ -51,10 +51,7 @@ class ItemEmailer(object):
         self._logger.info(
             requests.post(
                 f"https://api.mailgun.net/v3/{os.getenv('EMAIL_SENDER_DOMAIN')}/messages",
-                auth = ("api", keyring.get_password(
-                    service_name =  "api.mailgun.net",
-                    username =      os.getenv("MAILGUN_API_USER"),
-                )),
+                auth = ("api",  os.getenv("MAILGUN_API_KEY")),
                 files =         self._current_item.get_email_attachments(),
                 data = {
                     "from":     os.getenv("EMAIL_SENDER"),

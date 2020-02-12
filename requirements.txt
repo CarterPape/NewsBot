@@ -6,7 +6,6 @@
 # # # # # # # # # # # # # # # # # # # #
 
 scrapy
-keyring
 pape
 twisted
 python-magic
