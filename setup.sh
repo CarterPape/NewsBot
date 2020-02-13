@@ -57,10 +57,11 @@ done
 
 printf "\n"
 
-sudo mkdir -p /usr/local/lib/systemd/system && \
+sudo mkdir -p /usr/local/lib/systemd/system/ && \
     printf "/usr/local/lib/systemd/system created. \n"
-sudo cp -r $project_path /usr/local/src/NewsBot && \
+sudo cp -r $project_path /usr/local/src/NewsBot/ && \
     printf "Project copied; it is safe to delete this version.\n"
+sudo rm -rf /usr/local/lib/systemd/system/newsbot.service 2>/dev/null
 sudo ln -s /usr/local/src/NewsBot/newsbot.service /usr/local/lib/systemd/system/ && \
     printf "Service file linked.\n"
 
