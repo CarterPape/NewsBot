@@ -9,10 +9,10 @@ import scrapy
 import scrapy.http
 import NewsBot.items.dispatch
 import typing_extensions
-import newsbot_tasking.crawl_schedulers
+import newsbot_tasking.crawl_schedulers as NewsBotCrawlSchedulers
 
 
 class SelfScheduling(typing_extensions.Protocol):
     @staticmethod
-    def get_scheduler() -> newsbot_tasking.crawl_schedulers.CrawlScheduler:
+    def get_scheduler() -> NewsBotCrawlSchedulers.CrawlScheduler:
         raise NotImplementedError
