@@ -11,11 +11,11 @@
 # https://docs.scrapy.org/en/latest/topics/items.html
 
 import scrapy
-from NewsBot.items.emailable_item import EmailableItem
+import NewsBot.items.emailable_item
 import string
 
 
-class Dispatch(EmailableItem):
+class Dispatch(NewsBot.items.emailable_item.EmailableItem):
     audio_URL =         scrapy.Field()
     audio_file_path =   scrapy.Field()
     dispatched_agency = scrapy.Field()

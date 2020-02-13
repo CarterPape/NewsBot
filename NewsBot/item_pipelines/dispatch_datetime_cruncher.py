@@ -7,7 +7,7 @@
 
 import scrapy
 import datetime
-import NewsBot.items
+import NewsBot.items.dispatch
 import NewsBot.spiders
 import logging
 import datetime
@@ -23,9 +23,9 @@ class DispatchDatetimeCruncher(object):
     
     def process_item(
         self,
-        item: NewsBot.items.Dispatch,
-        spider: NewsBot.spiders.DispatchCallLogSpider
-    ) -> NewsBot.items.Dispatch:
+        item: NewsBot.items.dispatch.Dispatch,
+        spider: NewsBot.spiders.dispatch_call_log_spider.DispatchCallLogSpider
+    ) -> NewsBot.items.dispatch.Dispatch:
         
         item["dispatch_datetime"] = datetime.datetime.strptime(
             item["dispatch_date_string"],

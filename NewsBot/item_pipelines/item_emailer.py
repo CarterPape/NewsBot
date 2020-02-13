@@ -41,7 +41,7 @@ class ItemEmailer(object):
         
     def process_item(
         self,
-        item:   NewsBot.items.EmailableItem,
+        item:   NewsBot.items.emailable_item.EmailableItem,
         spider: scrapy.spiders.Spider
     ) -> scrapy.Item:
         

@@ -13,14 +13,17 @@ import newsbot_tasking.crawl_schedulers.uniform_capped_scheduler
 import newsbot_tasking.crawl_schedulers.crawl_scheduler
 
 
-class DispatchCallLogSpider(scrapy.Spider, NewsBot.spiders.self_scheduling_spider.SelfScheduling):
+class DispatchCallLogSpider(
+    scrapy.Spider,
+    NewsBot.spiders.self_scheduling_spider.SelfScheduling
+):
     name =              "DispatchCallLogSpider"
     allowed_domains =   ["edispatches.com"]
     custom_settings = {
         "ITEM_PIPELINES": {
-            "NewsBot.item_pipelines.DispatchAudioDownloader":   100,
-            "NewsBot.item_pipelines.DispatchDatetimeCruncher":  200,
-            "NewsBot.item_pipelines.ItemEmailer":               500,
+            "NewsBot.item_pipelines.dispatch_audio_downloader.DispatchAudioDownloader":     100,
+            "NewsBot.item_pipelines.dispatch_datetime_cruncher.DispatchDatetimeCruncher":   200,
+            "NewsBot.item_pipelines.item_emailer.ItemEmailer":                              500,
         }
     }
     _crawl_scheduler =   newsbot_tasking.crawl_schedulers.uniform_capped_scheduler.UniformCappedScheduler()
@@ -49,7 +52,7 @@ class DispatchCallLogSpider(scrapy.Spider, NewsBot.spiders.self_scheduling_spide
     ) -> [NewsBot.items.dispatch.Dispatch]:
         allDispatchLogRows = response.xpath(self._DISPATCH_LOG_ROW)
         allDispatches = [
-            NewsBot.items.Dispatch(
+            NewsBot.items.dispatch.Dispatch(
                 audio_URL =             oneRow.xpath(self._DISPATCH_AUDIO_RELATIVE_XPATH).get(),
                 dispatched_agency =     oneRow.xpath(self._DISPATCHED_AGENCY_RELATIVE_XPATH).get(),
                 dispatch_date_string =  oneRow.xpath(self._DISPATCH_TIME_RELATIVE_XPATH).get(),

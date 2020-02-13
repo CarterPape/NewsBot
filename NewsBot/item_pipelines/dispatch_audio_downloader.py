@@ -8,7 +8,7 @@
 import scrapy
 import scrapy.exceptions
 import NewsBot.settings
-import NewsBot.items
+import NewsBot.items.dispatch
 import NewsBot.spiders
 import os.path
 import urllib.parse
@@ -24,7 +24,7 @@ class DispatchAudioDownloader(object):
     
     def process_item(
         self,
-        item: NewsBot.items.Dispatch,
+        item: NewsBot.items.dispatch.Dispatch,
         spider: NewsBot.spiders.dispatch_call_log_spider.DispatchCallLogSpider
     ) -> twisted.internet.defer.Deferred:
         
@@ -42,8 +42,8 @@ class DispatchAudioDownloader(object):
     def _handle_item_downloaded(
         self,
         response: scrapy.http.Response,
-        item: NewsBot.items.Dispatch
-    ) -> NewsBot.items.Dispatch:
+        item: NewsBot.items.dispatch.Dispatch
+    ) -> NewsBot.items.dispatch.Dispatch:
         
         if response.status != 200:
             raise scrapy.exceptions.DropItem(
@@ -57,7 +57,7 @@ class DispatchAudioDownloader(object):
         
         return item
     
-    def _save_location(self, *, of_dispatch: NewsBot.items.Dispatch) -> str:
+    def _save_location(self, *, of_dispatch: NewsBot.items.dispatch.Dispatch) -> str:
         dispatch =      of_dispatch
         parsed_url =    urllib.parse.urlparse(dispatch["audio_URL"])
         return os.path.join(
@@ -66,6 +66,6 @@ class DispatchAudioDownloader(object):
             parsed_url.path.lstrip("/"),
         )
     
-    def _audio_already_downloaded(self, *, of_dispatch: NewsBot.items.Dispatch) -> bool:
+    def _audio_already_downloaded(self, *, of_dispatch: NewsBot.items.dispatch.Dispatch) -> bool:
         dispatch = of_dispatch
         return os.path.exists(dispatch["audio_file_path"])
