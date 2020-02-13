@@ -7,12 +7,13 @@
 
 import scrapy
 import scrapy.http
-import NewsBot.spiders as NewsBotSpiders
+import NewsBot.spiders.self_scheduling_spider
 import NewsBot.items.dispatch
-import newsbot_tasking.crawl_schedulers
+import newsbot_tasking.crawl_schedulers.uniform_capped_scheduler
+import newsbot_tasking.crawl_schedulers.crawl_scheduler
 
 
-class DispatchCallLogSpider(scrapy.Spider, NewsBotSpiders.SelfScheduling):
+class DispatchCallLogSpider(scrapy.Spider, NewsBot.spiders.self_scheduling_spider.SelfScheduling):
     name =              "DispatchCallLogSpider"
     allowed_domains =   ["edispatches.com"]
     custom_settings = {
@@ -22,7 +23,7 @@ class DispatchCallLogSpider(scrapy.Spider, NewsBotSpiders.SelfScheduling):
             "NewsBot.item_pipelines.ItemEmailer":               500,
         }
     }
-    _crawl_scheduler =   newsbot_tasking.crawl_schedulers.UniformCappedScheduler()
+    _crawl_scheduler =   newsbot_tasking.crawl_schedulers.uniform_capped_scheduler.UniformCappedScheduler()
     
     _DISPATCH_LOG_ROW =                 "//*[@id='call-log-info']//table/tr"
     _DISPATCH_AUDIO_RELATIVE_XPATH =    "./td[1]/audio/@src"
@@ -43,7 +44,9 @@ class DispatchCallLogSpider(scrapy.Spider, NewsBotSpiders.SelfScheduling):
             )
         ]
 
-    def parse_call_log(self, response: scrapy.http.HtmlResponse) -> [NewsBot.items.Dispatch]:
+    def parse_call_log(self,
+        response: scrapy.http.HtmlResponse
+    ) -> [NewsBot.items.dispatch.Dispatch]:
         allDispatchLogRows = response.xpath(self._DISPATCH_LOG_ROW)
         allDispatches = [
             NewsBot.items.Dispatch(
@@ -56,5 +59,5 @@ class DispatchCallLogSpider(scrapy.Spider, NewsBotSpiders.SelfScheduling):
         return allDispatches
     
     @staticmethod
-    def get_scheduler() -> newsbot_tasking.crawl_schedulers.CrawlScheduler:
+    def get_scheduler() -> newsbot_tasking.crawl_schedulers.crawl_scheduler.CrawlScheduler:
         return DispatchCallLogSpider._crawl_scheduler

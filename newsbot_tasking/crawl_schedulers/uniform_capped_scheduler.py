@@ -7,11 +7,11 @@
 
 import datetime
 import NewsBot.settings
-import newsbot_tasking.crawl_schedulers as crawl_schedulers
+import newsbot_tasking.crawl_schedulers.crawl_scheduler
 import random
 
 
-class UniformCappedScheduler(crawl_schedulers.CrawlScheduler):
+class UniformCappedScheduler(newsbot_tasking.crawl_schedulers.crawl_scheduler.CrawlScheduler):
     _DEFAULT_MAXIMUM_INTERVAL =     NewsBot.settings._DEFAULT_MAXIMUM_INTERVAL
     _UNIFORM_RELATIVE_DEVIATION =   0.1
     
