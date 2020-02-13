@@ -11,3 +11,4 @@ twisted
 python-magic
 python-dotenv
 typing_extensions
+pytz
