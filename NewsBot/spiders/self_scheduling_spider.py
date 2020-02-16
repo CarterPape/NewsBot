@@ -5,14 +5,29 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import scrapy
-import scrapy.http
+import scrapy.spiders
 import NewsBot.items.dispatch
 import typing_extensions
-import newsbot_tasking.crawl_schedulers.crawl_scheduler
+import newsbot_tasking.crawl_schedulers.uniformly_random_scheduler
+import NewsBot.settings
+import datetime
+import dotenv
+import os
 
 
-class SelfScheduling(typing_extensions.Protocol):
-    @staticmethod
-    def get_scheduler() -> newsbot_tasking.crawl_schedulers.crawl_scheduler.CrawlScheduler:
+class SelfSchedulingSpider(scrapy.spiders.Spider):
+    _DEBUG_SCHEDULER = (
+        newsbot_tasking.crawl_schedulers.uniformly_random_scheduler.UniformlyRandomScheduler(
+            minimum_interval = datetime.timedelta(seconds = 5),
+            maximum_interval = datetime.timedelta(seconds = 10),
+        )
+    )
+    
+    def __init__(self):
+        dotenv.load_dotenv(dotenv.find_dotenv())
+        if os.getenv("ENVIRONMENT") == "development":
+            self._crawl_scheduler = self._DEBUG_SCHEDULER
+    
+    @property
+    def scheduler(self) -> newsbot_tasking.crawl_schedulers.crawl_scheduler.CrawlScheduler:
         raise NotImplementedError

@@ -57,12 +57,12 @@ done
 
 printf "\n"
 
-sudo mkdir -p /usr/local/lib/systemd/system/ && \
-    printf "/usr/local/lib/systemd/system created. \n"
-sudo cp -r $project_path /usr/local/src/NewsBot/ && \
-    printf "Project copied; it is safe to delete this version.\n"
+sudo rm -rf /usr/local/src/NewsBot 2>/dev/null
+sudo ln -s $project_path /usr/local/src/NewsBot && \
+    printf "Project linked in /usr/local/src/.\n"
+    
 sudo rm -rf /usr/local/lib/systemd/system/newsbot.service 2>/dev/null
-sudo ln -s /usr/local/src/NewsBot/newsbot.service /usr/local/lib/systemd/system/ && \
-    printf "Service file linked.\n"
+sudo ln -s "$project_path/newsbot.service" /usr/local/lib/systemd/system/ && \
+    printf "Service file linked in /usr/local/lib/systemd/system/.\n"
 
-printf "Cool. Now do \`sudo systemctl enable newsbot.service\` to make it happen.\n"
+printf "Cool. Now do \`sudo systemctl enable newsbot.service\` to make the service run until stopped, or do  \`sudo systemctl start newsbot.service\` to run only until system shutdown or restart.\n"

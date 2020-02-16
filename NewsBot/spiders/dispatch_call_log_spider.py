@@ -9,14 +9,12 @@ import scrapy
 import scrapy.http
 import NewsBot.spiders.self_scheduling_spider
 import NewsBot.items.dispatch
-import newsbot_tasking.crawl_schedulers.uniform_capped_scheduler
+import newsbot_tasking.crawl_schedulers.uniformly_random_scheduler
 import newsbot_tasking.crawl_schedulers.crawl_scheduler
+import datetime
 
 
-class DispatchCallLogSpider(
-    scrapy.Spider,
-    NewsBot.spiders.self_scheduling_spider.SelfScheduling
-):
+class DispatchCallLogSpider(NewsBot.spiders.self_scheduling_spider.SelfSchedulingSpider):
     name =              "DispatchCallLogSpider"
     allowed_domains =   ["edispatches.com"]
     custom_settings = {
@@ -26,12 +24,21 @@ class DispatchCallLogSpider(
             "NewsBot.item_pipelines.item_emailer.ItemEmailer":                              500,
         }
     }
-    _crawl_scheduler =   newsbot_tasking.crawl_schedulers.uniform_capped_scheduler.UniformCappedScheduler()
     
-    _DISPATCH_LOG_ROW =                 "//*[@id='call-log-info']//table/tr"
-    _DISPATCH_AUDIO_RELATIVE_XPATH =    "./td[1]/audio/@src"
-    _DISPATCHED_AGENCY_RELATIVE_XPATH = "./td[2]/text()"
-    _DISPATCH_TIME_RELATIVE_XPATH =     "./td[4]/text()"
+    def __init__(self):
+        self._dispatch_log_row =                 "//*[@id='call-log-info']//table/tr"
+        self._dispatch_audio_relative_xpath =    "./td[1]/audio/@src"
+        self._dispatched_agency_relative_xpath = "./td[2]/text()"
+        self._dispatch_time_relative_xpath =     "./td[4]/text()"
+        
+        self._crawl_scheduler = (
+            newsbot_tasking.crawl_schedulers.uniformly_random_scheduler.UniformlyRandomScheduler(
+                maximum_interval =  datetime.timedelta(minutes = 6),
+                minimum_interval =  datetime.timedelta(minutes = 4),
+            )
+        )
+        
+        super().__init__()
     
     def start_requests(self) -> [scrapy.http.Request]:
         return [
@@ -50,17 +57,17 @@ class DispatchCallLogSpider(
     def parse_call_log(self,
         response: scrapy.http.HtmlResponse
     ) -> [NewsBot.items.dispatch.Dispatch]:
-        allDispatchLogRows = response.xpath(self._DISPATCH_LOG_ROW)
-        allDispatches = [
+        all_dispatch_log_rows = response.xpath(self._dispatch_log_row)
+        all_dispatches = [
             NewsBot.items.dispatch.Dispatch(
-                audio_URL =             oneRow.xpath(self._DISPATCH_AUDIO_RELATIVE_XPATH).get(),
-                dispatched_agency =     oneRow.xpath(self._DISPATCHED_AGENCY_RELATIVE_XPATH).get(),
-                dispatch_date_string =  oneRow.xpath(self._DISPATCH_TIME_RELATIVE_XPATH).get(),
+                audio_URL =             one_row.xpath(self._dispatch_audio_relative_xpath).get(),
+                dispatched_agency =     one_row.xpath(self._dispatched_agency_relative_xpath).get(),
+                dispatch_date_string =  one_row.xpath(self._dispatch_time_relative_xpath).get(),
             )
-            for oneRow in allDispatchLogRows
+            for one_row in all_dispatch_log_rows
         ]
-        return allDispatches
+        return all_dispatches
     
-    @staticmethod
-    def get_scheduler() -> newsbot_tasking.crawl_schedulers.crawl_scheduler.CrawlScheduler:
-        return DispatchCallLogSpider._crawl_scheduler
+    @property
+    def scheduler(self) -> newsbot_tasking.crawl_schedulers.crawl_scheduler.CrawlScheduler:
+        return self._crawl_scheduler

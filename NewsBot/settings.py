@@ -131,11 +131,6 @@ LOG_FILE = (
     )
 )
 
-if os.getenv("ENVIRONMENT") == "development":
-    _DEFAULT_MAXIMUM_INTERVAL = datetime.timedelta(seconds = 5)
-else:
-    _DEFAULT_MAXIMUM_INTERVAL = datetime.timedelta(minutes = 30)
-
 # MAIL_FROM   = environment.EMAIL_SENDER
 # MAIL_HOST   = environment.SMTP_HOST
 # MAIL_PORT   = environment.SMTP_PORT

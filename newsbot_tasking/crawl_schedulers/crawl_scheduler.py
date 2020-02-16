@@ -9,5 +9,6 @@ import typing_extensions
 
 
 class CrawlScheduler(typing_extensions.Protocol):
-    def get_pause_time_in_seconds(self) -> float:
+    @property
+    def pause_time_in_seconds(self) -> float:
         raise NotImplementedError

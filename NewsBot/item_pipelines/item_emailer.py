@@ -52,12 +52,12 @@ class ItemEmailer(object):
             requests.post(
                 f"https://api.mailgun.net/v3/{os.getenv('EMAIL_SENDER_DOMAIN')}/messages",
                 auth = ("api",  os.getenv("MAILGUN_API_KEY")),
-                files =         self._current_item.get_email_attachments(),
+                files =         self._current_item.email_attachments,
                 data = {
                     "from":     os.getenv("EMAIL_SENDER"),
                     "to":       os.getenv("EMAIL_RECIPIENT"),
-                    "subject":  self._current_item.get_email_subject(),
-                    "html":     self._current_item.get_html_email_body(),
+                    "subject":  self._current_item.email_subject,
+                    "html":     self._current_item.html_email_body,
                 }
             )
         )
