@@ -40,8 +40,7 @@ do_overwrite()
     printf "EMAIL_SENDER='$email_sender'\n" >> "$project_path/.env"
     printf "EMAIL_SENDER_DOMAIN='$email_sender_domain'\n\n" >> "$project_path/.env"
     printf "MAILGUN_API_KEY='$mailgun_api_key'\n" >> "$project_path/.env"
-    sudo chown "$project_path/.env"
-    sudo chmod u=r,g=,o= "$project_path/.env"
+    chmod u=rw,g=,o= "$project_path/.env"
     
     printf "$project_path/.env written\n"
 }
