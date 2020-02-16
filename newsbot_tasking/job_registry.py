@@ -18,14 +18,14 @@ class NewsBotJobRegistry(object):
     ):
         self._runner: scrapy.crawler.CrawlerRunner = (
             scrapy.crawler.CrawlerRunner(
-                settings = scrapy.utils.project.get_project_settings()
+                settings = scrapy.utils.project.get_project_settings(),
             )
         )
         
         self._jobs: [newsbot_tasking.crawl_job.CrawlJob] = [
             newsbot_tasking.crawl_job.CrawlJob(
                 from_runner =       self._runner,
-                spider_class =      each_spider_class
+                spider_class =      each_spider_class,
             )
             for each_spider_class in from_spider_classes
         ]
