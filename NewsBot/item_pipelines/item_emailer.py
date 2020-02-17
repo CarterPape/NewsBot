@@ -20,7 +20,7 @@ import dotenv
 import pape.utilities
 
 
-class ItemEmailer(object):
+class ItemEmailer(NewsBot.item_pipelines.item_pipeline.ItemPipeline):
     
     @classmethod
     def from_crawler(cls, crawler):
@@ -48,11 +48,19 @@ class ItemEmailer(object):
         self._current_item =    item
         self._current_spider =  spider
         
+        if issubclass(
+            type(self._current_item),
+            NewsBot.items.emailable_item_with_attachments.EmailableItemWithAttachments,
+        ):
+            attachments = self._current_item.email_attachments
+        else:
+            attachments = None
+        
         self._logger.info(
             requests.post(
                 f"https://api.mailgun.net/v3/{os.getenv('EMAIL_SENDER_DOMAIN')}/messages",
                 auth = ("api",  os.getenv("MAILGUN_API_KEY")),
-                files =         self._current_item.email_attachments,
+                files =         attachments,
                 data = {
                     "from":     os.getenv("EMAIL_SENDER"),
                     "to":       os.getenv("EMAIL_RECIPIENT"),

@@ -5,11 +5,7 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-scrapy
-pape
-twisted
-python-magic
-python-dotenv
-typing_extensions
-pytz
-mysql-connector
+import scrapy.exceptions
+
+class DropTransmittedItem(scrapy.exceptions.DropItem):
+    pass

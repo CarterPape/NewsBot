@@ -5,11 +5,10 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-scrapy
-pape
-twisted
-python-magic
-python-dotenv
-typing_extensions
-pytz
-mysql-connector
+import scrapy
+
+
+class DatedItem(scrapy.Item):
+    source_date_string =    scrapy.Field()
+    source_date_format =    scrapy.Field()
+    datetime =              scrapy.Field()

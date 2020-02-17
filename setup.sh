@@ -7,17 +7,37 @@ pip install -r "$project_path/requirements.txt"
 if command -v apt-get 2>/dev/null; then
     sudo apt update -y
     sudo apt-get install -y libmagic-dev
+    
+    sudo apt-get install -y mariadb-server
 elif command -v brew 2>/dev/null; then
     brew install libmagic
+    brew install mariadb
 else 
-    printf "This project requires libmagic. "
-    printf "Figure out how to install it, then hit [Enter] to continue. "
+    printf "This project requires libmagic and MariaDB (or MySQL). "
+    printf "Install them or ensure they are already installed, then hit [Enter] to continue. "
     read
 fi
 
+printf "Come up with a clever password for 'newsbot'@'localhost' (the MariaDB user for NewsBot): "
+stty -echo
+read -p $mariadb_password
+stty echo
+
+sudo mysql -u root << EOF
+create user 'newsbot'@'localhost' identified by '$mariadb_password';
+create database newsbot;
+grant all permissions on newsbot.* to 'newsbot'@'localhost';
+EOF
+
+printf "Now that the new user and database have been created, secure the root user. "
+printf "Hit [Enter] to continue "
+read
+
+sudo mysql_secure_installation
+
 printf "\n"
 
-do_overwrite()
+do_env_overwrite()
 {
     rm "$project_path/.env" 2>/dev/null
     
@@ -49,10 +69,14 @@ do_overwrite()
 printf "Do you want to write (or rewrite) .env?\n"
 select answer in "Yes" "No"; do
     case $answer in
-        Yes ) do_overwrite; break;;
-        No ) break;;
+        Yes ) do_env_overwrite; break;;
+        No ) printf "MYSQL_USER_PASSWORD='$mariadb_password'\n" >> "$project_path/.env"; break;;
     esac
 done
+
+printf "\n"
+
+python "$project_path/database_setup.py"
 
 printf "\n"
 
@@ -64,4 +88,5 @@ sudo rm -rf /usr/local/lib/systemd/system/newsbot.service 2>/dev/null
 sudo ln -s "$project_path/newsbot.service" /usr/local/lib/systemd/system/ && \
     printf "Service file linked in /usr/local/lib/systemd/system/.\n"
 
-printf "Cool. Now do \`sudo systemctl enable newsbot.service\` to make the service run until stopped, or do  \`sudo systemctl start newsbot.service\` to run only until system shutdown or restart.\n"
+sudo systemctl enable newsbot
+sudo systemctl start newsbot

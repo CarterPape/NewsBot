@@ -10,12 +10,16 @@ import NewsBot.items.dispatch
 import typing_extensions
 import newsbot_tasking.crawl_schedulers.uniformly_random_scheduler
 import NewsBot.settings
+import NewsBot.logger
 import datetime
 import dotenv
 import os
 
 
-class SelfSchedulingSpider(scrapy.spiders.Spider):
+class SelfSchedulingSpider(
+    scrapy.spiders.Spider,
+    NewsBot.logger.Logger,
+):
     _DEBUG_SCHEDULER = (
         newsbot_tasking.crawl_schedulers.uniformly_random_scheduler.UniformlyRandomScheduler(
             minimum_interval = datetime.timedelta(seconds = 5),
@@ -30,4 +34,4 @@ class SelfSchedulingSpider(scrapy.spiders.Spider):
     
     @property
     def scheduler(self) -> newsbot_tasking.crawl_schedulers.crawl_scheduler.CrawlScheduler:
-        raise NotImplementedError
+        return self._crawl_scheduler

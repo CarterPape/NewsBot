@@ -15,13 +15,14 @@ import datetime
 
 
 class DispatchCallLogSpider(NewsBot.spiders.self_scheduling_spider.SelfSchedulingSpider):
-    name =              "DispatchCallLogSpider"
+    name =              __name__
     allowed_domains =   ["edispatches.com"]
     custom_settings = {
         "ITEM_PIPELINES": {
-            "NewsBot.item_pipelines.dispatch_audio_downloader.DispatchAudioDownloader":     100,
-            "NewsBot.item_pipelines.dispatch_datetime_cruncher.DispatchDatetimeCruncher":   200,
-            "NewsBot.item_pipelines.item_emailer.ItemEmailer":                              500,
+            "NewsBot.item_pipelines.emailed_item_filter.EmailedItemFilter":     10,
+            "NewsBot.item_pipelines.file_downloader.FileDownloader":            100,
+            "NewsBot.item_pipelines.datetime_cruncher.DatetimeCruncher":        200,
+            "NewsBot.item_pipelines.item_emailer.ItemEmailer":                  500,
         }
     }
     
@@ -60,14 +61,11 @@ class DispatchCallLogSpider(NewsBot.spiders.self_scheduling_spider.SelfSchedulin
         all_dispatch_log_rows = response.xpath(self._dispatch_log_row)
         all_dispatches = [
             NewsBot.items.dispatch.Dispatch(
-                audio_URL =             one_row.xpath(self._dispatch_audio_relative_xpath).get(),
+                file_URLs =             one_row.xpath(self._dispatch_audio_relative_xpath).getall(),
+                source_date_string =    one_row.xpath(self._dispatch_time_relative_xpath).get(),
+                source_date_format =    "%Y-%m-%d %H:%M:%S",
                 dispatched_agency =     one_row.xpath(self._dispatched_agency_relative_xpath).get(),
-                dispatch_date_string =  one_row.xpath(self._dispatch_time_relative_xpath).get(),
             )
             for one_row in all_dispatch_log_rows
         ]
         return all_dispatches
-    
-    @property
-    def scheduler(self) -> newsbot_tasking.crawl_schedulers.crawl_scheduler.CrawlScheduler:
-        return self._crawl_scheduler

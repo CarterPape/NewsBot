@@ -22,21 +22,6 @@ class EmailableItem(scrapy.Item):
         raise NotImplementedError
     
     @property
-    def _attachment_paths(self) -> typing.Optional[typing.List[str]]:
-        return None
-    
-    @property
-    def email_attachments(self) -> [(str, (str, str))]:
-        return [
-            ("attachment", (
-                os.path.basename(current_path),
-                open(current_path, "rb").read()
-            ))
-            for current_path
-            in self._attachment_paths or []
-        ]
-    
-    @property
     def _email_template(self) -> string.Template:
         
         email_template_path = (

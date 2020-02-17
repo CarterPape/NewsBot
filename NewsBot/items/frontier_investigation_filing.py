@@ -7,16 +7,16 @@
 
 import scrapy
 import NewsBot.items.emailable_item
-import NewsBot.items.dated_item
-import NewsBot.items.item_with_files
 import string
 
 
-class Dispatch(
+class FrontierInvestigationFiling(
     NewsBot.items.emailable_item.EmailableItem,
     NewsBot.items.dated_item.DatedItem,
     NewsBot.items.item_with_files.ItemWithFiles,
 ):
+    audio_URL =         scrapy.Field()
+    audio_file_path =   scrapy.Field()
     dispatched_agency = scrapy.Field()
     
     @property
@@ -32,8 +32,8 @@ class Dispatch(
         
         return template_string.safe_substitute({
             "email_subject":    self.email_subject,
-            "dispatch_time":    self["datetime"].strftime("%H:%M:%S"),
-            "dispatch_date":    self["datetime"].strftime("%A, %b. %e"),
+            "dispatch_time":    self["dispatch_datetime"].strftime("%H:%M:%S"),
+            "dispatch_date":    self["dispatch_datetime"].strftime("%A, %b. %e"),
             "dispatched_agency":    self["dispatched_agency"],
-            "dispatch_audio_url":   self["files"][0]["url"],
+            "dispatch_audio_url":   self["audio_URL"],
         })
