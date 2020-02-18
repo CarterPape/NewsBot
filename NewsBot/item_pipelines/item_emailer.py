@@ -56,7 +56,7 @@ class ItemEmailer(NewsBot.item_pipelines.item_pipeline.ItemPipeline):
         else:
             attachments = None
         
-        self._logger.info(
+        item["email_response"] = (
             requests.post(
                 f"https://api.mailgun.net/v3/{os.getenv('EMAIL_SENDER_DOMAIN')}/messages",
                 auth = ("api",  os.getenv("MAILGUN_API_KEY")),
@@ -69,4 +69,6 @@ class ItemEmailer(NewsBot.item_pipelines.item_pipeline.ItemPipeline):
                 }
             )
         )
+        self._logger.info(item["email_response"])
+        
         return item
