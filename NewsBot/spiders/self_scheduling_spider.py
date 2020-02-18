@@ -9,7 +9,6 @@ import scrapy.spiders
 import NewsBot.items.dispatch
 import typing_extensions
 import newsbot_tasking.crawl_schedulers.uniformly_random_scheduler
-import NewsBot.settings
 import NewsBot.logger
 import datetime
 import dotenv

@@ -19,9 +19,7 @@ setuptools.setup(
     author_email =  "creator@newsbot.carterpape.com",
     
     packages =  setuptools.find_packages(),
-    scripts =   [
-        
-    ],
+    scripts =   [],
     
     long_description =              long_description,
     long_description_content_type = "text/markdown",

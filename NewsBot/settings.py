@@ -36,52 +36,11 @@ USER_AGENT = f"{BOT_NAME}/{_BOT_VERSION} (+https://github.com/carterpape/newsbot
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
-# Configure maximum concurrent requests performed by Scrapy (default: 16)
-# CONCURRENT_REQUESTS = 32
-
-# Configure a delay for requests for the same website (default: 0)
-# See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
-# See also autothrottle settings and docs
-# DOWNLOAD_DELAY = 3
-# The download delay setting will honor only one of:
-# CONCURRENT_REQUESTS_PER_DOMAIN = 16
-# CONCURRENT_REQUESTS_PER_IP = 16
-
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = True
 
 # Disable Telnet Console (enabled by default)
-# TELNETCONSOLE_ENABLED = False
-
-# Override the default request headers:
-# DEFAULT_REQUEST_HEADERS = {
-#     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-#     "Accept-Language": "en",
-# }
-
-# Enable or disable spider middlewares
-# See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-# SPIDER_MIDDLEWARES = {
-#     "NewsBot.middlewares.NewsbotSpiderMiddleware": 543,
-# }
-
-# Enable or disable downloader middlewares
-# See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-# DOWNLOADER_MIDDLEWARES = {
-#     "NewsBot.middlewares.NewsbotDownloaderMiddleware": 543,
-# }
-
-# Enable or disable extensions
-# See https://docs.scrapy.org/en/latest/topics/extensions.html
-# EXTENSIONS = {
-#     "scrapy.extensions.telnet.TelnetConsole": None,
-# }
-
-# Configure item pipelines
-# See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-ITEM_PIPELINES = {
-    
-}
+TELNETCONSOLE_ENABLED = True
 
 if os.getenv("ENVIRONMENT") == "development":
     LOG_LEVEL = "INFO"
@@ -128,17 +87,6 @@ LOG_FILE = (
     )
 )
 
-# MAIL_FROM   = environment.EMAIL_SENDER
-# MAIL_HOST   = environment.SMTP_HOST
-# MAIL_PORT   = environment.SMTP_PORT
-# MAIL_USER   = environment.EMAIL_SENDER
-# MAIL_PASS   = keyring.get_password(
-#     service_name    = environment.EMAIL_SERVICE_NAME,
-#     username        = MAIL_USER,
-# )
-# MAIL_TLS    = environment.USE_STARTTLS_WITH_MAIL
-# MAIL_SSL    = environment.USE_SSL_WITH_MAIL
-
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 AUTOTHROTTLE_ENABLED = True
@@ -151,10 +99,3 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = 0.5
 # Enable showing throttling stats for every response received:
 AUTOTHROTTLE_DEBUG = True
 
-# Enable and configure HTTP caching (disabled by default)
-# See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
-# HTTPCACHE_ENABLED = True
-# HTTPCACHE_EXPIRATION_SECS = 0
-# HTTPCACHE_DIR = "httpcache"
-# HTTPCACHE_IGNORE_HTTP_CODES = []
-# HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"

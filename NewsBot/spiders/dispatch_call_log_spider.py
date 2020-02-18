@@ -20,9 +20,10 @@ class DispatchCallLogSpider(NewsBot.spiders.self_scheduling_spider.SelfSchedulin
     custom_settings = {
         "ITEM_PIPELINES": {
             "NewsBot.item_pipelines.emailed_item_filter.EmailedItemFilter":     10,
-            "NewsBot.item_pipelines.file_downloader.FileDownloader":            100,
-            "NewsBot.item_pipelines.datetime_cruncher.DatetimeCruncher":        200,
-            "NewsBot.item_pipelines.item_emailer.ItemEmailer":                  500,
+            "NewsBot.item_pipelines.file_downloader.FileDownloader":            400,
+            "NewsBot.item_pipelines.datetime_cruncher.DatetimeCruncher":        500,
+            "NewsBot.item_pipelines.item_emailer.ItemEmailer":                  900,
+            "NewsBot.item_pipelines.emailed_item_recorder.EmailedItemRecorder": 990,
         }
     }
     
