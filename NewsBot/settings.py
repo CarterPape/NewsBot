@@ -29,6 +29,8 @@ _BOT_VERSION =  "0.1.0"
 SPIDER_MODULES =    ["NewsBot.spiders"]
 NEWSPIDER_MODULE =  "NewsBot.spiders"
 
+DB_CONNECTION_MODULES = ["NewsBot.db_connections"]
+
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = f"{BOT_NAME}/{_BOT_VERSION} (+https://github.com/carterpape/newsbot)"
@@ -98,4 +100,3 @@ AUTOTHROTTLE_MAX_DELAY = 60
 AUTOTHROTTLE_TARGET_CONCURRENCY = 0.5
 # Enable showing throttling stats for every response received:
 AUTOTHROTTLE_DEBUG = True
-
