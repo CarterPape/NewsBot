@@ -5,14 +5,15 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import typing
 import string
-import scrapy
+import scrapy.item
+import NewsBot.items.self_serializing_item
 import os
-import pape
 
 
-class EmailableItem(scrapy.Item):
+class EmailableItem(NewsBot.items.self_serializing_item.SelfSerializingItem):
+    email_response = scrapy.item.Field(ignore_when_serializing = True)
+    
     @property
     def email_subject(self) -> str:
         raise NotImplementedError
@@ -23,7 +24,6 @@ class EmailableItem(scrapy.Item):
     
     @property
     def _email_template(self) -> string.Template:
-        
         email_template_path = (
             os.path.abspath(
                 os.path.join(

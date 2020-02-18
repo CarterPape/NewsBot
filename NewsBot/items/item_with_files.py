@@ -5,12 +5,13 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import scrapy
+import scrapy.item
+import json
 
 
-class ItemWithFiles(scrapy.Item):
-    file_URLs = scrapy.Field()
-    files =     scrapy.Field(serializer = None)
+class ItemWithFiles(scrapy.item.Item):
+    file_URLs = scrapy.item.Field()
+    files =     scrapy.item.Field(ignore_when_serializing = True)
     
     @classmethod
     def get_files_urls_field(klass) -> str:

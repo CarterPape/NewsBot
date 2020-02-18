@@ -10,5 +10,5 @@ import scrapy
 
 class DatedItem(scrapy.Item):
     source_date_string =    scrapy.Field()
-    source_date_format =    scrapy.Field()
-    datetime =              scrapy.Field()
+    source_date_format =    scrapy.Field(ignore_when_serializing = True)
+    datetime =              scrapy.Field(ignore_when_serializing = True)

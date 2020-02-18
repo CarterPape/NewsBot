@@ -9,6 +9,7 @@ import scrapy
 import NewsBot.items.emailable_item
 import NewsBot.items.dated_item
 import NewsBot.items.item_with_files
+import NewsBot.items.self_serializing_item
 import string
 
 
