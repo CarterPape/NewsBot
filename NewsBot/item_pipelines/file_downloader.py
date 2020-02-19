@@ -8,7 +8,6 @@
 import scrapy
 import scrapy.item
 import scrapy.exceptions
-import NewsBot.settings
 import NewsBot.items.item_with_files
 import NewsBot.spiders
 import os.path
@@ -22,10 +21,6 @@ class FileDownloader(
     scrapy.pipelines.files.FilesPipeline,
     NewsBot.item_pipelines.item_pipeline.ItemPipeline,
 ):
-    _DOWNLOAD_DIRECTORY = os.path.join(
-        NewsBot.settings._DATA_DIRECTORY,
-        "file-downloads/"
-    )
     
     def __init__(self,
         store_uri:      str,
@@ -37,6 +32,11 @@ class FileDownloader(
         )
         self.FILES_RESULT_FIELD = (
             NewsBot.items.item_with_files.ItemWithFiles.get_files_result_field()
+        )
+        
+        self._download_directory = os.path.join(
+            settings.get("_DATA_DIRECTORY"),
+            "file-downloads/",
         )
         
         super().__init__(
@@ -52,7 +52,7 @@ class FileDownloader(
     ) -> str:
         parsed_url =    urllib.parse.urlparse(request.url)
         return os.path.join(
-            self._DOWNLOAD_DIRECTORY,
+            self._download_directory,
             parsed_url.netloc.lstrip("/"),
             parsed_url.path.lstrip("/"),
         )
