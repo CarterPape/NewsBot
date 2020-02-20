@@ -50,14 +50,14 @@ else:
     LOG_LEVEL = "WARNING"
 
 _PROJECT_DIRECTORY = (
-    os.path.dirname(
-        scrapy.utils.conf.closest_scrapy_cfg(
-            path = os.path.realpath(__file__)
+    os.path.abspath(
+        os.path.dirname(
+            scrapy.utils.conf.closest_scrapy_cfg(
+                path = os.path.realpath(__file__)
+            )
         )
     )
 )
-
-LOG_FORMATTER = "NewsBot.log_formatter.NewsBotLogFormatter"
 
 _DATA_DIRECTORY = (
     os.path.abspath(
@@ -68,6 +68,19 @@ _DATA_DIRECTORY = (
     )
 )
 os.makedirs(_DATA_DIRECTORY, exist_ok = True)
+
+FILES_STORE = (
+    os.path.abspath(
+        os.path.join(
+            _DATA_DIRECTORY,
+            "downloads/",
+        )
+    )
+)
+os.makedirs(FILES_STORE, exist_ok = True)
+
+FILES_URLS_FIELD = NewsBot.items.item_with_files.ItemWithFiles.get_files_urls_field()
+FILES_RESULT_FIELD = NewsBot.items.item_with_files.ItemWithFiles.get_files_result_field()
 
 
 _LOG_DIRECTORY = (
@@ -88,6 +101,8 @@ LOG_FILE = (
         )
     )
 )
+
+LOG_FORMATTER = "NewsBot.log_formatter.NewsBotLogFormatter"
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
