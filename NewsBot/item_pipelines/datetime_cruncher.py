@@ -10,12 +10,13 @@ import scrapy.spiders
 import datetime
 import NewsBot.items.dispatch
 import NewsBot.spiders
+import NewsBot.item_pipelines.item_pipeline as item_pipeline
 import logging
 import datetime
 import pytz
 
 
-class DatetimeCruncher(NewsBot.item_pipelines.item_pipeline.ItemPipeline):
+class DatetimeCruncher(item_pipeline.ItemPipeline):
     def __init__(self):
         if not hasattr(self, "source_timezone"):
             self._source_timezone = pytz.timezone('America/Denver')

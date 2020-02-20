@@ -6,8 +6,7 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import logging
-import NewsBot.items
-import NewsBot.spiders
+import NewsBot.items.emailable_item_with_attachments
 import scrapy
 import scrapy.settings
 import os
@@ -20,7 +19,10 @@ import dotenv
 import pape.utilities
 
 
-class ItemEmailer(NewsBot.item_pipelines.item_pipeline.ItemPipeline):
+class ItemEmailer(
+    NewsBot.item_pipelines.item_pipeline.ItemPipeline,
+    NewsBot.logger.Logger,
+):
     
     @classmethod
     def from_crawler(cls, crawler):
@@ -32,7 +34,6 @@ class ItemEmailer(NewsBot.item_pipelines.item_pipeline.ItemPipeline):
         settings: scrapy.settings.Settings = None
     ):
         self._settings =    settings
-        self._logger =      logging.getLogger(__name__)
         
         self._current_item:     scrapy.Item
         self._current_spider:   scrapy.spiders.Spider

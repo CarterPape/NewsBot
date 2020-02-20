@@ -23,9 +23,6 @@ import twisted
 
 
 class ItemPipeline(NewsBot.logger.Logger):
-    def __init__(self):
-        pass
-        
     def process_item(self,
         item:   scrapy.item.Item,
         spider: scrapy.spiders.Spider,
@@ -35,13 +32,3 @@ class ItemPipeline(NewsBot.logger.Logger):
         twisted.internet.defer.Deferred,
     ]:
         raise NotImplementedError
-    
-    def open_spider(self,
-        spider: scrapy.spiders.Spider
-    ):
-        pass
-    
-    def close_spider(self,
-        spider: scrapy.spiders.Spider
-    ):
-        pass
