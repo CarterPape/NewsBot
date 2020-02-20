@@ -25,9 +25,9 @@ read -p $mariadb_password
 stty echo
 
 sudo mysql -u root << EOF
-create user 'newsbot'@'localhost' identified by '$mariadb_password';
-create database newsbot;
-grant all permissions on newsbot.* to 'newsbot'@'localhost';
+CREATE USER 'newsbot'@'localhost' IDENTIFIED BY '$mariadb_password';
+CREATE DATABASE newsbot;
+GRANT ALL PRIVILEGES ON newsbot.* TO 'newsbot'@'localhost';
 EOF
 
 printf "Now that the new user and database have been created, do you want to secure the root user? "
@@ -61,16 +61,13 @@ printf "EMAIL_RECIPIENT='$email_recipient'\n" >> "$project_path/.env"
 printf "EMAIL_SENDER='$email_sender'\n" >> "$project_path/.env"
 printf "EMAIL_SENDER_DOMAIN='$email_sender_domain'\n\n" >> "$project_path/.env"
 printf "MAILGUN_API_KEY='$mailgun_api_key'\n\n" >> "$project_path/.env"
-printf "MYSQL_USERNAME='newsbot'\n" >> "$project_path/.env";
+printf "MYSQL_DATABASE='newsbot'\n" >> "$project_path/.env";
+printf "MYSQL_USER='newsbot'\n" >> "$project_path/.env";
 printf "MYSQL_PASSWORD='$mariadb_password'\n" >> "$project_path/.env";
 
 chmod u=rw,g=,o= "$project_path/.env"
 
 printf "$project_path/.env written\n"
-
-printf "\n"
-
-python "$project_path/database_setup.py"
 
 printf "\n"
 

@@ -6,7 +6,6 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import scrapy.settings
-import mysql.connector
 import collections
 import inspect
 import warnings
@@ -25,7 +24,7 @@ class DBConnectionLoader(object):
         self._db_connection_modules =   settings.getlist("DB_CONNECTION_MODULES")
         self._warn_only =               settings.getbool(
             "DB_CONNECTION_LOADER_WARN_ONLY",
-            default = True,
+            default = False,
         )
         self._db_connections =          list()
         self._found_classes =           collections.defaultdict(list)
@@ -35,7 +34,7 @@ class DBConnectionLoader(object):
         in_module: types.ModuleType
     ):
         module = in_module
-        for obj in vars(module):
+        for _, obj in vars(module).items():
             if (
                 inspect.isclass(obj)
             ) and (
@@ -45,8 +44,8 @@ class DBConnectionLoader(object):
             ) and (
                 getattr(
                     obj,
-                    "table_definition",
-                    NewsBot.db_connections.db_connection.DBConnection.table_definition
+                    "TABLE_NAME",
+                    NewsBot.db_connections.db_connection.DBConnection.table_definition,
                 ) != NewsBot.db_connections.db_connection.DBConnection.table_definition
             ):
                 yield obj
