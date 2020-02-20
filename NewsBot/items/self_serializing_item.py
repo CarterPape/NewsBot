@@ -16,11 +16,9 @@ class SelfSerializingItem(scrapy.Item):
         
         simple_self = dict()
         
-        for field_key in self.fields:
-            field_properties = self.fields[field_key]
-            
+        for field_key, field_properties in self.fields.items():
             if (
-                hasattr(field_properties, "ignore_when_serializing")
+                "ignore_when_serializing" in field_properties
             ) and (
                 field_properties["ignore_when_serializing"]
             ):
@@ -39,4 +37,4 @@ class SelfSerializingItem(scrapy.Item):
                     else:
                         raise
         
-        return simple_self
+        return json.dumps(simple_self, sort_keys = True)
