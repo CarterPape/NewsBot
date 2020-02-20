@@ -11,9 +11,9 @@ import logging
 class Logger(object):
     @property
     def _logger(self):
-        if hasattr(self, "_logger") and self._logger != None:
+        if getattr(self, "__logger", None) != None:
             pass
         else:
-            self._logger = logging.getLogger(type(self).__name__)
+            self.__logger = logging.getLogger(type(self).__name__)
         
-        return self._logger
+        return self.__logger
