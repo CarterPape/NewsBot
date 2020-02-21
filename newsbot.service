@@ -1,3 +1,10 @@
+# # # # # # # # # # # # # # # # # # # #
+# NewsBot, a journalism tool
+# Copyright 2020 Carter Pape
+# 
+# See file LICENSE for licensing terms.
+# # # # # # # # # # # # # # # # # # # #
+
 [Unit]
 Description=NewsBot, a journalism tool
 After=network.target

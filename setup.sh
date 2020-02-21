@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# # # # # # # # # # # # # # # # # # # #
+# NewsBot, a journalism tool
+# Copyright 2020 Carter Pape
+# 
+# See file LICENSE for licensing terms.
+# # # # # # # # # # # # # # # # # # # #
+
 project_path="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 pip install -r "$project_path/requirements.txt"
