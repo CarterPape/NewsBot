@@ -27,7 +27,7 @@ class FrontierInvestigationFiling(
         filing_or_filings = filing_or_filings[0].upper() + filing_or_filings[1:]
         
         return (
-            f"{filing_or_filings} filed "
+            f"{filing_or_filings} published "
             f"{self['datetime'].strftime('%A, %b. %e')}"
         )
     
