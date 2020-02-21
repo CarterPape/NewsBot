@@ -15,6 +15,7 @@ import os.path
 import urllib.parse
 import logging
 import twisted.internet.defer
+import twisted.python.failure
 import typing
 
 
@@ -30,7 +31,22 @@ class FileDownloader(
         
         parsed_url =    urllib.parse.urlparse(request.url)
         return os.path.join(
-            self.store.basedir,
             parsed_url.netloc.lstrip("/"),
             parsed_url.path.lstrip("/"),
         )
+    
+    def item_completed(self,
+        results:    (bool, typing.Union[dict, twisted.python.failure.Failure]),
+        item:       NewsBot.items.item_with_files.ItemWithFiles,
+        info:       scrapy.pipelines.media.MediaPipeline.SpiderInfo,
+    ):
+        item = super().item_completed(results, item, info)
+        
+        for fyle in item[self.files_result_field]:
+            fyle["path"] = os.path.abspath(
+                os.path.join(
+                    self.store.basedir,
+                    fyle["path"]
+                )
+            )
+        return item
