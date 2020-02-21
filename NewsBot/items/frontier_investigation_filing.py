@@ -18,8 +18,7 @@ class FrontierInvestigationFiling(
 ):
     filing_name_map = scrapy.Field()
     
-    @property
-    def email_subject(self) -> str:
+    def synthesize_email_subject(self) -> str:
         filing_or_filings = pape.utilities.pluralize(
             singular_form = "new Frontier investigation filing",
             count = len(self["filing_name_map"]),
@@ -31,8 +30,7 @@ class FrontierInvestigationFiling(
             f"{self['datetime'].strftime('%A, %b. %e')}"
         )
     
-    @property
-    def html_email_body(self) -> str:
+    def synthesize_html_email_body(self) -> str:
         filing_count = len(self["filing_name_map"])
         
         filing_or_filings = pape.utilities.pluralize(
@@ -41,8 +39,8 @@ class FrontierInvestigationFiling(
         ).capitalize()
         
         it_is_or_they_are = pape.utilities.pluralize(
-            singular_form = "It is",
-            plural_form =   "They are",
+            singular_form = "The filing is",
+            plural_form =   "The filings are",
             count =         filing_count,
             include_count = False,
         )
@@ -54,21 +52,16 @@ class FrontierInvestigationFiling(
             include_count = False,
         )
         
-        print(self._filing_link_list)
-        import time
-        time.sleep(5)
-        
-        return self._email_template.safe_substitute({
-            "email_subject":        self.email_subject,
+        return self._get_email_template().safe_substitute({
+            "email_subject":        self.synthesize_email_subject(),
             "filing_or_filings":    filing_or_filings,
             "it_is_or_they_are":    it_is_or_they_are,
             "here_it_they_is_are":  here_it_they_is_are,
             "filing_date":          self["datetime"].strftime("%A, %b. %e"),
-            "filing_link_list":     self._filing_link_list,
+            "filing_link_list":     self._synthesize_filing_link_list(),
         })
     
-    @property
-    def _filing_link_list(self) -> str:
+    def _synthesize_filing_link_list(self) -> str:
         all_items = "".join([
             f"""
                 <li>

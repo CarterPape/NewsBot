@@ -18,19 +18,17 @@ class Dispatch(
 ):
     dispatched_agency = scrapy.Field()
     
-    @property
-    def email_subject(self) -> str:
+    def synthesize_email_subject(self) -> str:
         return (
             f"Call to {self['dispatched_agency']} "
             f"{self['datetime'].strftime('%A at %l:%M %p')}"
         )
     
-    @property
-    def html_email_body(self) -> str:
-        template_string: string.Template = self._email_template
+    def synthesize_html_email_body(self) -> str:
+        template_string: string.Template = self._get_email_template()
         
         return template_string.safe_substitute({
-            "email_subject":    self.email_subject,
+            "email_subject":    self.synthesize_email_subject(),
             "dispatch_time":    self["datetime"].strftime("%H:%M:%S"),
             "dispatch_date":    self["datetime"].strftime("%A, %b. %e"),
             "dispatched_agency":    self["dispatched_agency"],

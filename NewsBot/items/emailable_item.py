@@ -12,21 +12,16 @@ import os
 
 
 class EmailableItem(NewsBot.items.self_serializing_item.SelfSerializingItem):
-    email_response = scrapy.item.Field(ignore_when_serializing = True)
+    email_response      = scrapy.item.Field(ignore_when_serializing = True)
+    email_sent_datetime = scrapy.item.Field(ignore_when_serializing = True)
     
-    def __getattr__(self, name):
-        pass
-    
-    @property
-    def email_subject(self) -> str:
+    def synthesize_email_subject(self) -> str:
         raise NotImplementedError
     
-    @property
-    def html_email_body(self) -> str:
+    def synthesize_html_email_body(self) -> str:
         raise NotImplementedError
     
-    @property
-    def _email_template(self) -> string.Template:
+    def _get_email_template(self) -> string.Template:
         email_template_path = (
             os.path.abspath(
                 os.path.join(

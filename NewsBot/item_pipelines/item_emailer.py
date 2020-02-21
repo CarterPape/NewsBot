@@ -18,6 +18,7 @@ import requests
 import keyring
 import dotenv
 import pape.utilities
+import datetime
 
 
 class ItemEmailer(
@@ -47,7 +48,7 @@ class ItemEmailer(
             type(item),
             NewsBot.items.emailable_item_with_attachments.EmailableItemWithAttachments,
         ):
-            attachments = item.email_attachments
+            attachments = item.gather_email_attachments()
         else:
             attachments = None
         
@@ -59,11 +60,12 @@ class ItemEmailer(
                 data = {
                     "from":     os.getenv("EMAIL_SENDER"),
                     "to":       os.getenv("EMAIL_RECIPIENT"),
-                    "subject":  item.email_subject,
-                    "html":     item.html_email_body,
+                    "subject":  item.synthesize_email_subject(),
+                    "html":     item.synthesize_html_email_body(),
                 }
             )
         )
+        item["email_sent_datetime"] = datetime.datetime.now()
         self._logger.info(item["email_response"])
         
         return item

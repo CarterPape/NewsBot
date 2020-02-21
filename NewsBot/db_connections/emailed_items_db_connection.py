@@ -41,7 +41,7 @@ class EmailedItemsDBConnection(db_connection.DBConnection):
                 serialized_item
             )
             VALUES (
-                '{item_to_record['datetime'].replace(tzinfo = None)}',
+                '{item_to_record['email_sent_datetime'].replace(tzinfo = None)}',
                 {item_to_record['email_response'].status_code},
                 '{item_to_record.serialized()}'
             )

@@ -18,9 +18,7 @@ class EmailableItemWithAttachments(
     NewsBot.items.emailable_item.EmailableItem,
     NewsBot.items.item_with_files.ItemWithFiles,
 ):
-    
-    @property
-    def email_attachments(self) -> [(str, (str, str))]:
+    def gather_email_attachments(self) -> [(str, (str, str))]:
         return [
             ("attachment", (
                 os.path.basename(current_file["path"]),
