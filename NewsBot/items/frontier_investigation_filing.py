@@ -27,7 +27,7 @@ class FrontierInvestigationFiling(
         
         return (
             f"{filing_or_filings} published "
-            f"{self['datetime'].strftime('%A, %b. %e')}"
+            f"{self['datetime'].strftime('%A, %B %e')}"
         )
     
     def synthesize_html_email_body(self) -> str:
