@@ -24,7 +24,7 @@ import datetime
 dotenv.load_dotenv(dotenv.find_dotenv())
 
 BOT_NAME =      "NewsBot"
-_BOT_VERSION =  "0.1.0"
+_BOT_VERSION =  "0.2.0"
 
 SPIDER_MODULES =    ["NewsBot.spiders"]
 NEWSPIDER_MODULE =  "NewsBot.spiders"
