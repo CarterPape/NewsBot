@@ -12,21 +12,24 @@ import NewsBot.items.frontier_investigation_filing
 import newsbot_tasking.crawl_schedulers.uniformly_random_scheduler
 import newsbot_tasking.crawl_schedulers.crawl_scheduler
 import datetime
+import scrapy.selector
 
 
 class FrontierInvestigationSpider(
     NewsBot.spiders.self_scheduling_spider.SelfSchedulingSpider,
     NewsBot.logger.Logger,
 ):
-    # name =              __name__
+    name =              __name__
     allowed_domains =   ["utah.gov"]
     custom_settings = {
         "ITEM_PIPELINES": {
-            "NewsBot.item_pipelines.emailed_item_filter.EmailedItemFilter":                 10,
-            "NewsBot.item_pipelines.file_downloader.FileDownloader":                        100,
-            "NewsBot.item_pipelines.dispatch_datetime_cruncher.DispatchDatetimeCruncher":   200,
-            "NewsBot.item_pipelines.item_emailer.ItemEmailer":                              500,
-        }
+            "NewsBot.item_pipelines.emailed_item_filter.EmailedItemFilter":     10 ,
+            "NewsBot.item_pipelines.file_downloader.FileDownloader":            400,
+            "NewsBot.item_pipelines.datetime_cruncher.DatetimeCruncher":        500,
+            "NewsBot.item_pipelines.item_emailer.ItemEmailer":                  900,
+            "NewsBot.item_pipelines.emailed_item_recorder.EmailedItemRecorder": 990,
+        },
+        "MEDIA_ALLOW_REDIRECTS": True,
     }
     
     def __init__(self):
@@ -56,4 +59,30 @@ class FrontierInvestigationSpider(
     def parse_filing_table(self,
         response: scrapy.http.HtmlResponse
     ) -> [NewsBot.items.frontier_investigation_filing.FrontierInvestigationFiling]:
-        raise NotImplementedError
+        all_filing_rows = response.xpath(self._filing_xpath)
+        all_filings = [
+            NewsBot.items.frontier_investigation_filing.FrontierInvestigationFiling(
+                file_URLs = (
+                    one_row.xpath(
+                        self._documents_relative_xpath
+                    ).xpath(
+                        self._document_url_relative_xpath
+                    ).getall()
+                ),
+                source_date_string =    one_row.xpath(self._filing_date_relative_xpath).get(),
+                source_date_format =    "%B %d, %Y",
+                filing_name_map =       self._extract_name_map(one_row),
+            )
+            for one_row in all_filing_rows
+        ]
+        return all_filings
+    
+    def _extract_name_map(self,
+        filing_row: scrapy.selector.Selector,
+    ):
+        return {
+            each_doc.xpath(self._document_description_relative_xpath).get():
+            each_doc.xpath(self._document_url_relative_xpath).get()
+            for each_doc
+            in filing_row.xpath(self._documents_relative_xpath)
+        }

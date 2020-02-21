@@ -14,6 +14,9 @@ import os
 class EmailableItem(NewsBot.items.self_serializing_item.SelfSerializingItem):
     email_response = scrapy.item.Field(ignore_when_serializing = True)
     
+    def __getattr__(self, name):
+        pass
+    
     @property
     def email_subject(self) -> str:
         raise NotImplementedError

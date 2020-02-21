@@ -6,17 +6,15 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import scrapy
-import NewsBot.items.emailable_item
+import NewsBot.items.emailable_item_with_attachments
 import NewsBot.items.dated_item
-import NewsBot.items.item_with_files
 import string
 import pape.utilities
 
 
 class FrontierInvestigationFiling(
-    NewsBot.items.emailable_item.EmailableItem,
+    NewsBot.items.emailable_item_with_attachments.EmailableItemWithAttachments,
     NewsBot.items.dated_item.DatedItem,
-    NewsBot.items.item_with_files.ItemWithFiles,
 ):
     filing_name_map = scrapy.Field()
     
@@ -29,7 +27,7 @@ class FrontierInvestigationFiling(
         filing_or_filings = filing_or_filings[0].upper() + filing_or_filings[1:]
         
         return (
-            f"{self._filing_or_filings} filed "
+            f"{filing_or_filings} filed "
             f"{self['datetime'].strftime('%A, %b. %e')}"
         )
     
@@ -56,6 +54,10 @@ class FrontierInvestigationFiling(
             include_count = False,
         )
         
+        print(self._filing_link_list)
+        import time
+        time.sleep(5)
+        
         return self._email_template.safe_substitute({
             "email_subject":        self.email_subject,
             "filing_or_filings":    filing_or_filings,
@@ -67,7 +69,7 @@ class FrontierInvestigationFiling(
     
     @property
     def _filing_link_list(self) -> str:
-        all_items = [
+        all_items = "".join([
             f"""
                 <li>
                     <a href="{each_link}">
@@ -77,7 +79,7 @@ class FrontierInvestigationFiling(
             """
             for each_name, each_link
             in self['filing_name_map'].items()
-        ]
+        ])
         
         return f"""
             <ul>

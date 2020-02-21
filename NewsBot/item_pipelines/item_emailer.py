@@ -6,6 +6,7 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import logging
+import NewsBot.items.emailable_item
 import NewsBot.items.emailable_item_with_attachments
 import scrapy
 import scrapy.settings
@@ -23,7 +24,6 @@ class ItemEmailer(
     NewsBot.item_pipelines.item_pipeline.ItemPipeline,
     NewsBot.logger.Logger,
 ):
-    
     @classmethod
     def from_crawler(cls, crawler):
         return cls(
@@ -35,9 +35,6 @@ class ItemEmailer(
     ):
         self._settings =    settings
         
-        self._current_item:     scrapy.Item
-        self._current_spider:   scrapy.spiders.Spider
-        
         dotenv.load_dotenv(dotenv.find_dotenv())
         
     def process_item(
@@ -46,14 +43,11 @@ class ItemEmailer(
         spider: scrapy.spiders.Spider
     ) -> scrapy.Item:
         
-        self._current_item =    item
-        self._current_spider =  spider
-        
         if issubclass(
-            type(self._current_item),
+            type(item),
             NewsBot.items.emailable_item_with_attachments.EmailableItemWithAttachments,
         ):
-            attachments = self._current_item.email_attachments
+            attachments = item.email_attachments
         else:
             attachments = None
         
@@ -65,8 +59,8 @@ class ItemEmailer(
                 data = {
                     "from":     os.getenv("EMAIL_SENDER"),
                     "to":       os.getenv("EMAIL_RECIPIENT"),
-                    "subject":  self._current_item.email_subject,
-                    "html":     self._current_item.html_email_body,
+                    "subject":  item.email_subject,
+                    "html":     item.html_email_body,
                 }
             )
         )

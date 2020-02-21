@@ -6,17 +6,15 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import scrapy
-import NewsBot.items.emailable_item
+import NewsBot.items.emailable_item_with_attachments
 import NewsBot.items.dated_item
-import NewsBot.items.item_with_files
 import NewsBot.items.self_serializing_item
 import string
 
 
 class Dispatch(
-    NewsBot.items.emailable_item.EmailableItem,
+    NewsBot.items.emailable_item_with_attachments.EmailableItemWithAttachments,
     NewsBot.items.dated_item.DatedItem,
-    NewsBot.items.item_with_files.ItemWithFiles,
 ):
     dispatched_agency = scrapy.Field()
     

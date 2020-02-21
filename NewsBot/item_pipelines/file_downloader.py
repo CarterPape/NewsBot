@@ -30,6 +30,7 @@ class FileDownloader(
         
         parsed_url =    urllib.parse.urlparse(request.url)
         return os.path.join(
+            self.store.basedir,
             parsed_url.netloc.lstrip("/"),
             parsed_url.path.lstrip("/"),
         )
