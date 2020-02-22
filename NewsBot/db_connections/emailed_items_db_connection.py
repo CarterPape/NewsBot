@@ -25,7 +25,7 @@ class EmailedItemsDBConnection(db_connection.DBConnection):
                 `email_no`          INTEGER     NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 `send_datetime`     DATETIME    NOT NULL,
                 `status_code`       SMALLINT    NOT NULL,
-                `serialized_item`   JSON        NOT NULL
+                `serialized_item`   MEDIUMTEXT  NOT NULL
             )
         """
     
