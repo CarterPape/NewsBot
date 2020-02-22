@@ -36,7 +36,7 @@ class ItemEmailer(
         self._settings =    settings
         
         dotenv.load_dotenv(dotenv.find_dotenv())
-        
+    
     def process_item(
         self,
         item:   NewsBot.items.emailable_item.EmailableItem,

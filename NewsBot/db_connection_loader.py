@@ -75,7 +75,7 @@ class DBConnectionLoader(object):
         
         for db_connection_class in self.db_connection_classes(in_module = module):
             self._db_connections.append(db_connection_class)
-
+    
     def _load_all_db_connections(self):
         for name in self._db_connection_modules:
             try:
@@ -91,12 +91,12 @@ class DBConnectionLoader(object):
                     warnings.warn(msg, RuntimeWarning)
                 else:
                     raise
-
+    
     @classmethod
     def from_settings(cls, *,
         settings: scrapy.settings.Settings,
     ):
         return cls(settings = settings)
-
+    
     def list(self):
         return self._db_connections

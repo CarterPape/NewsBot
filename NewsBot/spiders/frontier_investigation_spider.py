@@ -55,7 +55,7 @@ class FrontierInvestigationSpider(
                 callback =  self.parse_filing_table,
             )
         ]
-
+    
     def parse_filing_table(self,
         response: scrapy.http.HtmlResponse
     ) -> [NewsBot.items.frontier_investigation_filing.FrontierInvestigationFiling]:

@@ -55,7 +55,7 @@ class DispatchCallLogSpider(NewsBot.spiders.self_scheduling_spider.SelfSchedulin
                 callback = self.parse_call_log,
             )
         ]
-
+    
     def parse_call_log(self,
         response: scrapy.http.HtmlResponse
     ) -> [NewsBot.items.dispatch.Dispatch]:
