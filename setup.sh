@@ -82,6 +82,7 @@ sudo rm -rf /usr/local/src/NewsBot 2>/dev/null
 sudo ln -s $project_path /usr/local/src/NewsBot && \
     printf "Project linked in /usr/local/src/.\n"
     
+sudo mkdir -p /usr/local/lib/systemd/system/
 sudo rm -rf /usr/local/lib/systemd/system/newsbot.service 2>/dev/null
 sudo ln -s "$project_path/newsbot.service" /usr/local/lib/systemd/system/ && \
     printf "Service file linked in /usr/local/lib/systemd/system/.\n"
