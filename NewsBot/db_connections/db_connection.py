@@ -10,7 +10,6 @@ import mysql.connector.connection
 import mysql.connector.cursor
 import dotenv
 import os
-import time
 
 class DBConnection(mysql.connector.MySQLConnection):
     def __init__(self, *args, **kwargs):

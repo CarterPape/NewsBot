@@ -9,7 +9,6 @@ import scrapy.crawler
 import scrapy.utils.project
 import newsbot_tasking.crawl_job
 import datetime
-import time
 
 
 class NewsBotJobRegistry(object):

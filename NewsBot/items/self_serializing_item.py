@@ -10,31 +10,33 @@ import json
 
 
 class SelfSerializingItem(scrapy.Item):
-    def serialized(self, *,
-        skip_keys: bool = True,
-    ) -> dict:
+    _serialized = scrapy.Field(ignore_when_serializing = True)
+    
+    def serialized(self) -> dict:
         
-        simple_self = dict()
-        
-        for field_key, field_properties in self.fields.items():
-            if (
-                "ignore_when_serializing" in field_properties
-            ) and (
-                field_properties["ignore_when_serializing"]
-            ):
-                continue
+        if "_serialized" in self:
+            pass
+        else:
+            simple_self = dict()
             
-            else:
-                try:
-                    if hasattr(field_properties, "serializer"):
-                        simple_self[field_key] = field_properties["serializer"](self[field_key])
-                    else:
-                        simple_self[field_key] = self[field_key]
+            for field_key, field_properties in self.fields.items():
+                if (
+                    "ignore_when_serializing" in field_properties
+                ) and (
+                    field_properties["ignore_when_serializing"]
+                ):
+                    continue
                 
-                except KeyError:
-                    if skip_keys:
+                else:
+                    try:
+                        if hasattr(field_properties, "serializer"):
+                            simple_self[field_key] = field_properties["serializer"](self[field_key])
+                        else:
+                            simple_self[field_key] = self[field_key]
+                    
+                    except KeyError:
                         continue
-                    else:
-                        raise
+            
+            self["_serialized"] = json.dumps(simple_self, sort_keys = True)
         
-        return json.dumps(simple_self, sort_keys = True)
+        return self["_serialized"]

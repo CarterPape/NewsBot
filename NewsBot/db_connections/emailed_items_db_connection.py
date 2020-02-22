@@ -10,7 +10,6 @@ import NewsBot.items.emailable_item as emailable_item
 import datetime
 import pytz
 import typing
-import time
 
 
 class EmailedItemsDBConnection(db_connection.DBConnection):

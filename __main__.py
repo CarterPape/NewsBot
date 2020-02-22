@@ -15,7 +15,6 @@ import os
 import scrapy.spiderloader
 import dotenv
 import logging
-import time
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
