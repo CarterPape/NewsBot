@@ -5,42 +5,32 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-# Define here the models for your scraped items
-#
-# See documentation in:
-# https://docs.scrapy.org/en/latest/topics/items.html
-
 import scrapy
-import NewsBot.items.emailable_item
+import NewsBot.items.emailable_item_with_attachments
+import NewsBot.items.dated_item
+import NewsBot.items.self_serializing_item
 import string
 
 
-class Dispatch(NewsBot.items.emailable_item.EmailableItem):
-    audio_URL =         scrapy.Field()
-    audio_file_path =   scrapy.Field()
+class Dispatch(
+    NewsBot.items.emailable_item_with_attachments.EmailableItemWithAttachments,
+    NewsBot.items.dated_item.DatedItem,
+):
     dispatched_agency = scrapy.Field()
-    dispatch_date_string =  scrapy.Field()
-    dispatch_datetime = scrapy.Field()
     
-    @property
-    def email_subject(self) -> str:
+    def synthesize_email_subject(self) -> str:
         return (
-            f"New {self['dispatched_agency']} call "
-            f"{self['dispatch_datetime'].strftime('%A at %l:%M %p')}"
+            f"Call to {self['dispatched_agency']} "
+            f"{self['datetime'].strftime('%A at %l:%M %p')}"
         )
     
-    @property
-    def html_email_body(self) -> str:
-        template_string: string.Template = self._email_template
+    def synthesize_html_email_body(self) -> str:
+        template_string: string.Template = self._get_email_template()
         
         return template_string.safe_substitute({
-            "email_subject":    self.email_subject,
-            "dispatch_time":    self["dispatch_datetime"].strftime("%H:%M:%S"),
-            "dispatch_date":    self["dispatch_datetime"].strftime("%A, %b. %e"),
+            "email_subject":    self.synthesize_email_subject(),
+            "dispatch_time":    self["datetime"].strftime("%H:%M:%S"),
+            "dispatch_date":    self["datetime"].strftime("%A, %b. %e"),
             "dispatched_agency":    self["dispatched_agency"],
-            "dispatch_audio_url":   self["audio_URL"],
+            "dispatch_audio_url":   self["files"][0]["url"],
         })
-    
-    @property
-    def _attachment_paths(self) -> [str]:
-        return [self["audio_file_path"]]

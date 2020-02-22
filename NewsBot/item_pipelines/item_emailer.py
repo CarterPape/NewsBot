@@ -6,8 +6,8 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import logging
-import NewsBot.items
-import NewsBot.spiders
+import NewsBot.items.emailable_item
+import NewsBot.items.emailable_item_with_attachments
 import scrapy
 import scrapy.settings
 import os
@@ -18,10 +18,13 @@ import requests
 import keyring
 import dotenv
 import pape.utilities
+import datetime
 
 
-class ItemEmailer(object):
-    
+class ItemEmailer(
+    NewsBot.item_pipelines.item_pipeline.ItemPipeline,
+    NewsBot.logger.Logger,
+):
     @classmethod
     def from_crawler(cls, crawler):
         return cls(
@@ -32,10 +35,6 @@ class ItemEmailer(object):
         settings: scrapy.settings.Settings = None
     ):
         self._settings =    settings
-        self._logger =      logging.getLogger(__name__)
-        
-        self._current_item:     scrapy.Item
-        self._current_spider:   scrapy.spiders.Spider
         
         dotenv.load_dotenv(dotenv.find_dotenv())
         
@@ -45,20 +44,28 @@ class ItemEmailer(object):
         spider: scrapy.spiders.Spider
     ) -> scrapy.Item:
         
-        self._current_item =    item
-        self._current_spider =  spider
+        if issubclass(
+            type(item),
+            NewsBot.items.emailable_item_with_attachments.EmailableItemWithAttachments,
+        ):
+            attachments = item.gather_email_attachments()
+        else:
+            attachments = None
         
-        self._logger.info(
+        item["email_response"] = (
             requests.post(
                 f"https://api.mailgun.net/v3/{os.getenv('EMAIL_SENDER_DOMAIN')}/messages",
                 auth = ("api",  os.getenv("MAILGUN_API_KEY")),
-                files =         self._current_item.email_attachments,
+                files =         attachments,
                 data = {
                     "from":     os.getenv("EMAIL_SENDER"),
                     "to":       os.getenv("EMAIL_RECIPIENT"),
-                    "subject":  self._current_item.email_subject,
-                    "html":     self._current_item.html_email_body,
+                    "subject":  item.synthesize_email_subject(),
+                    "html":     item.synthesize_html_email_body(),
                 }
             )
         )
+        item["email_sent_datetime"] = datetime.datetime.now()
+        self._logger.info(item["email_response"])
+        
         return item

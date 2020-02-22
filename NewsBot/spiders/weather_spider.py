@@ -5,11 +5,4 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-scrapy
-pape
-twisted
-python-magic
-python-dotenv
-typing_extensions
-pytz
-mysql-connector
+url = "https://developers.synopticdata.com/mesonet/explorer/"

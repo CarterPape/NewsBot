@@ -6,7 +6,6 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import datetime
-import NewsBot.settings
 import newsbot_tasking.crawl_schedulers.crawl_scheduler
 import random
 

@@ -5,40 +5,23 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import typing
 import string
-import scrapy
+import scrapy.item
+import NewsBot.items.self_serializing_item
 import os
-import pape
 
 
-class EmailableItem(scrapy.Item):
-    @property
-    def email_subject(self) -> str:
+class EmailableItem(NewsBot.items.self_serializing_item.SelfSerializingItem):
+    email_response      = scrapy.item.Field(ignore_when_serializing = True)
+    email_sent_datetime = scrapy.item.Field(ignore_when_serializing = True)
+    
+    def synthesize_email_subject(self) -> str:
         raise NotImplementedError
     
-    @property
-    def html_email_body(self) -> str:
+    def synthesize_html_email_body(self) -> str:
         raise NotImplementedError
     
-    @property
-    def _attachment_paths(self) -> typing.Optional[typing.List[str]]:
-        return None
-    
-    @property
-    def email_attachments(self) -> [(str, (str, str))]:
-        return [
-            ("attachment", (
-                os.path.basename(current_path),
-                open(current_path, "rb").read()
-            ))
-            for current_path
-            in self._attachment_paths or []
-        ]
-    
-    @property
-    def _email_template(self) -> string.Template:
-        
+    def _get_email_template(self) -> string.Template:
         email_template_path = (
             os.path.abspath(
                 os.path.join(
