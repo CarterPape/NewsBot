@@ -56,7 +56,7 @@ class EmailedItemsDBConnection(db_connection.DBConnection):
             SELECT (
                 send_datetime
             ) FROM {self.TABLE_NAME}
-            WHERE 
+            WHERE
                 serialized_item like '{item_to_query.serialized()}'
                 AND status_code = 200
         """)
