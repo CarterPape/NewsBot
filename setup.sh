@@ -14,30 +14,31 @@ pip install -r "$project_path/requirements.txt"
 if command -v apt-get 2>/dev/null; then
     sudo apt update -y
     sudo apt-get install -y libmagic-dev
-    
     sudo apt-get install -y mysql-server
 elif command -v brew 2>/dev/null; then
     brew install libmagic
-    brew install mariadb
+    brew install mysql
 else 
-    printf "This project requires libmagic and MariaDB (or MySQL). "
+    printf "This project requires libmagic and MySQL. "
     printf "Install them or ensure they are already installed, then hit [Enter] to continue. "
     read
 fi
 
-printf "Come up with a clever password for 'newsbot'@'localhost' (the MariaDB user for NewsBot) "
+printf "Come up with a clever password for 'newsbot'@'localhost' (the MySQL user for NewsBot) "
 printf "or enter the existing password: "
 stty -echo
-read $mariadb_password
+read $mysql_password
 stty echo
 
 sudo mysql -u root << EOF
-CREATE USER 'newsbot'@'localhost' IDENTIFIED BY '$mariadb_password';
+CREATE USER 'newsbot'@'localhost' IDENTIFIED BY '$mysql_password';
 CREATE DATABASE newsbot;
 GRANT ALL PRIVILEGES ON newsbot.* TO 'newsbot'@'localhost';
 EOF
 
-printf "Now that the new user and database have been created, do you want to secure the root user? \n"
+printf "Now that the new user and database have been created, "
+printf "do you want to secure the root user? \n"
+
 select answer in "Yes" "No"; do
     case $answer in
         Yes ) sudo mysql_secure_installation; break;;
@@ -81,7 +82,7 @@ printf "\n"
 sudo rm -rf /usr/local/src/NewsBot 2>/dev/null
 sudo ln -s $project_path /usr/local/src/NewsBot && \
     printf "Project linked in /usr/local/src/.\n"
-    
+
 sudo mkdir -p /usr/local/lib/systemd/system/
 sudo rm -rf /usr/local/lib/systemd/system/newsbot.service 2>/dev/null
 sudo ln -s "$project_path/newsbot.service" /usr/local/lib/systemd/system/ && \

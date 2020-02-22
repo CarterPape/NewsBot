@@ -13,7 +13,6 @@ class SelfSerializingItem(scrapy.Item):
     _serialized = scrapy.Field(ignore_when_serializing = True)
     
     def serialized(self) -> dict:
-        
         if "_serialized" in self:
             pass
         else:
