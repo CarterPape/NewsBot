@@ -28,7 +28,7 @@ fi
 printf "Come up with a clever password for 'newsbot'@'localhost' (the MariaDB user for NewsBot) "
 printf "or enter the existing password: "
 stty -echo
-read -p $mariadb_password
+read $mariadb_password
 stty echo
 
 sudo mysql -u root << EOF
