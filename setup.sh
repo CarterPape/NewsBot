@@ -15,7 +15,7 @@ if command -v apt-get 2>/dev/null; then
     sudo apt update -y
     sudo apt-get install -y libmagic-dev
     
-    sudo apt-get install -y mariadb-server
+    sudo apt-get install -y mysql-server
 elif command -v brew 2>/dev/null; then
     brew install libmagic
     brew install mariadb
@@ -37,7 +37,7 @@ CREATE DATABASE newsbot;
 GRANT ALL PRIVILEGES ON newsbot.* TO 'newsbot'@'localhost';
 EOF
 
-printf "Now that the new user and database have been created, do you want to secure the root user? "
+printf "Now that the new user and database have been created, do you want to secure the root user? \n"
 select answer in "Yes" "No"; do
     case $answer in
         Yes ) sudo mysql_secure_installation; break;;
