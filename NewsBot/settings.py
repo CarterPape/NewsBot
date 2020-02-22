@@ -17,7 +17,6 @@ import dotenv
 import scrapy.utils.conf
 import os
 import os.path
-import keyring
 import NewsBot.log_formatter
 import datetime
 

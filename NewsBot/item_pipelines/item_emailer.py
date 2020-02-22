@@ -15,7 +15,6 @@ import string
 import os.path
 import magic
 import requests
-import keyring
 import dotenv
 import pape.utilities
 import datetime
