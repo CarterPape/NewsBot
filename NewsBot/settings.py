@@ -19,6 +19,7 @@ import os
 import os.path
 import NewsBot.log_formatter
 import datetime
+import NewsBot.items.item_with_files
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
@@ -42,11 +43,6 @@ COOKIES_ENABLED = True
 
 # Disable Telnet Console (enabled by default)
 TELNETCONSOLE_ENABLED = True
-
-if os.getenv("ENVIRONMENT") == "development":
-    LOG_LEVEL = "INFO"
-else:
-    LOG_LEVEL = "WARNING"
 
 _PROJECT_DIRECTORY = (
     os.path.abspath(
@@ -82,6 +78,11 @@ FILES_URLS_FIELD = NewsBot.items.item_with_files.ItemWithFiles.get_files_urls_fi
 FILES_RESULT_FIELD = NewsBot.items.item_with_files.ItemWithFiles.get_files_result_field()
 
 
+if os.getenv("ENVIRONMENT") == "development":
+    LOG_LEVEL = "INFO"
+else:
+    LOG_LEVEL = "WARNING"
+
 _LOG_DIRECTORY = (
     os.path.abspath(
         os.path.join(
@@ -102,6 +103,9 @@ LOG_FILE = (
 )
 
 LOG_FORMATTER = "NewsBot.log_formatter.NewsBotLogFormatter"
+
+
+_PRINT_INSTEAD_OF_EMAIL = (os.getenv("ENVIRONMENT") == "development")
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
