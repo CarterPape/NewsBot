@@ -66,7 +66,7 @@ class EmailedItemsDBConnection(db_connection.DBConnection):
         else:
             send_datetime = db_cursor.fetchone()[0]
             send_datetime = send_datetime.replace(
-                tzinfo = pytz.timezone('America/Denver')
+                tzinfo = pytz.timezone("America/Denver")
             )
             db_cursor.close()
             return send_datetime

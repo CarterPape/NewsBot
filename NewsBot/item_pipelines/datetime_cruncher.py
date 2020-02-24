@@ -19,7 +19,7 @@ import pytz
 class DatetimeCruncher(item_pipeline.ItemPipeline):
     def __init__(self):
         if not hasattr(self, "source_timezone"):
-            self._source_timezone = pytz.timezone('America/Denver')
+            self._source_timezone = pytz.timezone("America/Denver")
     
     def process_item(
         self,
