@@ -9,7 +9,7 @@ import scrapy
 import scrapy.http
 import NewsBot.spiders.self_scheduling_spider
 import NewsBot.items.dispatch
-import newsbot_tasking.crawl_schedulers.uniformly_random_scheduler
+import newsbot_tasking.crawl_schedulers.uniformly_random_scheduler as uniformly_random_scheduler
 import newsbot_tasking.crawl_schedulers.crawl_scheduler
 import datetime
 
@@ -32,15 +32,18 @@ class DispatchCallLogSpider(NewsBot.spiders.self_scheduling_spider.SelfSchedulin
         self._dispatch_audio_relative_xpath =    "./td[1]/audio/@src"
         self._dispatched_agency_relative_xpath = "./td[2]/text()"
         self._dispatch_time_relative_xpath =     "./td[4]/text()"
-        
-        self._crawl_scheduler = (
-            newsbot_tasking.crawl_schedulers.uniformly_random_scheduler.UniformlyRandomScheduler(
+    
+    @classmethod
+    def make_a_scheduler(klass, *, suggested_scheduler = None):
+        if suggested_scheduler == None:
+            new_scheduler = uniformly_random_scheduler.UniformlyRandomScheduler(
                 maximum_interval =  datetime.timedelta(minutes = 6),
                 minimum_interval =  datetime.timedelta(minutes = 4),
             )
-        )
+        else:
+            new_scheduler = suggested_scheduler
         
-        super().__init__()
+        return super().make_a_scheduler(suggested_scheduler = new_scheduler)
     
     def start_requests(self) -> [scrapy.http.Request]:
         return [

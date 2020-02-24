@@ -23,14 +23,15 @@ class SelfSchedulingSpider(
         newsbot_tasking.crawl_schedulers.uniformly_random_scheduler.UniformlyRandomScheduler(
             minimum_interval = datetime.timedelta(seconds = 5),
             maximum_interval = datetime.timedelta(seconds = 10),
+            first_call_is_immediate =   True,
         )
     )
     
-    def __init__(self):
-        dotenv.load_dotenv(dotenv.find_dotenv())
-        if os.getenv("ENVIRONMENT") == "development":
-            self._crawl_scheduler = self._DEBUG_SCHEDULER
-    
-    @property
-    def scheduler(self) -> newsbot_tasking.crawl_schedulers.crawl_scheduler.CrawlScheduler:
-        return self._crawl_scheduler
+    @classmethod
+    def make_a_scheduler(klass, *, suggested_scheduler = None):
+        if os.getenv("ENVIRONMENT") == "development" or suggested_scheduler == None:
+            new_scheduler = klass._DEBUG_SCHEDULER
+        else:
+            new_scheduler = suggested_scheduler
+        
+        return new_scheduler

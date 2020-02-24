@@ -31,4 +31,4 @@ class NewsBotJobRegistry(object):
     
     def schedule_all_jobs(self):
         for job in self._jobs:
-            job.schedule_crawling()
+            job.schedule_a_crawl()
