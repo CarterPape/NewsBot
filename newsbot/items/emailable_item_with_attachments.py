@@ -8,10 +8,10 @@
 import typing
 import string
 import scrapy
-import os
+import os.path
 import pape
-import NewsBot.items.emailable_item as emailable_item
-import NewsBot.items.item_with_files as item_with_files
+import newsbot.items.emailable_item as emailable_item
+import newsbot.items.item_with_files as item_with_files
 
 
 class EmailableItemWithAttachments(

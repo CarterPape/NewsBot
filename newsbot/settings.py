@@ -25,10 +25,18 @@ dotenv.load_dotenv(dotenv.find_dotenv())
 BOT_NAME =      "NewsBot"
 _BOT_VERSION =  "0.2.0"
 
-SPIDER_MODULES =    ["NewsBot.spiders", "private.spiders"]
-NEWSPIDER_MODULE =  "private.spiders"
+_TOP_LEVEL_MODULES   = ["private", "newsbot"]
 
-DB_CONNECTION_MODULES = ["NewsBot.db_connections", "private.db_connections"]
+SPIDER_MODULES =    [
+    top_level_module + ".spiders"
+    for top_level_module in _TOP_LEVEL_MODULES
+]
+NEWSPIDER_MODULE =  SPIDER_MODULES[0]
+
+_DB_CONNECTION_MODULES =    [
+    top_level_module + ".db_connections"
+    for top_level_module in _TOP_LEVEL_MODULES
+]
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -101,7 +109,7 @@ LOG_FILE = (
     )
 )
 
-LOG_FORMATTER = "NewsBot.log_formatter.NewsBotLogFormatter"
+LOG_FORMATTER = "newsbot.log_formatter.NewsBotLogFormatter"
 
 
 _PRINT_INSTEAD_OF_EMAIL = (os.getenv("ENVIRONMENT") == "development")

@@ -6,7 +6,7 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import scrapy
-import NewsBot.items.emailable_item as emailable_item
+import newsbot.items.emailable_item as emailable_item
 import newsbot.item_pipelines.item_pipeline as item_pipeline
 import newsbot.db_connections.emailed_items_db_connection as emailed_items_db_connection
 

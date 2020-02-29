@@ -24,14 +24,27 @@ class FrontierInvestigationSpider(
     allowed_domains =   ["utah.gov"]
     custom_settings = {
         "ITEM_PIPELINES": {
-            "NewsBot.item_pipelines.emailed_item_filter.EmailedItemFilter":     10 ,
-            "NewsBot.item_pipelines.file_downloader.FileDownloader":            400,
-            "NewsBot.item_pipelines.datetime_cruncher.DatetimeCruncher":        500,
-            "NewsBot.item_pipelines.item_emailer.ItemEmailer":                  900,
-            "NewsBot.item_pipelines.emailed_item_recorder.EmailedItemRecorder": 990,
+            "newsbot.item_pipelines.emailed_item_filter.EmailedItemFilter":     10 ,
+            "newsbot.item_pipelines.file_downloader.FileDownloader":            400,
+            "newsbot.item_pipelines.datetime_cruncher.DatetimeCruncher":        500,
+            "newsbot.item_pipelines.item_emailer.ItemEmailer":                  900,
+            "newsbot.item_pipelines.emailed_item_recorder.EmailedItemRecorder": 990,
         },
         "MEDIA_ALLOW_REDIRECTS": True,
     }
+    
+    @classmethod
+    def make_a_scheduler(klass, *, suggested_scheduler = None):
+        new_scheduler = (
+            uniformly_random_scheduler.UniformlyRandomScheduler(
+                maximum_interval =  datetime.timedelta(minutes = 25),
+                minimum_interval =  datetime.timedelta(minutes = 15),
+            )
+        )
+        
+        return super().make_a_scheduler(
+            suggested_scheduler = suggested_scheduler or new_scheduler
+        )
     
     def __init__(self):
         self._filing_xpath =                    "//main//table//tr[position()>1]"
@@ -39,13 +52,6 @@ class FrontierInvestigationSpider(
         self._documents_relative_xpath =        "./td[2]/a"
         self._document_description_relative_xpath =    "./text()"
         self._document_url_relative_xpath =     "./@href"
-        
-        self._crawl_scheduler = (
-            uniformly_random_scheduler.UniformlyRandomScheduler(
-                maximum_interval =  datetime.timedelta(minutes = 25),
-                minimum_interval =  datetime.timedelta(minutes = 15),
-            )
-        )
         
         super().__init__()
     

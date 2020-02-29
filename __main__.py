@@ -17,7 +17,7 @@ import newsbot.db_connection_loader as db_connection_loader
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
-os.environ["SCRAPY_SETTINGS_MODULE"] = "NewsBot.settings"
+os.environ["SCRAPY_SETTINGS_MODULE"] = "newsbot.settings"
 project_settings = scrapy.utils.project.get_project_settings()
 
 scrapy.utils.log.configure_logging(settings = project_settings)
