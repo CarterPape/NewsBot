@@ -30,8 +30,8 @@ class CrawlJob(logger.Logger):
         self._scheduler: crawl_scheduler.CrawlScheduler = spider_class.make_a_scheduler()
     
     def crawl_then_repeat_later(self):
-        self._runner.crawl(self._crawler)
-        self.schedule_a_crawl()
+        deferred = self._runner.crawl(self._crawler)
+        deferred.addBoth(self.schedule_a_crawl)
     
     def schedule_a_crawl(self):
         twisted.internet.reactor.callLater(
