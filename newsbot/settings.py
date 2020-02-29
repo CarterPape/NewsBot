@@ -25,10 +25,10 @@ dotenv.load_dotenv(dotenv.find_dotenv())
 BOT_NAME =      "NewsBot"
 _BOT_VERSION =  "0.2.0"
 
-SPIDER_MODULES =    ["NewsBot.spiders"]
-NEWSPIDER_MODULE =  "NewsBot.spiders"
+SPIDER_MODULES =    ["NewsBot.spiders", "private.spiders"]
+NEWSPIDER_MODULE =  "private.spiders"
 
-DB_CONNECTION_MODULES = ["NewsBot.db_connections"]
+DB_CONNECTION_MODULES = ["NewsBot.db_connections", "private.db_connections"]
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
