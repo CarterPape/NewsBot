@@ -7,7 +7,7 @@
 
 import scrapy.crawler
 import scrapy.utils.project
-import newsbot_tasking.crawl_job
+import newsbot.tasking.crawl_job as crawl_job
 import datetime
 
 
@@ -21,8 +21,8 @@ class NewsBotJobRegistry(object):
             )
         )
         
-        self._jobs: [newsbot_tasking.crawl_job.CrawlJob] = [
-            newsbot_tasking.crawl_job.CrawlJob(
+        self._jobs: [crawl_job.CrawlJob] = [
+            crawl_job.CrawlJob(
                 from_runner =       self._runner,
                 spider_class =      each_spider_class,
             )

@@ -7,31 +7,38 @@
 
 import newsbot.db_connections.db_connection as db_connection
 import newsbot.items.emailable_item as emailable_item
+import newsbot.items.web_element as web_element
 import datetime
 import pytz
 import typing
+import difflib
 
 
-class EmailedItemsDBConnection(db_connection.DBConnection):
-    TABLE_NAME =  "sent_emails"
+class WebElementHistoryDBConnection(db_connection.DBConnection):
+    TABLE_NAME =  "web_element_history"
     
     def __init__(self):
         super().__init__()
+        self._current_web_element: web_element.WebElement
     
     @property
     def table_definition(self):
         return f"""
             CREATE TABLE `{self.TABLE_NAME}` (
-                `email_no`          INTEGER     NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                `send_datetime`     DATETIME    NOT NULL,
-                `status_code`       SMALLINT    NOT NULL,
-                `serialized_item`   MEDIUMTEXT  NOT NULL
+                `web_element_instance`  INTEGER     NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                `url`                   TEXT        NOT NULL,
+                `instance_content`      MEDIUMTEXT  NOT NULL,
+                `first_appearance`      DATETIME    NOT NULL,
+                `latest_appearance`     DATETIME    NOT NULL,
+                `instance_is_current`   BOOLEAN     NOT NULL
             )
         """
     
-    def record_emailed_item(self,
-        item_to_record: emailable_item.EmailableItem
+    def record_web_element(self,
+        item_to_record: web_element.WebElement
     ):
+        raise NotImplementedError
+        
         db_cursor = self.cursor()
         db_cursor.execute(f"""
             INSERT INTO `{self.TABLE_NAME}` (
@@ -48,9 +55,9 @@ class EmailedItemsDBConnection(db_connection.DBConnection):
         self.commit()
         db_cursor.close()
     
-    def datetime_item_transmitted(self,
-        item_to_query: emailable_item.EmailableItem
-    ) -> typing.Union[datetime.datetime, None]:
+    def current_web_element_is_new(self) -> bool:
+        raise NotImplementedError
+        
         db_cursor = self.cursor(buffered = True)
         db_cursor.execute(f"""
             SELECT (
