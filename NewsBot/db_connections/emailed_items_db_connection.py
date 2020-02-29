@@ -5,11 +5,11 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import newsbot.db_connections.db_connection as db_connection
-import newsbot.items.emailable_item as emailable_item
 import datetime
 import pytz
 import typing
+import newsbot.db_connections.db_connection as db_connection
+import newsbot.items.emailable_item as emailable_item
 
 
 class EmailedItemsDBConnection(db_connection.DBConnection):

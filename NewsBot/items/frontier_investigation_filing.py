@@ -6,15 +6,15 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import scrapy
-import NewsBot.items.emailable_item_with_attachments
-import NewsBot.items.dated_item
+import newsbot.items.emailable_item_with_attachments as emailable_item_with_attachments
+import newsbot.items.dated_item as dated_item
 import string
 import pape.utilities
 
 
 class FrontierInvestigationFiling(
-    NewsBot.items.emailable_item_with_attachments.EmailableItemWithAttachments,
-    NewsBot.items.dated_item.DatedItem,
+    emailable_item_with_attachments.EmailableItemWithAttachments,
+    dated_item.DatedItem,
 ):
     filing_name_map = scrapy.Field()
     

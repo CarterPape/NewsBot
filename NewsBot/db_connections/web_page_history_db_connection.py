@@ -5,13 +5,13 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import newsbot.db_connections.db_connection as db_connection
-import newsbot.items.emailable_item as emailable_item
-import newsbot.items.web_element as web_element
 import datetime
 import pytz
 import typing
 import difflib
+import newsbot.db_connections.db_connection as db_connection
+import newsbot.items.emailable_item as emailable_item
+import newsbot.items.web_element as web_element
 
 
 class WebElementHistoryDBConnection(db_connection.DBConnection):

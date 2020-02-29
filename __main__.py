@@ -5,9 +5,6 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import newsbot_tasking.job_registry
-import NewsBot.db_connection_loader
-import NewsBot.spiders.self_scheduling_spider
 import twisted.internet.reactor
 import scrapy.utils.log
 import scrapy.utils.project
@@ -15,6 +12,8 @@ import os
 import scrapy.spiderloader
 import dotenv
 import logging
+import newsbot.tasking.job_registry as job_registry
+import newsbot.db_connection_loader as db_connection_loader
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
@@ -26,7 +25,7 @@ sterr_stream_handler = logging.StreamHandler()
 sterr_stream_handler.setLevel("WARNING")
 logging.getLogger().addHandler(sterr_stream_handler)
 
-db_connection_loader = NewsBot.db_connection_loader.DBConnectionLoader(settings = project_settings)
+db_connection_loader = db_connection_loader.DBConnectionLoader(settings = project_settings)
 db_connection_list = [
     db_connection_class()
     for db_connection_class in db_connection_loader.list()
@@ -45,7 +44,7 @@ spider_classes = [
     for spider_name in spider_loader.list()
 ]
 
-registry = newsbot_tasking.job_registry.NewsBotJobRegistry(
+registry = job_registry.NewsBotJobRegistry(
     from_spider_classes = spider_classes,
 )
 

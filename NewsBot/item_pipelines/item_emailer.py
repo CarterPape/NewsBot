@@ -5,24 +5,21 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import logging
-import NewsBot.items.emailable_item
-import NewsBot.items.emailable_item_with_attachments
 import scrapy
 import scrapy.settings
 import os
-import string
-import os.path
-import magic
 import requests
 import dotenv
-import pape.utilities
 import datetime
+import newsbot.items.emailable_item as emailable_item
+import newsbot.items.emailable_item_with_attachments as emailable_item_with_attachments
+import newsbot.item_pipelines.item_pipeline as item_pipeline
+import newsbot.logger as logger
 
 
 class ItemEmailer(
-    NewsBot.item_pipelines.item_pipeline.ItemPipeline,
-    NewsBot.logger.Logger,
+    item_pipeline.ItemPipeline,
+    logger.Logger,
 ):
     @classmethod
     def from_crawler(cls, crawler):
@@ -38,7 +35,7 @@ class ItemEmailer(
         dotenv.load_dotenv(dotenv.find_dotenv())
     
     def process_item(self,
-        item:   NewsBot.items.emailable_item.EmailableItem,
+        item:   emailable_item.EmailableItem,
         spider: scrapy.spiders.Spider,
     ) -> scrapy.Item:
         item["email_response"] = self._email_item(item)
@@ -48,11 +45,11 @@ class ItemEmailer(
         return item
     
     def _email_item(self,
-        item: NewsBot.items.emailable_item.EmailableItem,
+        item: emailable_item.EmailableItem,
     ):
         if issubclass(
             type(item),
-            NewsBot.items.emailable_item_with_attachments.EmailableItemWithAttachments,
+            emailable_item_with_attachments.EmailableItemWithAttachments,
         ):
             attachments = item.gather_email_attachments()
         else:

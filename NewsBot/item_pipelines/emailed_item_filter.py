@@ -5,20 +5,19 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import NewsBot.items.emailable_item
-import NewsBot.spiders
-import NewsBot.item_pipelines.item_pipeline
-import scrapy.spiders
-import NewsBot.db_connections.emailed_items_db_connection as emailed_items_db_connection
-import NewsBot.exceptions.drop_transmitted_item as drop_transmitted_item
+import scrapy
+import newsbot.items.emailable_item as emailable_item
+import newsbot.item_pipelines.item_pipeline as item_pipeline
+import newsbot.db_connections.emailed_items_db_connection as emailed_items_db_connection
+import newsbot.exceptions.drop_transmitted_item as drop_transmitted_item
 
 
-class EmailedItemFilter(NewsBot.item_pipelines.item_pipeline.ItemPipeline):
+class EmailedItemFilter(item_pipeline.ItemPipeline):
     def process_item(
         self,
-        item: NewsBot.items.emailable_item.EmailableItem,
-        spider: scrapy.spiders.Spider
-    ) -> NewsBot.items.emailable_item.EmailableItem:
+        item: emailable_item.EmailableItem,
+        spider: scrapy.Spider
+    ) -> emailable_item.EmailableItem:
         
         db_connection = emailed_items_db_connection.EmailedItemsDBConnection()
         datetime_transmitted = db_connection.datetime_item_transmitted(item)

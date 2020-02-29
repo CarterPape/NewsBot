@@ -6,22 +6,18 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import scrapy
-import scrapy.item
-import scrapy.exceptions
 import scrapy.pipelines.files
-import NewsBot.items.item_with_files
-import NewsBot.spiders
 import os.path
 import urllib.parse
-import logging
-import twisted.internet.defer
 import twisted.python.failure
 import typing
+import newsbot.items.item_with_files as item_with_files
+import newsbot.item_pipelines.item_pipeline as item_pipeline
 
 
 class FileDownloader(
     scrapy.pipelines.files.FilesPipeline,
-    NewsBot.item_pipelines.item_pipeline.ItemPipeline,
+    item_pipeline.ItemPipeline,
 ):
     def file_path(self,
         request:    scrapy.http.Request,
@@ -37,7 +33,7 @@ class FileDownloader(
     
     def item_completed(self,
         results:    (bool, typing.Union[dict, twisted.python.failure.Failure]),
-        item:       NewsBot.items.item_with_files.ItemWithFiles,
+        item:       item_with_files.ItemWithFiles,
         info:       scrapy.pipelines.media.MediaPipeline.SpiderInfo,
     ):
         item = super().item_completed(results, item, info)

@@ -17,9 +17,8 @@ import dotenv
 import scrapy.utils.conf
 import os
 import os.path
-import NewsBot.log_formatter
 import datetime
-import NewsBot.items.item_with_files
+import newsbot.items.item_with_files as item_with_files
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
@@ -74,8 +73,8 @@ FILES_STORE = (
 )
 os.makedirs(FILES_STORE, exist_ok = True)
 
-FILES_URLS_FIELD = NewsBot.items.item_with_files.ItemWithFiles.get_files_urls_field()
-FILES_RESULT_FIELD = NewsBot.items.item_with_files.ItemWithFiles.get_files_result_field()
+FILES_URLS_FIELD = item_with_files.ItemWithFiles.get_files_urls_field()
+FILES_RESULT_FIELD = item_with_files.ItemWithFiles.get_files_result_field()
 
 
 if os.getenv("ENVIRONMENT") == "development":

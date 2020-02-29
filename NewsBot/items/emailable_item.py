@@ -7,11 +7,11 @@
 
 import string
 import scrapy.item
-import NewsBot.items.self_serializing_item
+import newsbot.items.self_serializing_item as self_serializing_item
 import os
 
 
-class EmailableItem(NewsBot.items.self_serializing_item.SelfSerializingItem):
+class EmailableItem(self_serializing_item.SelfSerializingItem):
     email_response      = scrapy.item.Field(ignore_when_serializing = True)
     email_sent_datetime = scrapy.item.Field(ignore_when_serializing = True)
     
