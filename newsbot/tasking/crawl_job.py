@@ -33,7 +33,7 @@ class CrawlJob(logger.Logger):
         deferred = self._runner.crawl(self._crawler)
         deferred.addBoth(self.schedule_a_crawl)
     
-    def schedule_a_crawl(self):
+    def schedule_a_crawl(self, deferred_result = None):
         twisted.internet.reactor.callLater(
             self._scheduler.pause_time_in_seconds,
             self.crawl_then_repeat_later,
