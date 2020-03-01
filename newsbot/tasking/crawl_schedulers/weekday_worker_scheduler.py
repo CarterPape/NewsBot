@@ -6,7 +6,7 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import datetime
-import newsbot_tasking.crawl_schedulers.crawl_scheduler
+import newsbot.tasking.crawl_schedulers.crawl_scheduler as crawl_scheduler
 import random
 import pytz
 
@@ -26,7 +26,7 @@ import pytz
     },
 ]
 
-class WeekdayWorkerScheduler(newsbot_tasking.crawl_schedulers.crawl_scheduler.CrawlScheduler):
+class WeekdayWorkerScheduler(crawl_scheduler.CrawlScheduler):
     def __init__(self, *,
         average_check_interval_during_workday = datetime.timedelta(minutes = 20),
         average_check_interval_after_hours =    datetime.timedelta(hours = 4),

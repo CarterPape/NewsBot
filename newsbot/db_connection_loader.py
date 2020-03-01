@@ -12,7 +12,7 @@ import warnings
 import importlib
 import pkgutil
 import traceback
-import NewsBot.db_connections.db_connection
+import newsbot.db_connections.db_connection as db_connection
 import types
 
 
@@ -38,15 +38,15 @@ class DBConnectionLoader(object):
             if (
                 inspect.isclass(obj)
             ) and (
-                issubclass(obj, NewsBot.db_connections.db_connection.DBConnection)
+                issubclass(obj, db_connection.DBConnection)
             ) and (
                 obj.__module__ == module.__name__
             ) and (
                 getattr(
                     obj,
                     "TABLE_NAME",
-                    NewsBot.db_connections.db_connection.DBConnection.table_definition,
-                ) != NewsBot.db_connections.db_connection.DBConnection.table_definition
+                    db_connection.DBConnection.table_definition,
+                ) != db_connection.DBConnection.table_definition
             ):
                 yield obj
     

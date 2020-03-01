@@ -7,13 +7,13 @@
 
 import string
 import scrapy.item
-import NewsBot.items.self_serializing_item
+import newsbot.items.self_serializing_item as self_serializing_item
 import os
 
 
-class EmailableItem(NewsBot.items.self_serializing_item.SelfSerializingItem):
-    email_response      = scrapy.item.Field(ignore_when_serializing = True)
-    email_sent_datetime = scrapy.item.Field(ignore_when_serializing = True)
+class EmailableItem(self_serializing_item.SelfSerializingItem):
+    email_response      =       scrapy.item.Field(ignore_when_serializing = True)
+    email_sent_datetime =       scrapy.item.Field(ignore_when_serializing = True)
     
     def synthesize_email_subject(self) -> str:
         raise NotImplementedError
@@ -21,11 +21,14 @@ class EmailableItem(NewsBot.items.self_serializing_item.SelfSerializingItem):
     def synthesize_html_email_body(self) -> str:
         raise NotImplementedError
     
+    def _get_email_template_directory(self):
+        return os.path.dirname(__file__)
+    
     def _get_email_template(self) -> string.Template:
         email_template_path = (
             os.path.abspath(
                 os.path.join(
-                    os.path.dirname(__file__),
+                    self._get_email_template_directory(),
                     f"{type(self).__name__}.template.html",
                 )
             )

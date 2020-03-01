@@ -6,11 +6,11 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import datetime
-import newsbot_tasking.crawl_schedulers.crawl_scheduler
+import newsbot.tasking.crawl_schedulers.crawl_scheduler as crawl_scheduler
 import random
 
 
-class UniformlyRandomScheduler(newsbot_tasking.crawl_schedulers.crawl_scheduler.CrawlScheduler):
+class UniformlyRandomScheduler(crawl_scheduler.CrawlScheduler):
     def __init__(self, *,
         minimum_interval: datetime.timedelta,
         maximum_interval: datetime.timedelta,

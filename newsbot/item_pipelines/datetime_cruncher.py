@@ -6,14 +6,10 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import scrapy
-import scrapy.spiders
-import datetime
-import NewsBot.items.dispatch
-import NewsBot.spiders
-import NewsBot.item_pipelines.item_pipeline as item_pipeline
-import logging
 import datetime
 import pytz
+import newsbot.items.dated_item as dated_item
+import newsbot.item_pipelines.item_pipeline as item_pipeline
 
 
 class DatetimeCruncher(item_pipeline.ItemPipeline):
@@ -23,9 +19,9 @@ class DatetimeCruncher(item_pipeline.ItemPipeline):
     
     def process_item(
         self,
-        item: NewsBot.items.dispatch.Dispatch,
-        spider: scrapy.spiders.Spider
-    ) -> NewsBot.items.dispatch.Dispatch:
+        item:   dated_item.DatedItem,
+        spider: scrapy.Spider
+    ) -> dated_item.DatedItem:
         
         item["datetime"] = datetime.datetime.strptime(
             item["source_date_string"],

@@ -6,14 +6,14 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import setuptools
-import NewsBot.settings
+import newsbot.settings
 
 with open("README.md", "r") as readme_file:
     long_description = readme_file.read()
 
 setuptools.setup(
-    name =      NewsBot.settings.BOT_NAME,
-    version =   NewsBot.settings._BOT_VERSION,
+    name =      newsbot.settings.BOT_NAME,
+    version =   newsbot.settings._BOT_VERSION,
     
     author =    "Carter Pape",
     author_email =  "creator@newsbot.carterpape.com",

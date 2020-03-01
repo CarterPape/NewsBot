@@ -17,19 +17,26 @@ import dotenv
 import scrapy.utils.conf
 import os
 import os.path
-import NewsBot.log_formatter
 import datetime
-import NewsBot.items.item_with_files
+import newsbot.items.item_with_files as item_with_files
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
 BOT_NAME =      "NewsBot"
 _BOT_VERSION =  "0.2.0"
 
-SPIDER_MODULES =    ["NewsBot.spiders"]
-NEWSPIDER_MODULE =  "NewsBot.spiders"
+_TOP_LEVEL_MODULES   = ["private", "newsbot"]
 
-DB_CONNECTION_MODULES = ["NewsBot.db_connections"]
+SPIDER_MODULES =    [
+    top_level_module + ".spiders"
+    for top_level_module in _TOP_LEVEL_MODULES
+]
+NEWSPIDER_MODULE =  SPIDER_MODULES[0]
+
+_DB_CONNECTION_MODULES =    [
+    top_level_module + ".db_connections"
+    for top_level_module in _TOP_LEVEL_MODULES
+]
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -74,8 +81,8 @@ FILES_STORE = (
 )
 os.makedirs(FILES_STORE, exist_ok = True)
 
-FILES_URLS_FIELD = NewsBot.items.item_with_files.ItemWithFiles.get_files_urls_field()
-FILES_RESULT_FIELD = NewsBot.items.item_with_files.ItemWithFiles.get_files_result_field()
+FILES_URLS_FIELD = item_with_files.ItemWithFiles.get_files_urls_field()
+FILES_RESULT_FIELD = item_with_files.ItemWithFiles.get_files_result_field()
 
 
 if os.getenv("ENVIRONMENT") == "development":
@@ -102,7 +109,7 @@ LOG_FILE = (
     )
 )
 
-LOG_FORMATTER = "NewsBot.log_formatter.NewsBotLogFormatter"
+LOG_FORMATTER = "newsbot.log_formatter.NewsBotLogFormatter"
 
 
 _PRINT_INSTEAD_OF_EMAIL = (os.getenv("ENVIRONMENT") == "development")
