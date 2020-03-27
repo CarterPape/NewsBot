@@ -75,7 +75,7 @@ class ItemEmailer(
             
             print("Printing emails rather than sending (check setting _PRINT_INSTEAD_OF_EMAIL)")
             print("From:", os.getenv("EMAIL_SENDER"))
-            print("To:", os.getenv("EMAIL_RECIPIENT"))
+            print("To:", os.getenv("EMAIL_RECIPIENTS"))
             print("Subject:", item.synthesize_email_subject())
             print("———————————\n", item.synthesize_html_email_body(), "\n- - - - - -")
             print("Attachments:\n", attachment_paths, "\n———————————\n\n")
@@ -89,7 +89,7 @@ class ItemEmailer(
                 files =         attachments,
                 data = {
                     "from":     os.getenv("EMAIL_SENDER"),
-                    "to":       os.getenv("EMAIL_RECIPIENT"),
+                    "to":       os.getenv("EMAIL_RECIPIENTS"),
                     "subject":  item.synthesize_email_subject(),
                     "html":     item.synthesize_html_email_body(),
                 }
