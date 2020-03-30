@@ -19,7 +19,9 @@ class EmailedItemFilter(item_pipeline.ItemPipeline):
         spider: scrapy.Spider
     ) -> emailable_item.EmailableItem:
         
-        db_connection = emailed_items_db_connection.EmailedItemsDBConnection()
+        db_connection = emailed_items_db_connection.EmailedItemsDBConnection(
+            settings = spider.settings
+        )
         datetime_transmitted = db_connection.datetime_item_transmitted(item)
         db_connection.close()
         

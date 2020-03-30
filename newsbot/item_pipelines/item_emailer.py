@@ -21,23 +21,15 @@ class ItemEmailer(
     item_pipeline.ItemPipeline,
     logger.Logger,
 ):
-    @classmethod
-    def from_crawler(cls, crawler):
-        return cls(
-            settings = crawler.settings
-        )
-    
-    def __init__(self, *,
-        settings: scrapy.settings.Settings = None
-    ):
-        self._settings =    settings
-        
-        dotenv.load_dotenv(dotenv.find_dotenv())
+    def __init__(self):
+        self._settings: scrapy.settings.Settings
     
     def process_item(self,
         item:   emailable_item.EmailableItem,
         spider: scrapy.spiders.Spider,
     ) -> scrapy.Item:
+        
+        self._settings = spider.settings
         item["email_response"] = self._email_item(item)
         item["email_sent_datetime"] = datetime.datetime.now()
         self._logger.info(item["email_response"])
@@ -74,8 +66,8 @@ class ItemEmailer(
             ])
             
             print("Printing emails rather than sending (check setting _PRINT_INSTEAD_OF_EMAIL)")
-            print("From:", os.getenv("EMAIL_SENDER"))
-            print("To:", os.getenv("EMAIL_RECIPIENTS"))
+            print("From:", self._settings.get("_EMAIL_SENDER"))
+            print("To:", ", ".join(self._settings.getlist("_EMAIL_RECIPIENTS")))
             print("Subject:", item.synthesize_email_subject())
             print("———————————\n", item.synthesize_html_email_body(), "\n- - - - - -")
             print("Attachments:\n", attachment_paths, "\n———————————\n\n")
@@ -84,12 +76,12 @@ class ItemEmailer(
         
         else:
             return requests.post(
-                f"https://api.mailgun.net/v3/{os.getenv('EMAIL_SENDER_DOMAIN')}/messages",
-                auth = ("api",  os.getenv("MAILGUN_API_KEY")),
+                f"https://api.mailgun.net/v3/{self._settings.get('_EMAIL_SENDER_DOMAIN')}/messages",
+                auth = ("api",  self._settings.get("_MAILGUN_API_KEY")),
                 files =         attachments,
                 data = {
-                    "from":     os.getenv("EMAIL_SENDER"),
-                    "to":       os.getenv("EMAIL_RECIPIENTS"),
+                    "from":     self._settings.get("_EMAIL_SENDER"),
+                    "to":       ", ".join(self._settings.getlist("_EMAIL_RECIPIENTS")),
                     "subject":  item.synthesize_email_subject(),
                     "html":     item.synthesize_html_email_body(),
                 }

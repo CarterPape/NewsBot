@@ -39,6 +39,9 @@ _DB_CONNECTION_MODULES =    [
 ]
 
 
+_ENVIRONMENT =          os.getenv("ENVIRONMENT")
+
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = f"{BOT_NAME}/{_BOT_VERSION} (+https://github.com/carterpape/newsbot)"
 
@@ -85,7 +88,7 @@ FILES_URLS_FIELD = item_with_files.ItemWithFiles.get_files_urls_field()
 FILES_RESULT_FIELD = item_with_files.ItemWithFiles.get_files_result_field()
 
 
-if os.getenv("ENVIRONMENT") == "development":
+if _ENVIRONMENT == "development":
     LOG_LEVEL = "INFO"
 else:
     LOG_LEVEL = "WARNING"
@@ -111,6 +114,15 @@ LOG_FILE = (
 
 LOG_FORMATTER = "newsbot.log_formatter.NewsBotLogFormatter"
 
+_EMAIL_RECIPIENTS =     os.getenv("DEFAULT_EMAIL_RECIPIENTS")
+_EMAIL_SENDER =         os.getenv("DEFAULT_EMAIL_SENDER")
+_EMAIL_SENDER_DOMAIN =  os.getenv("EMAIL_SENDER_DOMAIN")
+
+_MAILGUN_API_KEY =      os.getenv("MAILGUN_API_KEY")
+
+_MYSQL_DATABASE =       os.getenv("MYSQL_DATABASE")
+_MYSQL_USER =           os.getenv("MYSQL_USER")
+_MYSQL_PASSWORD =       os.getenv("MYSQL_PASSWORD")
 
 _PRINT_INSTEAD_OF_EMAIL = (os.getenv("ENVIRONMENT") == "development")
 

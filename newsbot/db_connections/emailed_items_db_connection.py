@@ -15,9 +15,6 @@ import newsbot.items.emailable_item as emailable_item
 class EmailedItemsDBConnection(db_connection.DBConnection):
     TABLE_NAME =  "sent_emails"
     
-    def __init__(self):
-        super().__init__()
-    
     @property
     def table_definition(self):
         return f"""

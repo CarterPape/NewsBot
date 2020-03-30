@@ -27,7 +27,7 @@ logging.getLogger().addHandler(sterr_stream_handler)
 
 db_connection_loader = db_connection_loader.DBConnectionLoader(settings = project_settings)
 db_connection_list = [
-    db_connection_class()
+    db_connection_class(settings = project_settings)
     for db_connection_class in db_connection_loader.list()
 ]
 

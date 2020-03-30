@@ -34,7 +34,10 @@ class FrontierInvestigationSpider(
     }
     
     @classmethod
-    def make_a_scheduler(klass, *, suggested_scheduler = None):
+    def make_a_scheduler(klass, *,
+        from_crawler: scrapy.crawler.Crawler,
+        suggested_scheduler = None
+    ):
         new_scheduler = (
             uniformly_random_scheduler.UniformlyRandomScheduler(
                 maximum_interval =  datetime.timedelta(minutes = 25),
@@ -43,6 +46,7 @@ class FrontierInvestigationSpider(
         )
         
         return super().make_a_scheduler(
+            from_crawler = from_crawler,
             suggested_scheduler = suggested_scheduler or new_scheduler
         )
     

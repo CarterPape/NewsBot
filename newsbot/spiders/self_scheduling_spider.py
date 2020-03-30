@@ -28,8 +28,15 @@ class SelfSchedulingSpider(
     )
     
     @classmethod
-    def make_a_scheduler(klass, *, suggested_scheduler = None):
-        if os.getenv("ENVIRONMENT") == "development" or suggested_scheduler == None:
+    def make_a_scheduler(klass, *,
+        from_crawler: scrapy.crawler.Crawler,
+        suggested_scheduler = None
+    ):
+        if (
+            from_crawler.settings.get("_ENVIRONMENT") == "development"
+        ) or (
+            suggested_scheduler == None
+        ):
             new_scheduler = copy.copy(klass._DEBUG_SCHEDULER)
         else:
             new_scheduler = suggested_scheduler

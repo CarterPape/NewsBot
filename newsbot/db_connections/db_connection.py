@@ -5,6 +5,7 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
+import scrapy.settings
 import mysql.connector
 import mysql.connector.connection
 import mysql.connector.cursor
@@ -12,13 +13,11 @@ import dotenv
 import os
 
 class DBConnection(mysql.connector.MySQLConnection):
-    def __init__(self, *args, **kwargs):
-        dotenv.load_dotenv(dotenv.find_dotenv())
-        
+    def __init__(self, *args, settings: scrapy.settings.Settings, **kwargs):
         super().__init__(
-            database =  os.getenv("MYSQL_DATABASE"),
-            user =      os.getenv("MYSQL_USER"),
-            password =  os.getenv("MYSQL_PASSWORD"),
+            database =  settings.get("_MYSQL_DATABASE"),
+            user =      settings.get("_MYSQL_USER"),
+            password =  settings.get("_MYSQL_PASSWORD"),
             *args,
             **kwargs,
         )
