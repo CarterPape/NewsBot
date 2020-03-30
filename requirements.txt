@@ -13,3 +13,4 @@ python-dotenv
 typing_extensions
 pytz
 mysql-connector
+requests
