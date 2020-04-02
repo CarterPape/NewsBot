@@ -7,9 +7,13 @@
 
 import scrapy.item
 import json
+import abc
 
 
-class ItemWithFiles(scrapy.item.Item):
+class ItemWithFiles(
+    scrapy.item.Item,
+    metaclass = abc.ABCMeta,
+):
     file_URLs = scrapy.item.Field()
     files =     scrapy.item.Field(ignore_when_serializing = True)
     

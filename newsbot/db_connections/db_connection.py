@@ -5,6 +5,7 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
+import abc
 import scrapy.settings
 import mysql.connector
 import mysql.connector.connection
@@ -12,8 +13,15 @@ import mysql.connector.cursor
 import dotenv
 import os
 
-class DBConnection(mysql.connector.MySQLConnection):
-    def __init__(self, *args, settings: scrapy.settings.Settings, **kwargs):
+class DBConnection(
+    mysql.connector.MySQLConnection,
+    metaclass = abc.ABCMeta
+):
+    def __init__(self,
+        *args,
+        settings: scrapy.settings.Settings,
+        **kwargs
+    ):
         super().__init__(
             database =  settings.get("_MYSQL_DATABASE"),
             user =      settings.get("_MYSQL_USER"),
@@ -23,8 +31,9 @@ class DBConnection(mysql.connector.MySQLConnection):
         )
     
     @property
+    @abc.abstractmethod
     def table_definition(self):
-        raise NotImplementedError
+        pass
     
     def table_exists(self):
         db_cursor = self.cursor()

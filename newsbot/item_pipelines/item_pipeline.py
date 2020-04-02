@@ -9,9 +9,14 @@ import scrapy
 import typing
 import twisted
 import newsbot.logger as logger
+import abc
 
 
-class ItemPipeline(logger.Logger):
+class ItemPipeline(
+    logger.Logger,
+    metaclass = abc.ABCMeta
+):
+    @abc.abstractmethod
     def process_item(self,
         item:   scrapy.Item,
         spider: scrapy.Spider,
@@ -20,4 +25,4 @@ class ItemPipeline(logger.Logger):
         dict,
         twisted.internet.defer.Deferred,
     ]:
-        raise NotImplementedError
+        pass

@@ -6,9 +6,13 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import logging
+import abc
 
 
-class Logger(object):
+class Logger(
+    object,
+    metaclass = abc.ABCMeta,
+):
     @property
     def _logger(self):
         if getattr(self, "__logger", None) != None:

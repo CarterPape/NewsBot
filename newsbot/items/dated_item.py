@@ -6,9 +6,13 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import scrapy
+import abc
 
 
-class DatedItem(scrapy.Item):
+class DatedItem(
+    scrapy.Item,
+    metaclass = abc.ABCMeta,
+):
     source_date_string =    scrapy.Field()
     source_date_format =    scrapy.Field(ignore_when_serializing = True)
     datetime =              scrapy.Field(ignore_when_serializing = True)

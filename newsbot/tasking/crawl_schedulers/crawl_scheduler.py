@@ -5,10 +5,14 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import typing_extensions
+import abc
 
 
-class CrawlScheduler(typing_extensions.Protocol):
+class CrawlScheduler(
+    object,
+    metaclass = abc.ABCMeta,
+):
     @property
+    @abc.abstractmethod
     def pause_time_in_seconds(self) -> float:
-        raise NotImplementedError
+        pass

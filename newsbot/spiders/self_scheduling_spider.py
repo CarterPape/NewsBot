@@ -6,6 +6,7 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import scrapy.spiders
+import scrapy.crawler
 import typing_extensions
 import newsbot.tasking.crawl_schedulers.uniformly_random_scheduler as uniformly_random_scheduler
 import newsbot.logger as logger
@@ -13,11 +14,13 @@ import datetime
 import dotenv
 import os
 import copy
+import abc
 
 
 class SelfSchedulingSpider(
     scrapy.spiders.Spider,
     logger.Logger,
+    metaclass = abc.ABCMeta,
 ):
     _DEBUG_SCHEDULER = (
         uniformly_random_scheduler.UniformlyRandomScheduler(

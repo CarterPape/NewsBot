@@ -7,9 +7,13 @@
 
 import scrapy
 import json
+import abc
 
 
-class SelfSerializingItem(scrapy.Item):
+class SelfSerializingItem(
+    scrapy.Item,
+    metaclass = abc.ABCMeta,
+):
     def serialized(self) -> dict:
         simple_self = dict()
         

@@ -12,11 +12,13 @@ import os.path
 import pape
 import newsbot.items.emailable_item as emailable_item
 import newsbot.items.item_with_files as item_with_files
+import abc
 
 
 class EmailableItemWithAttachments(
     emailable_item.EmailableItem,
     item_with_files.ItemWithFiles,
+    metaclass = abc.ABCMeta,
 ):
     def gather_email_attachments(self) -> [(str, (str, typing.IO[typing.Any]))]:
         return [
