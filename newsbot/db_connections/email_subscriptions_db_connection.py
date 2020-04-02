@@ -13,12 +13,14 @@ import newsbot.items.emailable_item as emailable_item
 
 
 class EmailSubscriptionsDBConnection(db_connection.DBConnection):
-    TABLE_NAME =  "email_subscriptions"
+    @property
+    def table_name(self):
+        return "email_subscriptions"
     
     @property
     def table_definition(self):
         return f"""
-            CREATE TABLE `{self.TABLE_NAME}` (
+            CREATE TABLE `{self.table_name}` (
                 `subscription_id`           INTEGER     NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 `addressee_name`            TEXT,
                 `email_address`             TINYTEXT    NOT NULL,
@@ -35,7 +37,7 @@ class EmailSubscriptionsDBConnection(db_connection.DBConnection):
         
         db_cursor = self.cursor()
         db_cursor.execute(f"""
-            INSERT INTO `{self.TABLE_NAME}` (
+            INSERT INTO `{self.table_name}` (
                 addressee_name,
                 email_address,
                 item_selection
@@ -54,7 +56,7 @@ class EmailSubscriptionsDBConnection(db_connection.DBConnection):
     ):
         db_cursor = self.cursor()
         db_cursor.execute(f"""
-            DELETE FROM `{self.TABLE_NAME}`
+            DELETE FROM `{self.table_name}`
             WHERE email_address = "{requester_email_address}"
         """)
         self.commit()
@@ -69,7 +71,7 @@ class EmailSubscriptionsDBConnection(db_connection.DBConnection):
                 addressee_name,
                 email_address
             )
-            FROM {self.TABLE_NAME}
+            FROM {self.table_name}
             WHERE "{subscribed_to_items_named}" LIKE item_selection
         """)
         addressee_list = db_cursor.fetchall()

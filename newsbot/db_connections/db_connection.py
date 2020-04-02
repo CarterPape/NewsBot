@@ -32,6 +32,11 @@ class DBConnection(
     
     @property
     @abc.abstractmethod
+    def table_name(self):
+        pass
+    
+    @property
+    @abc.abstractmethod
     def table_definition(self):
         pass
     
@@ -41,7 +46,7 @@ class DBConnection(
             SELECT COUNT(*)
             FROM information_schema.tables 
             WHERE table_schema = 'newsbot' 
-            AND table_name = '{self.TABLE_NAME}'
+            AND table_name = '{self.table_name}'
         """)
         table_count = db_cursor.fetchone()[0]
         db_cursor.close()

@@ -13,12 +13,14 @@ import newsbot.items.emailable_item as emailable_item
 
 
 class EmailedItemsDBConnection(db_connection.DBConnection):
-    TABLE_NAME =  "sent_emails"
+    @property
+    def table_name(self):
+        return "sent_emails"
     
     @property
     def table_definition(self):
         return f"""
-            CREATE TABLE `{self.TABLE_NAME}` (
+            CREATE TABLE `{self.table_name}` (
                 `email_no`          INTEGER     NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 `send_datetime`     DATETIME    NOT NULL,
                 `status_code`       SMALLINT    NOT NULL,
@@ -31,7 +33,7 @@ class EmailedItemsDBConnection(db_connection.DBConnection):
     ):
         db_cursor = self.cursor()
         db_cursor.execute(f"""
-            INSERT INTO `{self.TABLE_NAME}` (
+            INSERT INTO `{self.table_name}` (
                 send_datetime,
                 status_code,
                 serialized_item
@@ -52,7 +54,7 @@ class EmailedItemsDBConnection(db_connection.DBConnection):
         db_cursor.execute(f"""
             SELECT (
                 send_datetime
-            ) FROM {self.TABLE_NAME}
+            ) FROM {self.table_name}
             WHERE
                 serialized_item like '{item_to_query.serialized()}'
                 AND status_code = 200
