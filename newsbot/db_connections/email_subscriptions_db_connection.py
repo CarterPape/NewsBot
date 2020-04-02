@@ -79,12 +79,17 @@ class EmailSubscriptionsDBConnection(db_connection.DBConnection):
         """)
         addressee_list = db_cursor.fetchall()
         db_cursor.close()
-        return [
-            (
-                f"{addressee[0]} <{addressee[1]}>"
-                if addressee[0] == None
-                else f"{addressee[1]}"
-            )
-            for addressee
-            in addressee_list
-        ]
+        return addressee_list
+    
+    def get_all_subscriptions(self) -> [str]:
+        db_cursor = self.cursor()
+        db_cursor.execute(f"""
+            SELECT
+                addressee_name,
+                email_address,
+                item_selection
+            FROM `{self.table_name}`
+        """)
+        subscription_list = db_cursor.fetchall()
+        db_cursor.close()
+        return subscription_list

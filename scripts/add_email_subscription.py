@@ -29,6 +29,20 @@ db_connection = email_subscriptions_db_connection.EmailSubscriptionsDBConnection
 
 add_addressee = "yes"
 
+print("Here are the current subscriptions:")
+subscription_list = db_connection.get_all_subscriptions()
+for subscription in subscription_list:
+    print(
+        (
+            f"{subscription[0]} <{subscription[1]}>"
+            if subscription[0] != None
+            else f"{subscription[1]}"
+        ) + (
+            f"\n    subscribed to {subscription[2]}"
+        )
+    )
+print()
+
 print("Here are the items currently known to NewsBot:")
 emailable_item_class_loader = newsbot.concrete_subclass_loader.ConcreteSubclassLoader(
     load_subclasses_of =    newsbot.items.emailable_item.EmailableItem,
@@ -36,7 +50,6 @@ emailable_item_class_loader = newsbot.concrete_subclass_loader.ConcreteSubclassL
 )
 for emailable_item_class in emailable_item_class_loader.list():
     print(pape.utilities.full_name(of_type = emailable_item_class))
-
 print()
 
 while (

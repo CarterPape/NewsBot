@@ -54,9 +54,18 @@ class ItemEmailer(
             )
         )
         
-        email_recipients = db_connection.get_addressees(
+        addressee_list = db_connection.get_addressees(
             that_should_receive_item = item,
         )
+        formatted_addressee_list = [
+            (
+                f"{addressee[0]} <{addressee[1]}>"
+                if addressee[0] != None
+                else f"{addressee[1]}"
+            )
+            for addressee
+            in addressee_list
+        ]
         
         if self._settings.getbool("_PRINT_INSTEAD_OF_EMAIL"):
             
@@ -78,7 +87,7 @@ class ItemEmailer(
             
             print("Printing emails rather than sending (check setting _PRINT_INSTEAD_OF_EMAIL)\n")
             print("From:", self._settings.get("_EMAIL_SENDER"))
-            print("To:", ", ".join(email_recipients))
+            print("To:", ", ".join(formatted_addressee_list))
             print("Subject:", item.synthesize_email_subject())
             print("———————————\n", item.synthesize_html_email_body(), "\n- - - - - -")
             print("Attachments:\n", attachment_paths, "\n———————————\n\n")
@@ -92,7 +101,7 @@ class ItemEmailer(
                 files =         attachments,
                 data = {
                     "from":     self._settings.get("_EMAIL_SENDER"),
-                    "to":       ", ".join(email_recipients),
+                    "to":       ", ".join(formatted_addressee_list),
                     "subject":  item.synthesize_email_subject(),
                     "html":     item.synthesize_html_email_body(),
                 }
