@@ -11,7 +11,7 @@ import sys
 import os
 sys.path.append(os.getcwd())
 
-import newsbot.db_connections.email_subscribtions_db_connection as email_subscribtions_db_connection
+import newsbot.db_connections.email_subscriptions_db_connection as email_subscriptions_db_connection
 import dotenv
 import scrapy.utils.project
 
@@ -20,7 +20,7 @@ dotenv.load_dotenv(dotenv.find_dotenv())
 os.environ["SCRAPY_SETTINGS_MODULE"] = "newsbot.settings"
 project_settings = scrapy.utils.project.get_project_settings()
 
-db_connection = email_subscribtions_db_connection.EmailSubscriptionsDBConnection(
+db_connection = email_subscriptions_db_connection.EmailSubscriptionsDBConnection(
     settings = project_settings
 )
 
@@ -30,9 +30,13 @@ else:
     db_connection.create_table()
 
 db_cursor = db_connection.cursor()
-db_cursor.execute(
-    "SELECT addressee_name, email_address FROM email_subscriptions WHERE item_selection='%'"
-)
+db_cursor.execute("""
+    SELECT
+        addressee_name,
+        email_address
+    FROM email_subscriptions
+    WHERE item_selection = '%'
+""")
 recipient_list = db_cursor.fetchall()
 db_cursor.close()
 
