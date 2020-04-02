@@ -52,9 +52,9 @@ class EmailedItemsDBConnection(db_connection.DBConnection):
     ) -> typing.Union[datetime.datetime, None]:
         db_cursor = self.cursor(buffered = True)
         db_cursor.execute(f"""
-            SELECT (
+            SELECT
                 send_datetime
-            ) FROM {self.table_name}
+            FROM {self.table_name}
             WHERE
                 serialized_item like '{item_to_query.serialized()}'
                 AND status_code = 200
