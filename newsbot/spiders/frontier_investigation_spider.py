@@ -7,6 +7,7 @@
 
 import scrapy
 import scrapy.http
+import scrapy.crawler
 import newsbot.spiders.self_scheduling_spider as self_scheduling_spider
 import newsbot.items.frontier_investigation_filing as frontier_investigation_filing
 import newsbot.tasking.crawl_schedulers.uniformly_random_scheduler as uniformly_random_scheduler
