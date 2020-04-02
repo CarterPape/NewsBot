@@ -13,7 +13,8 @@ import scrapy.spiderloader
 import dotenv
 import logging
 import newsbot.tasking.job_registry as job_registry
-import newsbot.db_connection_loader as db_connection_loader
+import newsbot.db_connections.db_connection
+import newsbot.concrete_subclass_loader
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
@@ -25,7 +26,10 @@ sterr_stream_handler = logging.StreamHandler()
 sterr_stream_handler.setLevel("WARNING")
 logging.getLogger().addHandler(sterr_stream_handler)
 
-db_connection_loader = db_connection_loader.DBConnectionLoader(settings = project_settings)
+db_connection_loader = newsbot.concrete_subclass_loader.ConcreteSubclassLoader(
+    load_subclasses_of =    newsbot.db_connections.db_connection.DBConnection,
+    from_modules_named =    project_settings.getlist("_TOP_LEVEL_MODULES"),
+)
 db_connection_list = [
     db_connection_class(settings = project_settings)
     for db_connection_class in db_connection_loader.list()
