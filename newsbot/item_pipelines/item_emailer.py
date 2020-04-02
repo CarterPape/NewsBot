@@ -11,6 +11,7 @@ import os
 import requests
 import dotenv
 import datetime
+import newsbot.db_connections.email_subscriptions_db_connection as email_subscriptions_db_connection
 import newsbot.items.emailable_item as emailable_item
 import newsbot.items.emailable_item_with_attachments as emailable_item_with_attachments
 import newsbot.item_pipelines.item_pipeline as item_pipeline
@@ -47,6 +48,16 @@ class ItemEmailer(
         else:
             attachments = None
         
+        db_connection = (
+            email_subscriptions_db_connection.EmailSubscriptionsDBConnection(
+                settings = self._settings
+            )
+        )
+        
+        email_recipients = db_connection.get_addressees(
+            that_should_receive_item = item,
+        )
+        
         if self._settings.getbool("_PRINT_INSTEAD_OF_EMAIL"):
             
             class __FakeResponse(requests.Response):
@@ -65,9 +76,9 @@ class ItemEmailer(
                 for attachment in attachments
             ])
             
-            print("Printing emails rather than sending (check setting _PRINT_INSTEAD_OF_EMAIL)")
+            print("Printing emails rather than sending (check setting _PRINT_INSTEAD_OF_EMAIL)\n")
             print("From:", self._settings.get("_EMAIL_SENDER"))
-            print("To:", ", ".join(self._settings.getlist("_EMAIL_RECIPIENTS")))
+            print("To:", ", ".join(email_recipients))
             print("Subject:", item.synthesize_email_subject())
             print("———————————\n", item.synthesize_html_email_body(), "\n- - - - - -")
             print("Attachments:\n", attachment_paths, "\n———————————\n\n")
@@ -81,7 +92,7 @@ class ItemEmailer(
                 files =         attachments,
                 data = {
                     "from":     self._settings.get("_EMAIL_SENDER"),
-                    "to":       ", ".join(self._settings.getlist("_EMAIL_RECIPIENTS")),
+                    "to":       ", ".join(email_recipients),
                     "subject":  item.synthesize_email_subject(),
                     "html":     item.synthesize_html_email_body(),
                 }

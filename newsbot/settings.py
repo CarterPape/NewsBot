@@ -114,7 +114,6 @@ LOG_FILE = (
 
 LOG_FORMATTER = "newsbot.log_formatter.NewsBotLogFormatter"
 
-_EMAIL_RECIPIENTS =     os.getenv("DEFAULT_EMAIL_RECIPIENTS")
 _EMAIL_SENDER =         os.getenv("DEFAULT_EMAIL_SENDER")
 _EMAIL_SENDER_DOMAIN =  os.getenv("EMAIL_SENDER_DOMAIN")
 

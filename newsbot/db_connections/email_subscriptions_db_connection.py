@@ -10,6 +10,7 @@ import pytz
 import typing
 import newsbot.db_connections.db_connection as db_connection
 import newsbot.items.emailable_item as emailable_item
+import pape.utilities
 
 
 class EmailSubscriptionsDBConnection(db_connection.DBConnection):
@@ -63,16 +64,18 @@ class EmailSubscriptionsDBConnection(db_connection.DBConnection):
         db_cursor.close()
     
     def get_addressees(self, *,
-        subscribed_to_items_named: str,
+        that_should_receive_item: emailable_item.EmailableItem,
     ) -> [str]:
+        full_item_class_name = pape.utilities.full_class_name(
+            of_object = that_should_receive_item
+        )
         db_cursor = self.cursor()
         db_cursor.execute(f"""
-            SELECT (
+            SELECT
                 addressee_name,
                 email_address
-            )
-            FROM {self.table_name}
-            WHERE "{subscribed_to_items_named}" LIKE item_selection
+            FROM `{self.table_name}`
+            WHERE "{full_item_class_name}" LIKE item_selection
         """)
         addressee_list = db_cursor.fetchall()
         db_cursor.close()
