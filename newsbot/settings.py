@@ -23,7 +23,7 @@ import newsbot.items.item_with_files as item_with_files
 dotenv.load_dotenv(dotenv.find_dotenv())
 
 BOT_NAME =      "NewsBot"
-_BOT_VERSION =  "0.2.0"
+_BOT_VERSION =  "0.3.0"
 
 _TOP_LEVEL_MODULES   = ["private", "newsbot"]
 
