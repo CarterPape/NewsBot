@@ -20,12 +20,15 @@ class WebElementHistoryDBConnection(db_connection.DBConnection):
     def table_name(self):
         return "web_element_history"
     
-    def __init__(self, *args, settings: scrapy.settings.Settings, **kwargs):
+    def __init__(self,
+        *args,
+        settings: scrapy.settings.Settings,
+        **kwargs
+    ):
         super().__init__(
-            self,
             *args,
             settings = settings,
-            **kwargs
+            **kwargs,
         )
         self._current_web_element: web_element.WebElement
     

@@ -23,10 +23,10 @@ class DBConnection(
         **kwargs
     ):
         super().__init__(
+            *args,
             database =  settings.get("_MYSQL_DATABASE"),
             user =      settings.get("_MYSQL_USER"),
             password =  settings.get("_MYSQL_PASSWORD"),
-            *args,
             **kwargs,
         )
     
