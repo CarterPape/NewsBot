@@ -8,15 +8,13 @@
 import string
 import scrapy.item
 import newsbot.items.self_serializing_item as self_serializing_item
-import newsbot.loadable_class
 import os
 import abc
 
 
 class EmailableItem(
     self_serializing_item.SelfSerializingItem,
-    newsbot.loadable_class.LoadableClass,
-    metaclass = abc.ABCMeta
+    metaclass = abc.ABCMeta,
 ):
     email_response      =       scrapy.item.Field(ignore_when_serializing = True)
     email_sent_datetime =       scrapy.item.Field(ignore_when_serializing = True)
