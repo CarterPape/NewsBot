@@ -46,9 +46,9 @@ newsbot_users=$(sudo mysql -u root -s -r -e \
 if [[ $newsbot_users == 0 ]]; then
     printf "Come up with a clever password for 'newsbot'@'localhost' (the MySQL user for NewsBot) "
     stty -echo
-    read $mysql_password
+    read mysql_password
     stty echo
-
+    
     sudo mysql -u root -e "CREATE USER 'newsbot'@'localhost' IDENTIFIED BY '$mysql_password';"
 else
     printf "MySQL user 'newsbot'@'localhost' already exists.\n"
