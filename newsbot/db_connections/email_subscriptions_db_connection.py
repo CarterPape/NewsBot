@@ -65,7 +65,7 @@ class EmailSubscriptionsDBConnection(db_connection.DBConnection):
     
     def get_addressees(self, *,
         that_should_receive_item: emailable_item.EmailableItem,
-    ) -> [str]:
+    ) -> [tuple]:
         full_item_class_name = pape.utilities.full_class_name(
             of_object = that_should_receive_item
         )
@@ -81,7 +81,7 @@ class EmailSubscriptionsDBConnection(db_connection.DBConnection):
         db_cursor.close()
         return addressee_list
     
-    def get_all_subscriptions(self) -> [str]:
+    def get_all_subscriptions(self) -> [tuple]:
         db_cursor = self.cursor()
         db_cursor.execute(f"""
             SELECT

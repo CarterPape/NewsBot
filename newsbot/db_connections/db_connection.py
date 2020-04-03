@@ -55,4 +55,5 @@ class DBConnection(
     def create_table(self):
         db_cursor = self.cursor()
         db_cursor.execute(self.table_definition)
+        self.commit()
         db_cursor.close()

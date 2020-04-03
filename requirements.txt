@@ -12,5 +12,5 @@ python-magic
 python-dotenv
 typing_extensions
 pytz
-mysql-connector
+mysql-connector-python
 requests
