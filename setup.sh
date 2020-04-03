@@ -44,10 +44,15 @@ newsbot_users=$(sudo mysql -u root -s -r -e \
     "
 )
 if [[ $newsbot_users == 0 ]]; then
+    if [[ -e "$project_path/.env" ]]; then
+        printf "No MySQL user 'newsbot'@'localhost' detected. Moving .env to .env.old\n"
+        mv .env .env.old &>/dev/null
+    fi
     printf "Come up with a clever password for 'newsbot'@'localhost' (the MySQL user for NewsBot) "
     stty -echo
     read mysql_password
     stty echo
+    printf "\n"
     
     sudo mysql -u root -e "CREATE USER 'newsbot'@'localhost' IDENTIFIED BY '$mysql_password';"
 else
@@ -99,6 +104,14 @@ else
     printf "MAILGUN_API_KEY='$mailgun_api_key'\n\n" >> "$project_path/.env"
     printf "MYSQL_DATABASE='newsbot'\n" >> "$project_path/.env";
     printf "MYSQL_USER='newsbot'\n" >> "$project_path/.env";
+    
+    if [[ -z ${mysql_password+x} ]]; then
+        printf "What is the current password for MySQL user 'newsbot'@'localhost'? "
+        stty -echo
+        read mysql_password
+        stty echo
+        printf "\n"
+    fi
     printf "MYSQL_PASSWORD='$mysql_password'\n" >> "$project_path/.env";
 
     chmod u=rw,g=,o= "$project_path/.env"
