@@ -6,7 +6,6 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import scrapy.crawler
-import datetime
 import typing
 import twisted.internet.defer
 import twisted.internet.reactor

@@ -17,7 +17,6 @@ import dotenv
 import scrapy.utils.conf
 import os
 import os.path
-import datetime
 import newsbot.items.item_with_files as item_with_files
 
 dotenv.load_dotenv(dotenv.find_dotenv())

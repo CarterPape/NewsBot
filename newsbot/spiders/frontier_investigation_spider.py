@@ -14,6 +14,7 @@ import newsbot.tasking.crawl_schedulers.uniformly_random_scheduler as uniformly_
 import newsbot.tasking.crawl_schedulers.crawl_scheduler as crawl_scheduler
 import newsbot.logger as logger
 import datetime
+import pytz
 import scrapy.selector
 
 
@@ -27,7 +28,6 @@ class FrontierInvestigationSpider(
         "ITEM_PIPELINES": {
             "newsbot.item_pipelines.emailed_item_filter.EmailedItemFilter":     10 ,
             "newsbot.item_pipelines.file_downloader.FileDownloader":            400,
-            "newsbot.item_pipelines.datetime_cruncher.DatetimeCruncher":        500,
             "newsbot.item_pipelines.item_emailer.ItemEmailer":                  900,
             "newsbot.item_pipelines.emailed_item_recorder.EmailedItemRecorder": 990,
         },
@@ -81,9 +81,11 @@ class FrontierInvestigationSpider(
                         self._document_url_relative_xpath
                     ).getall()
                 ),
-                source_date_string =    one_row.xpath(self._filing_date_relative_xpath).get(),
-                source_date_format =    "%B %d, %Y",
                 filing_name_map =       self._extract_name_map(one_row),
+                filing_datetime = datetime.datetime.strptime(
+                    one_row.xpath(self._filing_date_relative_xpath).get(),
+                    "%B %d, %Y",
+                ),
             )
             for one_row in all_filing_rows
         ]

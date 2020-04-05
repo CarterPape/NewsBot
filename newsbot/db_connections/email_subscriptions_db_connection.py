@@ -5,7 +5,6 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import datetime
 import pytz
 import typing
 import newsbot.db_connections.db_connection as db_connection

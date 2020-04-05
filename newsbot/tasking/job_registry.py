@@ -8,7 +8,6 @@
 import scrapy.crawler
 import scrapy.utils.project
 import newsbot.tasking.crawl_job as crawl_job
-import datetime
 
 
 class NewsBotJobRegistry(object):

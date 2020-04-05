@@ -7,16 +7,15 @@
 
 import scrapy
 import newsbot.items.emailable_item_with_attachments as emailable_item_with_attachments
-import newsbot.items.dated_item as dated_item
 import string
 import pape.utilities
 
 
 class FrontierInvestigationFiling(
     emailable_item_with_attachments.EmailableItemWithAttachments,
-    dated_item.DatedItem,
 ):
     filing_name_map = scrapy.Field()
+    filing_datetime = scrapy.Field()
     
     def synthesize_email_subject(self) -> str:
         filing_or_filings = pape.utilities.pluralize(
@@ -27,7 +26,7 @@ class FrontierInvestigationFiling(
         
         return (
             f"{filing_or_filings} published "
-            f"{self['datetime'].strftime('%A, %B %e')}"
+            f"{self['filing_datetime'].strftime('%A, %B %e')}"
         )
     
     def synthesize_html_email_body(self) -> str:
@@ -57,7 +56,7 @@ class FrontierInvestigationFiling(
             "filing_or_filings":    filing_or_filings,
             "it_is_or_they_are":    it_is_or_they_are,
             "here_it_they_is_are":  here_it_they_is_are,
-            "filing_date":          self["datetime"].strftime("%A, %b. %e"),
+            "filing_date":          self["filing_datetime"].strftime("%A, %b. %e"),
             "filing_link_list":     self._synthesize_filing_link_list(),
         })
     
