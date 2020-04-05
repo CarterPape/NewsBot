@@ -10,6 +10,7 @@ import scrapy.item
 import newsbot.items.self_serializing_item as self_serializing_item
 import os
 import abc
+import inspect
 
 
 class EmailableItem(
@@ -27,14 +28,11 @@ class EmailableItem(
     def synthesize_html_email_body(self) -> str:
         pass
     
-    def _get_email_template_directory(self):
-        return os.path.dirname(__file__)
-    
     def _get_email_template(self) -> string.Template:
         email_template_path = (
             os.path.abspath(
                 os.path.join(
-                    self._get_email_template_directory(),
+                    inspect.getfile(self.__class__),
                     f"{type(self).__name__}.template.html",
                 )
             )
