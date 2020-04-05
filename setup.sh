@@ -7,6 +7,7 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
+printf "Asking for sudo authentication. If no password required, send interrupt (Control-C).\n"
 sudo -v
 project_path="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
@@ -24,7 +25,7 @@ elif command -v brew &>/dev/null; then
     brew list libmagic &>/dev/null || brew install libmagic
     brew list mysql &>/dev/null || brew install mysql
 else 
-    printf "This project requires libmagic and MySQL. "
+    printf "This project requires libmagic and MySQL.\n"
     printf "Install them or ensure they are already installed, then hit [Enter] to continue. "
     read
 fi
