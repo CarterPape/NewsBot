@@ -32,7 +32,7 @@ class EmailableItem(
         email_template_path = (
             os.path.abspath(
                 os.path.join(
-                    inspect.getfile(self.__class__),
+                    os.path.dirname(inspect.getfile(self.__class__)),
                     f"{type(self).__name__}.template.html",
                 )
             )
