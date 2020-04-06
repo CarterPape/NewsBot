@@ -46,8 +46,8 @@ _workday_when_to_fire = WhenToFire({
 
 class TimeConditionalScheduler(crawl_scheduler.CrawlScheduler):
     def __init__(self, *,
-        working_timezone: datetime.tzinfo = pytz.timezone("America/Denver"),
         when_to_fire: WhenToFire =          _workday_when_to_fire,
+        working_timezone: datetime.tzinfo = pytz.timezone("America/Denver"),
         uniform_relative_deviation =        0.1,
         uniform_absolute_deviation =        datetime.timedelta(minutes = 10),
     ):
