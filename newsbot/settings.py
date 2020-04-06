@@ -124,6 +124,8 @@ _MYSQL_PASSWORD =       os.getenv("MYSQL_PASSWORD")
 
 _PRINT_INSTEAD_OF_EMAIL = (os.getenv("ENVIRONMENT") == "development")
 
+DOWNLOAD_WARNSIZE = 9 * (10 ** 6)
+
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 AUTOTHROTTLE_ENABLED = True
