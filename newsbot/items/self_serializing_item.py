@@ -14,7 +14,7 @@ class SelfSerializingItem(
     scrapy.Item,
     metaclass = abc.ABCMeta,
 ):
-    def serialized(self) -> dict:
+    def serialized(self) -> str:
         simple_self = dict()
         
         for field_key, field_properties in self.fields.items():
@@ -26,8 +26,19 @@ class SelfSerializingItem(
                 continue
             
             else:
-                if hasattr(field_properties, "serializer"):
+                if "serializer" in field_properties:
                     simple_self[field_key] = field_properties["serializer"](self[field_key])
+                elif issubclass(type(self[field_key]), SelfSerializingItem):
+                    simple_self[field_key] = self[field_key].serialized()
+                elif (
+                    issubclass(type(self[field_key]), list)
+                ):
+                    simple_self[field_key] = [
+                        each_item.serialized()
+                        if issubclass(type(each_item), SelfSerializingItem)
+                        else each_item
+                        for each_item in self[field_key]
+                    ]
                 else:
                     simple_self[field_key] = self[field_key]
         

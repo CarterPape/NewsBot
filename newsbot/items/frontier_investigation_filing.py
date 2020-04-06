@@ -15,7 +15,7 @@ class FrontierInvestigationFiling(
     emailable_item_with_attachments.EmailableItemWithAttachments,
 ):
     filing_name_map = scrapy.Field()
-    filing_datetime = scrapy.Field()
+    filing_datetime = scrapy.Field(serializer = str)
     
     def synthesize_email_subject(self) -> str:
         filing_or_filings = pape.utilities.pluralize(
