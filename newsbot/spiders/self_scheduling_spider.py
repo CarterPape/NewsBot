@@ -7,7 +7,6 @@
 
 import scrapy.spiders
 import scrapy.crawler
-import typing_extensions
 import newsbot.tasking.crawl_schedulers.uniformly_random_scheduler as uniformly_random_scheduler
 import newsbot.logger as logger
 import datetime
