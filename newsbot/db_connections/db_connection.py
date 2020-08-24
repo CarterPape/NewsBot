@@ -32,15 +32,15 @@ class DBConnection(
     
     @property
     @abc.abstractmethod
-    def table_name(self):
+    def table_name(self) -> str:
         pass
     
     @property
     @abc.abstractmethod
-    def table_definition(self):
+    def table_definition(self) -> str:
         pass
     
-    def table_exists(self):
+    def table_exists(self) -> bool:
         db_cursor = self.cursor()
         db_cursor.execute(f"""
             SELECT COUNT(*)
@@ -51,6 +51,9 @@ class DBConnection(
         table_count = db_cursor.fetchone()[0]
         db_cursor.close()
         return table_count > 0
+    
+    def connection_dependencies(self) -> [type]:
+        return []
     
     def create_table(self):
         db_cursor = self.cursor()

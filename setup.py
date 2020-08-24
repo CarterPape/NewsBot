@@ -15,7 +15,7 @@ setuptools.setup(
     name =      newsbot.settings.BOT_NAME,
     version =   newsbot.settings._BOT_VERSION,
     
-    author =    "Carter Pape",
+    author =        "Carter Pape",
     author_email =  "creator@newsbot.carterpape.com",
     
     packages =  setuptools.find_packages(),
