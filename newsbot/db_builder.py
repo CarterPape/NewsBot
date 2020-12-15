@@ -29,15 +29,16 @@ class DBBuilder(object):
             in self._db_connection_loader.list()
         ])
         
-        self._currently_building = self._principal_db_connection_list
-        
-        self._deferred_for_building = set()
+        self._currently_building:       set
+        self._deferred_for_building:    set
     
     def build_all_db_connections(self):
+        self._currently_building =      self._principal_db_connection_list
+        
         while (
-            len(self._currently_building) > 0
-        ) and (
             self._currently_building
+        ) and (
+            len(self._currently_building) > 0
         ):
             self._deferred_for_building = set()
             self._maybe_build_current_set()

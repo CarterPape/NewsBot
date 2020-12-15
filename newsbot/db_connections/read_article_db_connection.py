@@ -6,6 +6,7 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import typing
+import scrapy.settings
 import newsbot.db_connections.db_connection as db_connection
 import newsbot.db_connections.news_sources_db_connection as news_sources_db_connection
 import newsbot.items.news_article as news_article
@@ -14,21 +15,34 @@ import datetime
 
 
 class NewsArticleDBConnection(db_connection.DBConnection):
+    def __init__(self,
+        *args,
+        settings: scrapy.settings.Settings,
+        **kwargs,
+    ):
+        super().__init__(
+            *args,
+            settings =  settings,
+            **kwargs,
+        )
+        
+        self._news_sources_table = news_sources_db_connection.NewsSourcesDBConnection(
+            settings = settings,
+        )
+    
     @property
     def table_name(self):
         return "news_articles"
     
     @property
     def table_definition(self):
-        news_sources_table = news_sources_db_connection.NewsSourcesDBConnection()
-        
         return f"""
             CREATE TABLE `{self.table_name}` (
                 `article_id`        INTEGER     NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 `news_source_id`    INTEGER,
                 `article_clean_url` TEXT        NOT NULL,
                 FOREIGN KEY (news_source_id)
-                    REFERENCES {news_sources_table.table_name}(source_id)
+                    REFERENCES {self._news_sources_table.table_name}(source_id)
                     ON UPDATE CASCADE
                     ON DELETE CASCADE
             )

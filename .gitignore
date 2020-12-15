@@ -8,6 +8,7 @@
 # output files
 out/
 data/
+log/
 
 # environment-specific configuration
 .vscode/

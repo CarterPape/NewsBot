@@ -20,7 +20,7 @@ class DBConnection(
     def __init__(self,
         *args,
         settings: scrapy.settings.Settings,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(
             *args,
