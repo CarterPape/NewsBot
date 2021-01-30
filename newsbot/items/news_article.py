@@ -14,9 +14,9 @@ import urllib.parse
 
 class NewsArticle(emailable_item.EmailableItem):
     clean_url =     scrapy.Field()
-    title =         scrapy.Field()
-    description =   scrapy.Field()
-    img_src =       scrapy.Field()
+    title =         scrapy.Field(ignore_when_serializing = True)
+    description =   scrapy.Field(ignore_when_serializing = True)
+    img_src =       scrapy.Field(ignore_when_serializing = True)
     news_source =   scrapy.Field(ignore_when_serializing = True)
     
     def synthesize_email_subject(self) -> str:
