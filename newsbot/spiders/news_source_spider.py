@@ -27,6 +27,7 @@ class NewsSourceSpider(self_scheduling_spider.SelfSchedulingSpider):
     name = __name__
     custom_settings = {
         "ITEM_PIPELINES": {
+            "newsbot.item_pipelines.emailed_item_filter.EmailedItemFilter":     10 ,
             "newsbot.item_pipelines.open_graph_extractor.OpenGraphExtractor":   100,
             "newsbot.item_pipelines.item_emailer.ItemEmailer":                  900,
             "newsbot.item_pipelines.emailed_item_recorder.EmailedItemRecorder": 910,

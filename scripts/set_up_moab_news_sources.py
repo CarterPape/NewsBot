@@ -12,7 +12,7 @@ moab_news_source_dict_list = [
     {
         "name":         "The Salt Lake Tribune",
         "url":          "https://www.sltrib.com/search/Moab",
-        "links_xpath":  "//*[contains(concat(' ',normalize-space(@class), ' '), ' results-list ')]/article//*[contains(concat(' ',normalize-space(@class), ' '), ' resultText ')]/a/@href",
+        "links_xpath":  "//*[contains(concat(' ', normalize-space(@class), ' '), ' results-list ')]/article//*[contains(concat(' ', normalize-space(@class), ' '), ' resultText ')]/a/@href",
     },
     {
         "name":         "The New York Times",
@@ -22,7 +22,7 @@ moab_news_source_dict_list = [
     {
         "name":         "KSL",
         "url":          "https://www.ksl.com/?sid=53574&nid=208&cx=partner-pub-3771868546990559%3Ar955z1-wmf4&cof=FORID%3A9&ie=ISO-8859-1&sa=Search&searchtype=kslcom&x=15&y=19&q=%22Moab%22#gsc.tab=0&gsc.q=%22Moab%22&gsc.sort=date&gsc.ref=more%3Aksl_news",
-        "links_xpath":  "//*[@data-refinementlabel='ksl_news']/ancestor::*[contains(concat(' ',normalize-space(@class), ' '), ' gs-webResult ')]//a[@class='gs-title']/@href",
+        "links_xpath":  "//*[@data-refinementlabel='ksl_news']/ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' gs-webResult ')]//a[@class='gs-title']/@href",
     },
     {
         "name":         "The Washington Post",
@@ -32,7 +32,7 @@ moab_news_source_dict_list = [
     {
         "name":         "KUTV",
         "url":          "https://kutv.com/search?find=Moab",
-        "links_xpath":  "//*[contains(concat(' ',normalize-space(@class), ' '), ' sd-main-content ')]//li[contains(concat(' ',normalize-space(@class), ' '), ' teaser-list-item ')]/a/@href",
+        "links_xpath":  "//*[contains(concat(' ', normalize-space(@class), ' '), ' sd-main-content ')]//li[contains(concat(' ', normalize-space(@class), ' '), ' teaser-list-item ')]/a/@href",
     },
 ]
 

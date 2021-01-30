@@ -7,12 +7,12 @@
 
 import logging
 import scrapy.logformatter
-import newsbot.exceptions.drop_transmitted_item as drop_transmitted_item
+import newsbot.exceptions.safe_drop_exception as safe_drop_exception
 
 
 class NewsBotLogFormatter(scrapy.logformatter.LogFormatter):
     def dropped(self, item, exception, response, spider):
-        if isinstance(exception, drop_transmitted_item.DropTransmittedItem):
+        if isinstance(exception, safe_drop_exception.SafeDropException):
             return {
                 "level":    logging.DEBUG,
                 "msg":      scrapy.logformatter.DROPPEDMSG,

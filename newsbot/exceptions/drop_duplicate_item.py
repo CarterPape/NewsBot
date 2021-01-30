@@ -7,5 +7,5 @@
 
 import newsbot.exceptions.safe_drop_exception as safe_drop_exception
 
-class DropTransmittedItem(safe_drop_exception.SafeDropException):
+class DropDuplicateItem(safe_drop_exception.SafeDropException):
     pass
