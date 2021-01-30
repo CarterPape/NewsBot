@@ -12,9 +12,7 @@ import pape.utilities
 import urllib.parse
 
 
-class NewsArticle(
-    emailable_item.EmailableItem,
-):
+class NewsArticle(emailable_item.EmailableItem):
     clean_url =     scrapy.Field()
     title =         scrapy.Field()
     description =   scrapy.Field()

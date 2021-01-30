@@ -8,20 +8,17 @@
 import scrapy
 import scrapy.http
 import scrapy.crawler
+import logging
 import newsbot.spiders.self_scheduling_spider as self_scheduling_spider
 import newsbot.items.frontier_investigation_filing as frontier_investigation_filing
 import newsbot.tasking.crawl_schedulers.uniformly_random_scheduler as uniformly_random_scheduler
 import newsbot.tasking.crawl_schedulers.crawl_scheduler as crawl_scheduler
-import newsbot.logger as logger
 import datetime
 import pytz
 import scrapy.selector
 
 
-class FrontierInvestigationSpider(
-    self_scheduling_spider.SelfSchedulingSpider,
-    logger.Logger,
-):
+class FrontierInvestigationSpider(self_scheduling_spider.SelfSchedulingSpider):
     name =              __name__
     allowed_domains =   ["utah.gov"]
     custom_settings = {
@@ -81,7 +78,7 @@ class FrontierInvestigationSpider(
                         self._document_url_relative_xpath
                     ).getall()
                 ),
-                filing_name_map =       self._extract_name_map(one_row),
+                filing_name_map = self._extract_name_map(one_row),
                 filing_datetime = datetime.datetime.strptime(
                     one_row.xpath(self._filing_date_relative_xpath).get(),
                     "%B %d, %Y",
@@ -89,6 +86,9 @@ class FrontierInvestigationSpider(
             )
             for one_row in all_filing_rows
         ]
+        
+        logging.info(f"Found {len(all_filings)} Frontier filings")
+        
         return all_filings
     
     def _extract_name_map(self,

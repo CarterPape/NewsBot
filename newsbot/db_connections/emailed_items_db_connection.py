@@ -8,6 +8,7 @@
 import datetime
 import pytz
 import typing
+import logging
 import newsbot.db_connections.db_connection as db_connection
 import newsbot.items.emailable_item as emailable_item
 
@@ -31,6 +32,8 @@ class EmailedItemsDBConnection(db_connection.DBConnection):
     def record_emailed_item(self,
         item_to_record: emailable_item.EmailableItem
     ):
+        logging.debug(f"Recording item {item_to_record} as emailed")
+        
         db_cursor = self.cursor()
         db_cursor.execute(f"""
             INSERT INTO `{self.table_name}` (
@@ -50,6 +53,9 @@ class EmailedItemsDBConnection(db_connection.DBConnection):
     def datetime_item_transmitted(self,
         item_to_query: emailable_item.EmailableItem
     ) -> typing.Union[datetime.datetime, None]:
+        
+        logging.debug(f"Getting datetime of transmission (if one exists) for item {item_to_query}")
+        
         db_cursor = self.cursor(buffered = True)
         db_cursor.execute(f"""
             SELECT

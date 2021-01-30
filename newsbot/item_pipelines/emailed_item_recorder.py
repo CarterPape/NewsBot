@@ -6,6 +6,7 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import scrapy
+import logging
 import newsbot.items.emailable_item as emailable_item
 import newsbot.item_pipelines.item_pipeline as item_pipeline
 import newsbot.db_connections.emailed_items_db_connection as emailed_items_db_connection
@@ -18,6 +19,7 @@ class EmailedItemRecorder(item_pipeline.ItemPipeline):
         spider: scrapy.Spider
     ) -> emailable_item.EmailableItem:
         
+        logging.debug(f"Recording item {item} as emailed")
         db_connection = emailed_items_db_connection.EmailedItemsDBConnection(
             settings = spider.settings,
         )

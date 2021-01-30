@@ -7,6 +7,7 @@
 
 import pytz
 import typing
+import logging
 import newsbot.db_connections.db_connection as db_connection
 import newsbot.items.emailable_item as emailable_item
 import pape.utilities
@@ -33,7 +34,13 @@ class EmailSubscriptionsDBConnection(db_connection.DBConnection):
         email_address: str,
         item_selection: str,
     ):
-        addressee_name_with_quotes_or_null = f"\"{addressee_name}\"" or "NULL"
+        addressee_name_with_quotes_or_null = (
+            f"\"{addressee_name}\""
+            if addressee_name
+            else "NULL"
+        )
+        
+        logging.info(f"Adding subscription to {item_selection} for \"{addressee_name}\" <{email_address}>")
         
         db_cursor = self.cursor()
         db_cursor.execute(f"""
@@ -54,6 +61,8 @@ class EmailSubscriptionsDBConnection(db_connection.DBConnection):
     def remove_all_subscriptions(self, *,
         requester_email_address: str
     ):
+        logging.info(f"Removing all subscriptions for {requester_email_address}")
+        
         db_cursor = self.cursor()
         db_cursor.execute(f"""
             DELETE FROM `{self.table_name}`
@@ -62,12 +71,13 @@ class EmailSubscriptionsDBConnection(db_connection.DBConnection):
         self.commit()
         db_cursor.close()
     
-    def get_addressees(self, *,
-        that_should_receive_item: emailable_item.EmailableItem,
+    def get_addressees_that_should_receive(self,
+        item: emailable_item.EmailableItem,
     ) -> [tuple]:
         full_item_class_name = pape.utilities.full_class_name(
-            of_object = that_should_receive_item
+            of_object = item
         )
+        logging.debug(f"Getting subscriptions for item of class {full_item_class_name}")
         db_cursor = self.cursor()
         db_cursor.execute(f"""
             SELECT
@@ -81,6 +91,7 @@ class EmailSubscriptionsDBConnection(db_connection.DBConnection):
         return addressee_list
     
     def get_all_subscriptions(self) -> [tuple]:
+        logging.debug(f"Getting all subscriptions")
         db_cursor = self.cursor()
         db_cursor.execute(f"""
             SELECT

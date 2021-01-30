@@ -14,7 +14,7 @@ class NewsBotLogFormatter(scrapy.logformatter.LogFormatter):
     def dropped(self, item, exception, response, spider):
         if isinstance(exception, drop_transmitted_item.DropTransmittedItem):
             return {
-                "level":    logging.INFO,
+                "level":    logging.DEBUG,
                 "msg":      scrapy.logformatter.DROPPEDMSG,
                 "args": {
                     "exception":    exception,

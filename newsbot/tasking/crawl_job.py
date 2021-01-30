@@ -7,15 +7,15 @@
 
 import scrapy.crawler
 import typing
+import logging
 import twisted.internet.defer
 import twisted.internet.reactor
 import random
 import newsbot.tasking.crawl_schedulers.crawl_scheduler as crawl_scheduler
 import newsbot.spiders.self_scheduling_spider as self_scheduling_spider
-import newsbot.logger as logger
 
 
-class CrawlJob(logger.Logger):
+class CrawlJob:
     def __init__(self, *,
         from_runner:        scrapy.crawler.CrawlerRunner,
         spider_class:       type,
@@ -31,11 +31,15 @@ class CrawlJob(logger.Logger):
         )
     
     def crawl_then_repeat_later(self):
+        logging.info(f"Starting a crawl with a spider of class {self._crawler.spidercls}")
+        
         deferred = self._runner.crawl(self._crawler)
         deferred.addCallback(self.schedule_a_crawl)
     
     def schedule_a_crawl(self, deferred_result = None):
         pause_time = self._scheduler.pause_time_in_seconds
+        
+        logging.info(f"Scheduling a crawl with a spider of class {self._crawler.spidercls} for {pause_time} seconds from now")
         
         twisted.internet.reactor.callLater(
             pause_time,

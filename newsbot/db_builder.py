@@ -6,6 +6,7 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import typing
+import logging
 import newsbot.db_connections.db_connection as db_connection
 import newsbot.concrete_subclass_loader as concrete_subclass_loader
 import scrapy
@@ -16,15 +17,15 @@ class DBBuilder(object):
     def __init__(self, *,
         from_settings: scrapy.settings.Settings,
     ):
-        project_settings = from_settings
+        self._settings = from_settings
         
         self._db_connection_loader = concrete_subclass_loader.ConcreteSubclassLoader(
             load_subclasses_of =    db_connection.DBConnection,
-            from_modules_named =    project_settings.getlist("_TOP_LEVEL_MODULES"),
+            from_modules_named =    self._settings.getlist("_TOP_LEVEL_MODULES"),
         )
         
         self._principal_db_connection_list = set([
-            db_connection_class(settings = project_settings)
+            db_connection_class(settings = self._settings)
             for db_connection_class
             in self._db_connection_loader.list()
         ])
@@ -32,7 +33,8 @@ class DBBuilder(object):
         self._currently_building:       set
         self._deferred_for_building:    set
     
-    def build_all_db_connections(self):
+    def build_unbuilt_tables(self):
+        logging.debug("Building all unbuilt database tables")
         self._currently_building =      self._principal_db_connection_list
         
         while (
@@ -50,7 +52,7 @@ class DBBuilder(object):
     def _maybe_build_current_set(self):
         for db_connection in self._currently_building:
             if db_connection.table_exists():
-                pass
+                logging.debug(f"Table {db_connection.table_name} already built")
             else:
                 self._build_or_defer(db_connection)
         
@@ -61,14 +63,23 @@ class DBBuilder(object):
     
     def _build_or_defer(self, db_connection: db_connection.DBConnection):
         if self._dependencies_for_db_connection_exist(db_connection):
+            logging.debug(f"Building table {db_connection.table_name}")
             db_connection.create_table()
         else:
+            logging.debug(f"Deferring table {db_connection.table_name} construction because at least one of its dependencies is unbuilt")
             self._deferred_for_building.add(db_connection)
     
     def _dependencies_for_db_connection_exist(self, db_connection: db_connection.DBConnection):
         all_exist = True
         
         for each_dependency in db_connection.connection_dependencies:
-            all_exist = all_exist and each_dependency.table_exists()
+            logging.debug(f"Dependency for {db_connection} found: {each_dependency}")
+            all_exist = (
+                all_exist
+            ) and (
+                each_dependency(
+                    settings = self._settings
+                ).table_exists()
+            )
         
         return all_exist

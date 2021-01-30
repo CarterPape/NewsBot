@@ -5,10 +5,10 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
+import logging
 import scrapy.spiders
 import scrapy.crawler
 import newsbot.tasking.crawl_schedulers.uniformly_random_scheduler as uniformly_random_scheduler
-import newsbot.logger as logger
 import datetime
 import dotenv
 import os
@@ -18,7 +18,6 @@ import abc
 
 class SelfSchedulingSpider(
     scrapy.spiders.Spider,
-    logger.Logger,
     metaclass = abc.ABCMeta,
 ):
     _DEBUG_SCHEDULER = (
@@ -42,5 +41,7 @@ class SelfSchedulingSpider(
             new_scheduler = copy.copy(klass._DEBUG_SCHEDULER)
         else:
             new_scheduler = suggested_scheduler
+        
+        logging.debug(f"Using scheduler {new_scheduler} for a spider of class {klass}")
         
         return new_scheduler

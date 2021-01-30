@@ -8,6 +8,7 @@
 import scrapy.settings
 import collections
 import inspect
+import logging
 import warnings
 import importlib
 import pkgutil
@@ -65,12 +66,18 @@ class ConcreteSubclassLoader(object):
         from_module: types.ModuleType,
     ):
         module = from_module
+        logging.debug(f"Searching for subclasses of {self._load_subclasses_of} in module {module}")
         
         for concrete_subclass in self.concrete_subclasses(in_module = module):
+            logging.debug(f"Found {concrete_subclass}, a concrete subclass of {self._load_subclasses_of}")
             self._loaded_concrete_subclasses.append(concrete_subclass)
     
     def _load_all_subclasses(self):
+        logging.debug(f"Loading sublasses of {self._load_subclasses_of}")
+        
         for name in self._from_modules_named:
+            logging.debug(f"Searching for subclasses of {self._load_subclasses_of} in name {name}")
+            
             for module in self.walk_modules(at_path = name):
                 self._load_subclasses(from_module = module)
     

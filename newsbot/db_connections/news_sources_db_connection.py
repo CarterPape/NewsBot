@@ -6,6 +6,7 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import typing
+import logging
 import newsbot.db_connections.db_connection as db_connection
 import newsbot.db_connections.news_sources_db_connection as news_sources_db_connection
 import newsbot.items.news_article as news_article
@@ -26,7 +27,7 @@ class NewsSourcesDBConnection(db_connection.DBConnection):
                 `source_id`         INTEGER     NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 `source_name`       TEXT        NOT NULL,
                 `source_url`        TEXT        NOT NULL,
-                `links_xpath`       TEXT        NOT NULL,
+                `links_xpath`       TEXT        NOT NULL
             )
         """
     
@@ -36,6 +37,8 @@ class NewsSourcesDBConnection(db_connection.DBConnection):
         same_name_is_duplicate =    True,
         same_url_is_duplicate =     True,
     ):
+        logging.debug(f"Adding news source {source}")
+        
         if same_name_is_duplicate or same_url_is_duplicate:
             self._raise_if_existing(
                 source_to_look_for =        source,
@@ -83,7 +86,7 @@ class NewsSourcesDBConnection(db_connection.DBConnection):
         if match_count > 0:
             raise duplicate_entry_exception.DuplicateEntryException()
     
-    def list_all_sources(self) -> [news_source.NewsSource]:
+    def list_all_sources(self) -> typing.List[news_source.NewsSource]:
         db_cursor = self.cursor()
         db_cursor.execute(f"""
             SELECT

@@ -11,9 +11,7 @@ import string
 import pape.utilities
 
 
-class FrontierInvestigationFiling(
-    emailable_item_with_attachments.EmailableItemWithAttachments,
-):
+class FrontierInvestigationFiling(emailable_item_with_attachments.EmailableItemWithAttachments):
     filing_name_map = scrapy.Field()
     filing_datetime = scrapy.Field(serializer = str)
     

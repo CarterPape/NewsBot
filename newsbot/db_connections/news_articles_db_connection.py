@@ -14,7 +14,7 @@ import newsbot.items.news_source as news_source
 import datetime
 
 
-class NewsArticleDBConnection(db_connection.DBConnection):
+class NewsArticlesDBConnection(db_connection.DBConnection):
     def __init__(self,
         *args,
         settings: scrapy.settings.Settings,
@@ -48,7 +48,8 @@ class NewsArticleDBConnection(db_connection.DBConnection):
             )
         """
     
-    def connection_dependencies(self) -> [type]:
+    @property
+    def connection_dependencies(self) -> typing.List[type]:
         return [news_sources_db_connection.NewsSourcesDBConnection]
     
     def record_news_article(self,

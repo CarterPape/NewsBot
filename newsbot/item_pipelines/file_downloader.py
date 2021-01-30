@@ -6,6 +6,7 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import scrapy
+import logging
 import scrapy.pipelines.files
 import os.path
 import urllib.parse
@@ -45,4 +46,6 @@ class FileDownloader(
                     fyle["path"]
                 )
             )
+        
+        logging.debug(f"Files for item {item} downloaded")
         return item

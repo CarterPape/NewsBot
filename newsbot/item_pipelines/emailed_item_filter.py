@@ -6,6 +6,7 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import scrapy
+import logging
 import newsbot.items.emailable_item as emailable_item
 import newsbot.item_pipelines.item_pipeline as item_pipeline
 import newsbot.db_connections.emailed_items_db_connection as emailed_items_db_connection
@@ -26,6 +27,7 @@ class EmailedItemFilter(item_pipeline.ItemPipeline):
         db_connection.close()
         
         if datetime_transmitted == None:
+            logging.debug(f"Item {item} has not been emailed previously.")
             return item
         else:
             raise drop_transmitted_item.DropTransmittedItem(

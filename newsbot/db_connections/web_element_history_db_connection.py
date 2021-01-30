@@ -6,7 +6,7 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import difflib
-
+import logging
 import scrapy.settings
 import newsbot.db_connections.db_connection as db_connection
 import newsbot.items.emailable_item as emailable_item

@@ -6,11 +6,10 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import scrapy
+import logging
 import newsbot.items.emailable_item as emailable_item
 import string
 
 
-class WebElement(
-    emailable_item.EmailableItem,
-):
+class WebElement(emailable_item.EmailableItem,):
     pass

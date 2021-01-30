@@ -28,7 +28,7 @@ sterr_stream_handler.setLevel("WARNING")
 logging.getLogger().addHandler(sterr_stream_handler)
 
 db_builder = db_builder.DBBuilder(from_settings = project_settings)
-db_builder.build_all_db_connections()
+db_builder.build_unbuilt_tables()
 
 spider_loader = scrapy.spiderloader.SpiderLoader(project_settings)
 spider_classes = [

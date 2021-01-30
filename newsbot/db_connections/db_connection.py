@@ -5,6 +5,7 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
+import logging
 import abc
 import scrapy.settings
 import mysql.connector
@@ -12,6 +13,7 @@ import mysql.connector.connection
 import mysql.connector.cursor
 import dotenv
 import os
+import typing
 
 class DBConnection(
     mysql.connector.MySQLConnection,
@@ -40,6 +42,10 @@ class DBConnection(
     def table_definition(self) -> str:
         pass
     
+    @property
+    def connection_dependencies(self) -> typing.List[type]:
+        return []
+    
     def table_exists(self) -> bool:
         db_cursor = self.cursor()
         db_cursor.execute(f"""
@@ -50,13 +56,24 @@ class DBConnection(
         """)
         table_count = db_cursor.fetchone()[0]
         db_cursor.close()
+        
+        exists_or_not = (
+            "exists"
+                if table_count > 0
+            else "does not exist"
+        )
+        logging.debug(f"Table {self.table_name} {exists_or_not}")
+        
         return table_count > 0
     
-    def connection_dependencies(self) -> [type]:
-        return []
-    
     def create_table(self):
+        logging.info(f"Creating table {self.table_name}")
+        
         db_cursor = self.cursor()
         db_cursor.execute(self.table_definition)
         self.commit()
         db_cursor.close()
+    
+    def commit(self):
+        logging.debug(f"Committing transaction on table {self.table_name}")
+        super().commit()

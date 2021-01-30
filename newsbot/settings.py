@@ -88,7 +88,7 @@ FILES_RESULT_FIELD = item_with_files.ItemWithFiles.get_files_result_field()
 
 
 if _ENVIRONMENT == "development":
-    LOG_LEVEL = "INFO"
+    LOG_LEVEL = "DEBUG"
 else:
     LOG_LEVEL = "WARNING"
 
