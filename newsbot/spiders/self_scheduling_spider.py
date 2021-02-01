@@ -20,25 +20,15 @@ class SelfSchedulingSpider(
     scrapy.spiders.Spider,
     metaclass = abc.ABCMeta,
 ):
-    _DEBUG_SCHEDULER = (
-        uniformly_random_scheduler.UniformlyRandomScheduler(
-            minimum_interval = datetime.timedelta(seconds = 5),
-            maximum_interval = datetime.timedelta(seconds = 10),
-            first_call_is_immediate =   True,
-        )
-    )
-    
     @classmethod
     def make_a_scheduler(klass, *,
         from_crawler: scrapy.crawler.Crawler,
         suggested_scheduler = None
     ):
-        if (
-            from_crawler.settings.get("_ENVIRONMENT") == "development"
-        ) or (
-            suggested_scheduler == None
-        ):
-            new_scheduler = copy.copy(klass._DEBUG_SCHEDULER)
+        if from_crawler.settings.get("_FORCE_SCHEDULER") != None:
+            new_scheduler = copy.copy(
+                from_crawler.settings.get("_FORCE_SCHEDULER")
+            )
         else:
             new_scheduler = suggested_scheduler
         

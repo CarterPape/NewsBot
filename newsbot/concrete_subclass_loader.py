@@ -5,16 +5,12 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import scrapy.settings
 import collections
 import inspect
 import logging
-import warnings
 import importlib
 import pkgutil
-import traceback
 import types
-import pape.utilities
 
 class ConcreteSubclassLoader(object):
     def __init__(self, *,

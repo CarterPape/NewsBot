@@ -18,31 +18,35 @@ import scrapy.utils.conf
 import os
 import os.path
 import newsbot.items.item_with_files as item_with_files
+import newsbot.tasking.crawl_schedulers.uniformly_random_scheduler as uniformly_random_scheduler
+import datetime
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
 BOT_NAME =      "NewsBot"
-_BOT_VERSION =  "0.3.0"
+_BOT_VERSION =  "0.4.0"
 
-_TOP_LEVEL_MODULES   = ["private", "newsbot"]
+_TOP_LEVEL_MODULES = ["private", "newsbot"]
 
-SPIDER_MODULES =    [
+SPIDER_MODULES = [
     top_level_module + ".spiders"
     for top_level_module in _TOP_LEVEL_MODULES
 ]
 NEWSPIDER_MODULE =  SPIDER_MODULES[0]
 
-_DB_CONNECTION_MODULES =    [
+_DB_CONNECTION_MODULES = [
     top_level_module + ".db_connections"
     for top_level_module in _TOP_LEVEL_MODULES
 ]
 
 
-_ENVIRONMENT =          os.getenv("ENVIRONMENT")
+_ENVIRONMENT = os.getenv("ENVIRONMENT")
 
 
-# Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = f"{BOT_NAME}/{_BOT_VERSION} (+https://github.com/carterpape/newsbot)"
+if _ENVIRONMENT == "development":
+    USER_AGENT = f"{BOT_NAME}-under-development/{_BOT_VERSION} (+https://github.com/carterpape/newsbot)"
+else:
+    USER_AGENT = f"{BOT_NAME}/{_BOT_VERSION} (+https://github.com/carterpape/newsbot)"
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -122,7 +126,7 @@ _MYSQL_DATABASE =       os.getenv("MYSQL_DATABASE")
 _MYSQL_USER =           os.getenv("MYSQL_USER")
 _MYSQL_PASSWORD =       os.getenv("MYSQL_PASSWORD")
 
-_PRINT_INSTEAD_OF_EMAIL = (os.getenv("ENVIRONMENT") == "development")
+_PRINT_INSTEAD_OF_EMAIL = (_ENVIRONMENT == "development")
 
 DOWNLOAD_WARNSIZE = 9 * (10 ** 6)
 
@@ -137,3 +141,14 @@ AUTOTHROTTLE_MAX_DELAY = 60
 AUTOTHROTTLE_TARGET_CONCURRENCY = 0.5
 # Enable showing throttling stats for every response received:
 AUTOTHROTTLE_DEBUG = True
+
+if _ENVIRONMENT == "development":
+    _FORCE_SCHEDULER = (
+        uniformly_random_scheduler.UniformlyRandomScheduler(
+            minimum_interval = datetime.timedelta(seconds = 60),
+            maximum_interval = datetime.timedelta(seconds = 80),
+            first_call_is_immediate =   True,
+        )
+    )
+    
+    _MAKE_NO_PURCHASE = True
