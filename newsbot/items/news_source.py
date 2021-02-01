@@ -6,10 +6,15 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import scrapy
+import newsbot.spiders.helpers.link_list_parser as link_list_parser
 
 
-class NewsSource(scrapy.Item):
-    source_id =     scrapy.Field(ignore_when_serializing = True)
-    url =           scrapy.Field()
-    name =          scrapy.Field()
-    links_xpath =   scrapy.Field()
+class NewsSource(object):
+    def __init__(self, *,
+        name: str,
+        url: str,
+        links_parser: link_list_parser.LinkListParser,
+    ):
+        self.name =         name
+        self.url =          url
+        self.links_parser = links_parser

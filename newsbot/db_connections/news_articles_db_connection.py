@@ -15,21 +15,6 @@ import datetime
 
 
 class NewsArticlesDBConnection(db_connection.DBConnection):
-    def __init__(self,
-        *args,
-        settings: scrapy.settings.Settings,
-        **kwargs,
-    ):
-        super().__init__(
-            *args,
-            settings =  settings,
-            **kwargs,
-        )
-        
-        self._news_sources_table = news_sources_db_connection.NewsSourcesDBConnection(
-            settings = settings,
-        )
-    
     @property
     def table_name(self):
         return "news_articles"
@@ -41,10 +26,7 @@ class NewsArticlesDBConnection(db_connection.DBConnection):
                 `article_id`        INTEGER     NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 `news_source_id`    INTEGER,
                 `article_clean_url` TEXT        NOT NULL,
-                FOREIGN KEY (news_source_id)
-                    REFERENCES {self._news_sources_table.table_name}(source_id)
-                    ON UPDATE CASCADE
-                    ON DELETE CASCADE
+                `news_source_id`    TEXT        NOT NULL
             )
         """
     
@@ -64,7 +46,7 @@ class NewsArticlesDBConnection(db_connection.DBConnection):
                 article_clean_url
             )
             VALUES (
-                {from_news_source.source_id},
+                '{from_news_source.source_id}',
                 '{article.clean_url}'
             )
         """)
