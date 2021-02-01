@@ -7,6 +7,7 @@
 
 import typing
 import logging
+import urllib.parse
 import scrapy
 import scrapy.http
 import scrapy.crawler
@@ -32,6 +33,11 @@ class NewsSourceSpider(self_scheduling_spider.SelfSchedulingSpider):
             "newsbot.item_pipelines.item_emailer.ItemEmailer":                  900,
             "newsbot.item_pipelines.emailed_item_recorder.EmailedItemRecorder": 910,
         },
+        "USER_AGENT": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) "
+            "AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 "
+            "Safari/605.1.15"
+        ),
     }
     
     @classmethod
@@ -65,7 +71,7 @@ class NewsSourceSpider(self_scheduling_spider.SelfSchedulingSpider):
             settings = self.settings,
         )
         
-        news_source_list = self._news_sources_db_connection.get_source_list()
+        news_source_list = self._news_sources_db_connection.list_all_sources()
         
         for news_source in news_source_list:
             yield scrapy.Request(
@@ -82,11 +88,30 @@ class NewsSourceSpider(self_scheduling_spider.SelfSchedulingSpider):
         the_source: news_source.NewsSource,
     ) -> typing.List[news_article.NewsArticle]:
         
-        all_urls = response.xpath(the_source.links_xpath)
+        all_urls = the_source.links_parser.parse_response(response)
         
         logging.info(f"Found {len(all_urls)} articles on {the_source}")
         
-        for one_article_url in all_urls:
+        for each_article_url in all_urls:
             yield news_article.NewsArticle(
-                article_url = one_article_url.get(),
+                clean_url = self._clean_url(
+                    dirty_url = each_article_url
+                ),
             )
+    
+    def _clean_url(self, *,
+        dirty_url: str,
+    ):
+        parsed_url = urllib.parse.urlparse(dirty_url)
+        
+        clean_url = urllib.parse.urlunparse(
+            parsed_url._replace(
+                query = "",
+                params = "",
+                fragment = "",
+            )
+        )
+        
+        logging.debug(f"Cleaned url {dirty_url} into {clean_url}")
+        
+        return clean_url

@@ -25,7 +25,7 @@ class SLTribSearchParser(link_list_parser.LinkListParser):
         return [
             urllib.parse.urljoin(
                 response.url,
-                each_result["website_url"],
+                each_result["canonical_url"],
             )
             for each_result
             in search_result_list

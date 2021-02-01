@@ -24,9 +24,8 @@ class NewsArticlesDBConnection(db_connection.DBConnection):
         return f"""
             CREATE TABLE `{self.table_name}` (
                 `article_id`        INTEGER     NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                `news_source_id`    INTEGER,
-                `article_clean_url` TEXT        NOT NULL,
-                `news_source_id`    TEXT        NOT NULL
+                `news_source_id`    TEXT        NOT NULL,
+                `article_clean_url` TEXT        NOT NULL
             )
         """
     
