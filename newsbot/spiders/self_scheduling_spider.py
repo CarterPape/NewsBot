@@ -10,8 +10,6 @@ import scrapy.spiders
 import scrapy.crawler
 import newsbot.tasking.crawl_schedulers.uniformly_random_scheduler as uniformly_random_scheduler
 import datetime
-import dotenv
-import os
 import copy
 import abc
 
