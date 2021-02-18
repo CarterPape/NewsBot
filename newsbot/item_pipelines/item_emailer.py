@@ -7,9 +7,7 @@
 
 import scrapy
 import scrapy.settings
-import os
 import requests
-import dotenv
 import datetime
 import logging
 import newsbot.db_connections.email_subscriptions_db_connection as email_subscriptions_db_connection
@@ -78,11 +76,6 @@ class ItemEmailer(item_pipeline.ItemPipeline):
                 def status_code(self):
                     pass
             
-            attachment_paths = "\n".join([
-                f"    {attachment[1][0]}"
-                for attachment in attachments
-            ])
-            
             faux_email_message = (
                 "From:"
                     + self._settings.get("_EMAIL_SENDER") + "\n"
@@ -92,11 +85,23 @@ class ItemEmailer(item_pipeline.ItemPipeline):
                     + item.synthesize_email_subject() + "\n"
                 + "———————————\n"
                 + item.synthesize_html_email_body() + "\n"
-                + "- - - - - -\n"
-                + "Attachments:\n"
-                + attachment_paths + "\n"
-                + "———————————\n\n"
             )
+            
+            if issubclass(
+                type(item),
+                emailable_item_with_attachments.EmailableItemWithAttachments
+            ):
+                attachment_paths = "\n".join([
+                    f"    {attachment[1][0]}"
+                    for attachment in attachments
+                ])
+                faux_email_message += (
+                    "- - - - - -\n"
+                    + "Attachments:\n"
+                    + attachment_paths + "\n"
+                )
+            
+            faux_email_message += "———————————\n\n"
             
             logging.info("Email intentionally not sent:\n" + faux_email_message)
             return __FakeResponse()
