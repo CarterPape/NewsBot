@@ -14,4 +14,4 @@ pytz
 mysql-connector-python
 requests
 dateparser
-opengraph
+metadata_parser
