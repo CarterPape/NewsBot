@@ -33,11 +33,6 @@ class NewsSourceSpider(self_scheduling_spider.SelfSchedulingSpider):
             "newsbot.item_pipelines.item_emailer.ItemEmailer":                  900,
             "newsbot.item_pipelines.emailed_item_recorder.EmailedItemRecorder": 910,
         },
-        "USER_AGENT": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) "
-            "AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 "
-            "Safari/605.1.15"
-        ),
     }
     
     @classmethod
@@ -75,7 +70,7 @@ class NewsSourceSpider(self_scheduling_spider.SelfSchedulingSpider):
         
         for news_source in news_source_list:
             yield scrapy.Request(
-                news_source.url,
+                news_source.search_url,
                 callback =  self.parse_article_list,
                 cb_kwargs = {
                     "the_source": news_source,
@@ -90,13 +85,17 @@ class NewsSourceSpider(self_scheduling_spider.SelfSchedulingSpider):
         
         all_urls = the_source.links_parser.parse_response(response)
         
-        logging.info(f"Found {len(all_urls)} articles on {the_source}")
+        if len(all_urls) > 0:
+            logging.info(f"Found {len(all_urls)} articles on {the_source}")
+        else:
+            logging.warning(f"Found no articles on {the_source}")
         
         for each_article_url in all_urls:
             yield news_article.NewsArticle(
                 clean_url = self._clean_url(
                     dirty_url = each_article_url
                 ),
+                news_source = the_source,
             )
     
     def _clean_url(self, *,
