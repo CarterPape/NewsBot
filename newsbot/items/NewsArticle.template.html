@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!--
+    # # # # # # # # # # # # # # # # # # # #
+    # NewsBot, a journalism tool
+    # Copyright 2020 Carter Pape
+    # 
+    # See file LICENSE for licensing terms.
+    # # # # # # # # # # # # # # # # # # # #
+-->
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+        <title>
+            $email_subject
+        </title>
+    </head>
+    <body>
+        <p>
+            <a href="$news_source_home_url">$news_source_name</a> published a new article about Moab or Grand County at $article_domain titled "<strong><a href="$article_url">$article_title</a></strong>". Here is the description provided with the article (which may not actually be useful):
+        </p>
+        <blockquote>
+            $article_description
+        </blockquote>
+        <p>
+            This article showed up via <a href="$news_source_search_url">this search</a> (which may not be human-readable).
+        </p>
+    </body>
+</html>
