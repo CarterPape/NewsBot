@@ -8,13 +8,13 @@ I am [Carter Pape](https://carterpape.com). I developed this project from [Pytho
 
 ## prerequisites
 
-You will need either a [Mailgun account](https://signup.mailgun.com/new/signup) for sending emails or to modify the `newsbot.item_pipelines.item_emailer.ItemEmailer` class. Mailgun charges $0.80 per 1000 emails sent, following a 3-month free trial.
+You will need either a [Mailgun account](https://signup.mailgun.com/new/signup) for sending emails or to modify the `newsbot.item_pipelines.item_emailer.ItemEmailer` class. Mailgun charges $0.80 per 1,000 emails sent, following a 3-month free trial.
 
 If you want to send and or receive mail from a domain that isn't the Mailgun sandbox, obtain your own domain name. Domain registration costs as little as $8 per year if [registered through Cloudflare](https://www.cloudflare.com/products/registrar/).
 
 Note that if you do want Cloudflare as your registrar, you will need to make the initial domain name purchase elsewhere first. Many registrars have low introductory rates; play them like a fiddle by making the initial purchase with them then immediately moving the registration to Cloudflare.
 
-I'm pretty sure this project works with most Python 3.x versions, but I have only tested the current version of NewsBot (0.3.0) against Python 3.8.
+I'm pretty sure this project works with most Python 3.x versions, but I have only tested the current version of NewsBot (0.4.0) against Python 3.9.
 
 ## installation
 
