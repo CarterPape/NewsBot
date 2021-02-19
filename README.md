@@ -8,7 +8,7 @@ I am [Carter Pape](https://carterpape.com). I developed this project from [Pytho
 
 ## prerequisites
 
-You will need either a [Mailgun account](https://signup.mailgun.com/new/signup) for sending emails or to modify the `newsbot.item_pipelines.item_emailer.ItemEmailer1` class. Mailgun charges $0.80 per 1000 emails sent, following a 3-month free trial.
+You will need either a [Mailgun account](https://signup.mailgun.com/new/signup) for sending emails or to modify the `newsbot.item_pipelines.item_emailer.ItemEmailer` class. Mailgun charges $0.80 per 1000 emails sent, following a 3-month free trial.
 
 If you want to send and or receive mail from a domain that isn't the Mailgun sandbox, obtain your own domain name. Domain registration costs as little as $8 per year if [registered through Cloudflare](https://www.cloudflare.com/products/registrar/).
 
