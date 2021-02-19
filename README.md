@@ -58,4 +58,4 @@ It is no different than maintaining the confidentiality of sources. That is, in 
 
 Whenever possible, I have made components of this project publicly available. Whenever making a component publicly accessible would violate the confidentiality of a source, the component is private.
 
-As of [last count](https://github.com/AlDanial/cloc), 1,382 lines of code in this project are public, and the private components collectively account for fewer than 500 lines.
+As of [last count](https://github.com/AlDanial/cloc), 2,971 lines of code in this project are public, and the private components collectively account for fewer than 600 lines.
