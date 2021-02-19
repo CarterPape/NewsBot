@@ -21,9 +21,11 @@ class FileDownloader(
     item_pipeline.ItemPipeline,
 ):
     def file_path(self,
-        request:    scrapy.http.Request,
-        response:   scrapy.http.Response =                              None,
+        request:    scrapy.http.request.Request,
+        response:   scrapy.http.response.Response =                     None,
         info:       scrapy.pipelines.media.MediaPipeline.SpiderInfo =   None,
+        *,
+        item = None
     ) -> str:
         
         parsed_url =    urllib.parse.urlparse(request.url)
