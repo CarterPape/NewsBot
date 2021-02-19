@@ -6,11 +6,11 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import typing
-import newsbot.spiders.helpers.sltrib_search_parser as sltrib_search_parser
 import newsbot.spiders.helpers.css_link_list_parser as css_link_list_parser
 import newsbot.spiders.helpers.xpath_link_list_parser as xpath_link_list_parser
 import newsbot.spiders.helpers.json_link_list_parser as json_link_list_parser
 import newsbot.items.news_source as news_source
+import newsbot.items.google_custom_search_news_source as google_custom_search_news_source
 
 class NewsSourcesDefinitions(object):
     _all_sources = [
@@ -47,7 +47,17 @@ class NewsSourcesDefinitions(object):
                 "https://www.sltrib.com/search/headlines.basic:Moab",
                 "https://www.sltrib.com/search/headlines.basic:%22Grand%20County%22",
             ],
-            links_parser =  sltrib_search_parser.SLTribSearchParser(),
+            links_parser =  json_link_list_parser.JSONLinkListParser(
+                json_extractor = (
+                    lambda response: response.xpath("//*[@title='Search Results']/@content").get()
+                ),
+                item_list_selector = (
+                    lambda base_object: base_object["content_elements"]
+                ),
+                item_url_selector = (
+                    lambda each_result: each_result["canonical_url"]
+                )
+            ),
         ),
         #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #
         news_source.NewsSource(
@@ -74,17 +84,6 @@ class NewsSourcesDefinitions(object):
         ),
         # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
         news_source.NewsSource(
-            name =          "KSL",
-            home_url =      "https://www.ksl.com",
-            search_url_list = [
-                "https://www.ksl.com/?sid=53574&nid=208&cx=partner-pub-3771868546990559%3Ar955z1-wmf4&cof=FORID%3A9&ie=ISO-8859-1&sa=Search&searchtype=kslcom&x=15&y=19&q=%22Moab%22#gsc.tab=0&gsc.q=%22Moab%22&gsc.sort=date&gsc.ref=more%3Aksl_news",
-            ],
-            links_parser =  xpath_link_list_parser.XPathLinkListParser(
-                "//*[@data-refinementlabel='ksl_news']/ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' gs-webResult ')]//a[@class='gs-title']/@href",
-            ),
-        ),
-        # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-        news_source.NewsSource(
             name =          "The Washington Post",
             home_url =      "https://www.washingtonpost.com",
             search_url_list = [
@@ -102,7 +101,7 @@ class NewsSourcesDefinitions(object):
                     lambda base_object: base_object["results"]["documents"]
                 ),
                 item_url_selector = (
-                    lambda result_object: result_object["contenturl"]
+                    lambda each_result: each_result["contenturl"]
                 ),
             )
         ),

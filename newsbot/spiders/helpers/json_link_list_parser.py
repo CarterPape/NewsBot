@@ -25,16 +25,15 @@ class JSONLinkListParser(link_list_parser.LinkListParser):
         self._item_url_selector = item_url_selector
     
     def parse_response(self, response: scrapy.http.Response) -> typing.List[str]:
-        search_content = response.xpath(self._search_content_xpath).get()
-        search_result_list = json\
-            .loads(search_content)\
-            ["content_elements"]
+        json_string =   self._json_extractor(response)
+        json_object =   json.loads(json_string)
+        item_list =     self._item_list_selector(json_object)
         
         return [
             urllib.parse.urljoin(
                 response.url,
-                each_result["canonical_url"],
+                self._item_url_selector(each_item),
             )
-            for each_result
-            in search_result_list
+            for each_item
+            in item_list
         ]

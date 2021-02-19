@@ -37,5 +37,5 @@ class NewsSourcesDBConnection(db_connection.DBConnection):
     def create_table(self):
         raise RuntimeError("No MySQL table is defined for news sources. For now, news sources are defined and maintained in code.")
     
-    def list_all_sources(self) -> dict[str, news_source.NewsSource]:
+    def list_all_sources(self) -> typing.List[news_source.NewsSource]:
         return news_sources_definitions.NewsSourcesDefinitions.list_all_sources()

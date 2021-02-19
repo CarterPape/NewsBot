@@ -21,8 +21,8 @@ class OpenGraphExtractor(item_pipeline.ItemPipeline):
             url = item["clean_url"],
             search_head_only = True,
         )
-        item["title"] =        page_data.get_metadatas("title")[0]
-        item["description"] =  page_data.get_metadatas("description")[0]
-        item["img_src"] =      page_data.get_metadatas("image")[0]
+        item["title"] =         (page_data.get_metadatas("title") or [None])[0]
+        item["description"] =   (page_data.get_metadatas("description") or [None])[0]
+        item["img_src"] =       (page_data.get_metadatas("image") or [None])[0]
         
         return item

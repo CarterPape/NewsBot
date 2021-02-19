@@ -18,6 +18,7 @@ class NewsArticle(emailable_item.EmailableItem):
     description =   scrapy.Field(ignore_when_serializing = True)
     img_src =       scrapy.Field(ignore_when_serializing = True)
     news_source =   scrapy.Field(ignore_when_serializing = True)
+    search_url =    scrapy.Field(ignore_when_serializing = True)
     
     def synthesize_email_subject(self) -> str:
         return f"{self['news_source'].name}: {self['title']}"
@@ -27,7 +28,7 @@ class NewsArticle(emailable_item.EmailableItem):
             "email_subject":            self.synthesize_email_subject(),
             "news_source_name":         self["news_source"].name,
             "news_source_home_url":     self["news_source"].home_url,
-            "news_source_search_url":   self["news_source"].search_url,
+            "search_source_url":        self["search_url"],
             "article_title":            self["title"],
             "article_description":      self["description"],
             "article_url":              self["clean_url"],

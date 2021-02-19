@@ -42,8 +42,8 @@ class NewsSourceSpider(self_scheduling_spider.SelfSchedulingSpider):
     ):
         new_scheduler = (
             uniformly_random_scheduler.UniformlyRandomScheduler(
-                maximum_interval =  datetime.timedelta(minutes = 15),
-                minimum_interval =  datetime.timedelta(minutes = 5),
+                maximum_interval =  datetime.timedelta(minutes = 20),
+                minimum_interval =  datetime.timedelta(minutes = 15),
             )
         )
         
@@ -69,13 +69,15 @@ class NewsSourceSpider(self_scheduling_spider.SelfSchedulingSpider):
         news_source_list = self._news_sources_db_connection.list_all_sources()
         
         for news_source in news_source_list:
-            yield scrapy.Request(
-                news_source.search_url,
-                callback =  self.parse_article_list,
-                cb_kwargs = {
-                    "the_source": news_source,
-                }
-            )
+            for each_search_url in news_source.search_url_list:
+                yield scrapy.Request(
+                    each_search_url,
+                    headers = news_source.request_headers,
+                    callback =  self.parse_article_list,
+                    cb_kwargs = {
+                        "the_source": news_source,
+                    },
+                )
     
     def parse_article_list(self,
         response: scrapy.http.HtmlResponse,
@@ -96,6 +98,7 @@ class NewsSourceSpider(self_scheduling_spider.SelfSchedulingSpider):
                     dirty_url = each_article_url
                 ),
                 news_source = the_source,
+                search_url = response.url,
             )
     
     def _clean_url(self, *,
