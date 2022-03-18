@@ -5,10 +5,11 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import scrapy
 import typing
-import twisted
 import abc
+
+import twisted
+import scrapy
 
 
 class ItemPipeline(metaclass = abc.ABCMeta):

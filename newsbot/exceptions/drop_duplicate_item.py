@@ -5,7 +5,7 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import newsbot.exceptions.safe_drop_exception as safe_drop_exception
+from newsbot.exceptions import safe_drop_exception
 
 class DropDuplicateItem(safe_drop_exception.SafeDropException):
     pass

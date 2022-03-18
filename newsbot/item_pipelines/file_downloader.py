@@ -5,15 +5,17 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import scrapy
 import logging
-import scrapy.pipelines.files
 import os.path
 import urllib.parse
-import twisted.python.failure
 import typing
-import newsbot.items.item_with_files as item_with_files
-import newsbot.item_pipelines.item_pipeline as item_pipeline
+
+import scrapy
+import scrapy.pipelines.files
+import twisted.python.failure
+
+from newsbot.items import item_with_files
+from newsbot.item_pipelines import item_pipeline
 
 
 class FileDownloader(
@@ -35,7 +37,7 @@ class FileDownloader(
         )
     
     def item_completed(self,
-        results:    (bool, typing.Union[dict, twisted.python.failure.Failure]),
+        results:    typing.Tuple(bool, typing.Union[dict, twisted.python.failure.Failure]),
         item:       item_with_files.ItemWithFiles,
         info:       scrapy.pipelines.media.MediaPipeline.SpiderInfo,
     ):

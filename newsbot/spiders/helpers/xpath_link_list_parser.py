@@ -5,11 +5,6 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import json
-import logging
-import urllib.parse
-import typing
-import scrapy.http
 import newsbot.spiders.helpers.lambda_link_list_parser as lambda_link_list_parser
 
 class XPathLinkListParser(lambda_link_list_parser.LambdaLinkListParser):

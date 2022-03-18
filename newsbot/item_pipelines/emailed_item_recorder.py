@@ -5,11 +5,13 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import scrapy
 import logging
-import newsbot.items.emailable_item as emailable_item
-import newsbot.item_pipelines.item_pipeline as item_pipeline
-import newsbot.db_connections.emailed_items_db_connection as emailed_items_db_connection
+
+import scrapy
+
+from newsbot.items import emailable_item
+from newsbot.item_pipelines import item_pipeline
+from newsbot.db_connections import emailed_items_db_connection
 
 
 class EmailedItemRecorder(item_pipeline.ItemPipeline):

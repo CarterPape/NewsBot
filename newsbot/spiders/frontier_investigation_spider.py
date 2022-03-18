@@ -5,16 +5,15 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
+import typing
+import logging
+import datetime
 import scrapy
 import scrapy.http
 import scrapy.crawler
-import logging
 import newsbot.spiders.self_scheduling_spider as self_scheduling_spider
 import newsbot.items.frontier_investigation_filing as frontier_investigation_filing
 import newsbot.tasking.crawl_schedulers.uniformly_random_scheduler as uniformly_random_scheduler
-import newsbot.tasking.crawl_schedulers.crawl_scheduler as crawl_scheduler
-import datetime
-import pytz
 import scrapy.selector
 
 
@@ -57,7 +56,7 @@ class FrontierInvestigationSpider(self_scheduling_spider.SelfSchedulingSpider):
         
         super().__init__()
     
-    def start_requests(self) -> [scrapy.http.Request]:
+    def start_requests(self) -> typing.List[scrapy.http.Request]:
         return [
             scrapy.Request(
                 "https://psc.utah.gov/2019/05/20/docket-no-19-041-04/",
@@ -67,7 +66,7 @@ class FrontierInvestigationSpider(self_scheduling_spider.SelfSchedulingSpider):
     
     def parse_filing_table(self,
         response: scrapy.http.HtmlResponse
-    ) -> [frontier_investigation_filing.FrontierInvestigationFiling]:
+    ) -> typing.List[frontier_investigation_filing.FrontierInvestigationFiling]:
         all_filing_rows = response.xpath(self._filing_xpath)
         all_filings = [
             frontier_investigation_filing.FrontierInvestigationFiling(

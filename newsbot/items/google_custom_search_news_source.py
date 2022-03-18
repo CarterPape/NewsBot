@@ -5,10 +5,12 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import dotenv
 import os
-import newsbot.items.news_source as news_source
-import newsbot.spiders.helpers.json_link_list_parser as json_link_list_parser
+
+import dotenv
+
+from newsbot.items import news_source
+from newsbot.spiders.helpers import json_link_list_parser
 
 
 dotenv.load_dotenv(dotenv.find_dotenv())

@@ -5,15 +5,17 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
+import datetime
+import logging
+
 import scrapy
 import scrapy.settings
 import requests
-import datetime
-import logging
-import newsbot.db_connections.email_subscriptions_db_connection as email_subscriptions_db_connection
-import newsbot.items.emailable_item as emailable_item
-import newsbot.items.emailable_item_with_attachments as emailable_item_with_attachments
-import newsbot.item_pipelines.item_pipeline as item_pipeline
+
+from newsbot.db_connections import email_subscriptions_db_connection
+from newsbot.items import emailable_item
+from newsbot.items import emailable_item_with_attachments
+from newsbot.item_pipelines import item_pipeline
 
 
 class ItemEmailer(item_pipeline.ItemPipeline):
@@ -62,7 +64,10 @@ class ItemEmailer(item_pipeline.ItemPipeline):
         
         if self._settings.getbool("_PRINT_INSTEAD_OF_EMAIL"):
             
-            logging.warning("Logging email at level INFO rather than sending them (check setting _PRINT_INSTEAD_OF_EMAIL)")
+            logging.warning(
+                "Logging email at level INFO rather than "
+                "sending them (check setting _PRINT_INSTEAD_OF_EMAIL)"
+            )
             class __FakeResponse(requests.Response):
                 @property
                 def status_code(self) -> int:
@@ -103,7 +108,7 @@ class ItemEmailer(item_pipeline.ItemPipeline):
             
             faux_email_message += "———————————\n\n"
             
-            logging.info("Email intentionally not sent:\n" + faux_email_message)
+            logging.info(f"Email intentionally not sent:\n{faux_email_message}")
             return __FakeResponse()
         
         else:

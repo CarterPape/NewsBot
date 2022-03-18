@@ -6,11 +6,13 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import datetime
-import newsbot.tasking.crawl_schedulers.crawl_scheduler as crawl_scheduler
 import random
-from newsbot.tasking.crawl_schedulers.helpers.timing_types import \
-    DayOfTheWeek, Time, IntervalRule, WhenToFire, FireRule, NextFireDatetimeFound
+
 import pytz
+
+from newsbot.tasking.crawl_schedulers import crawl_scheduler
+from newsbot.tasking.crawl_schedulers.helpers.timing_types import \
+    DayOfTheWeek, Time, IntervalRule, WhenToFire, NextFireDatetimeFound
 
 _workday_when_to_fire = WhenToFire({
     DayOfTheWeek.weekdays: [
@@ -73,7 +75,7 @@ class TimeConditionalScheduler(crawl_scheduler.CrawlScheduler):
         except NextFireDatetimeFound:
             pass
         
-        if self._datetime_of_next_firing == None:
+        if self._datetime_of_next_firing is None:
             self._datetime_of_next_firing = self._potential_datetime_of_next_firing
         
         true_now = datetime.datetime.now(tz = self._working_timezone)
@@ -111,7 +113,7 @@ class TimeConditionalScheduler(crawl_scheduler.CrawlScheduler):
                 self._datetime_of_next_firing = self._potential_datetime_of_next_firing
                 return
             else:
-                assert(self._potential_datetime_of_next_firing == None)
+                assert self._potential_datetime_of_next_firing is None
                 continue
     
     def _handle_time_fire_rule(self,
@@ -122,23 +124,23 @@ class TimeConditionalScheduler(crawl_scheduler.CrawlScheduler):
         the_date = on_date
         the_datetime = the_time.on_date(the_date)
         if self._now <= the_datetime:
-            if self._potential_datetime_of_next_firing == None:
+            if self._potential_datetime_of_next_firing is None:
                 self._datetime_of_next_firing = self._datetime_with_random_deviation(
                     the_datetime
                 )
                 raise NextFireDatetimeFound()
             else:
-                assert(self._potential_datetime_of_next_firing != None)
+                assert self._potential_datetime_of_next_firing is not None
                 if the_datetime <= self._potential_datetime_of_next_firing:
                     self._datetime_of_next_firing = self._datetime_with_random_deviation(
                         the_datetime
                     )
                     raise NextFireDatetimeFound()
                 else:
-                    assert(self._potential_datetime_of_next_firing < the_datetime)
+                    assert self._potential_datetime_of_next_firing < the_datetime
                     return
         else:
-            assert(the_datetime <= self._now)
+            assert the_datetime <= self._now
             return
     
     def _handle_interval_fire_rule(self,
@@ -150,7 +152,7 @@ class TimeConditionalScheduler(crawl_scheduler.CrawlScheduler):
         interval_start_datetime = the_interval_fire_rule.start_time.on_date(the_date)
         interval_end_datetime = the_interval_fire_rule.end_time.on_date(the_date)
         
-        if self._potential_datetime_of_next_firing != None:
+        if self._potential_datetime_of_next_firing is not None:
             if self._potential_datetime_of_next_firing < interval_start_datetime:
                 return
             
@@ -168,11 +170,11 @@ class TimeConditionalScheduler(crawl_scheduler.CrawlScheduler):
                     interval_start_datetime
                 )
             else:
-                assert(interval_start_datetime <= self._potential_datetime_of_next_firing)
-                assert(self._potential_datetime_of_next_firing < interval_end_datetime)
+                assert interval_start_datetime <= self._potential_datetime_of_next_firing
+                assert self._potential_datetime_of_next_firing < interval_end_datetime
                 return
         else:
-            assert(interval_end_datetime < self._now)
+            assert interval_end_datetime < self._now
             return
     
     def _current_or_next_future_date_from(self, *,

@@ -5,14 +5,14 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import scrapy.crawler
-import typing
 import logging
+
+import scrapy.crawler
 import twisted.internet.defer
 import twisted.internet.reactor
-import random
-import newsbot.tasking.crawl_schedulers.crawl_scheduler as crawl_scheduler
-import newsbot.spiders.self_scheduling_spider as self_scheduling_spider
+
+from newsbot.tasking.crawl_schedulers import crawl_scheduler
+from newsbot.spiders import self_scheduling_spider
 
 
 class CrawlJob:
@@ -20,7 +20,7 @@ class CrawlJob:
         from_runner:        scrapy.crawler.CrawlerRunner,
         spider_class:       type,
     ):
-        assert(issubclass(spider_class, self_scheduling_spider.SelfSchedulingSpider))
+        assert issubclass(spider_class, self_scheduling_spider.SelfSchedulingSpider)
         self._runner =          from_runner
         self._crawler =         scrapy.crawler.Crawler(
             spider_class,
@@ -36,10 +36,13 @@ class CrawlJob:
         deferred = self._runner.crawl(self._crawler)
         deferred.addCallback(self.schedule_a_crawl)
     
-    def schedule_a_crawl(self, deferred_result = None):
+    def schedule_a_crawl(self):
         pause_time = self._scheduler.pause_time_in_seconds
         
-        logging.info(f"Scheduling a crawl with a spider of class {self._crawler.spidercls} for {pause_time} seconds from now")
+        logging.info(
+            f"Scheduling a crawl with a spider of class {self._crawler.spidercls} "
+            f"for {pause_time} seconds from now"
+        )
         
         twisted.internet.reactor.callLater(
             pause_time,

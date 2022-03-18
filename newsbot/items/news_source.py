@@ -5,12 +5,12 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import scrapy
-import newsbot.spiders.helpers.link_list_parser as link_list_parser
 import typing
 
+from newsbot.spiders.helpers import link_list_parser
 
-class NewsSource(object):
+
+class NewsSource:
     def __init__(self, *,
         source_id: str = None,
         name: str,
@@ -19,7 +19,7 @@ class NewsSource(object):
         request_headers: dict = None,
         links_parser: link_list_parser.LinkListParser,
     ):
-        if source_id != None:
+        if source_id is not None:
             self.source_id = source_id
         else:
             self.source_id = name

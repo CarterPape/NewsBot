@@ -6,11 +6,13 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import string
-import scrapy.item
-import newsbot.items.self_serializing_item as self_serializing_item
 import os
 import abc
 import inspect
+
+import scrapy.item
+
+from newsbot.items import self_serializing_item
 
 
 class EmailableItem(
@@ -38,4 +40,9 @@ class EmailableItem(
             )
         )
         
-        return string.Template(open(email_template_path, "r").read())
+        return string.Template(
+            open(
+                email_template_path, "r",
+                encoding = "UTF8",
+            ).read()
+        )

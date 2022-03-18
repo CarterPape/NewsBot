@@ -6,11 +6,12 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import typing
-import newsbot.spiders.helpers.css_link_list_parser as css_link_list_parser
-import newsbot.spiders.helpers.xpath_link_list_parser as xpath_link_list_parser
-import newsbot.spiders.helpers.json_link_list_parser as json_link_list_parser
-import newsbot.items.news_source as news_source
-import newsbot.items.google_custom_search_news_source as google_custom_search_news_source
+
+from newsbot.spiders.helpers import css_link_list_parser
+from newsbot.spiders.helpers import xpath_link_list_parser
+from newsbot.spiders.helpers import json_link_list_parser
+from newsbot.items import news_source
+from newsbot.items import google_custom_search_news_source
 
 class NewsSourcesDefinitions(object):
     _all_sources = [

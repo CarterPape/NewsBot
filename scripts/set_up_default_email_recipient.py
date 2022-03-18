@@ -11,9 +11,9 @@ import sys
 import os
 sys.path.append(os.getcwd())
 
-import newsbot.db_connections.email_subscriptions_db_connection as email_subscriptions_db_connection
 import dotenv
 import scrapy.utils.project
+from newsbot.db_connections import email_subscriptions_db_connection
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 

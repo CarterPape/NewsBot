@@ -5,9 +5,10 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import scrapy
 import json
 import abc
+
+import scrapy
 
 
 class SelfSerializingItem(
@@ -15,7 +16,7 @@ class SelfSerializingItem(
     metaclass = abc.ABCMeta,
 ):
     def serialized(self) -> str:
-        simple_self = dict()
+        simple_self = {}
         
         for field_key, field_properties in self.fields.items():
             if (

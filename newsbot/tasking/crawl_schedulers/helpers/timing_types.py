@@ -8,10 +8,10 @@
 import enum
 import datetime
 import typing
-import dateparser
 import math
-import sys
+
 import pytz
+import dateparser
 
 class DayOfTheWeek(enum.Flag):
     Monday =    enum.auto()
@@ -39,7 +39,7 @@ class DayOfTheWeek(enum.Flag):
             return klass._value2member_map_[2 ** index_value]
         except AttributeError as exception:
             raise AttributeError(
-                f"Looks like enum.Flag objects no longer have _value2member_map_ members."
+                "Looks like enum.Flag objects no longer have _value2member_map_ members."
             ) from exception
     
     def next_day_of_the_week(self):
@@ -97,7 +97,7 @@ class IntervalRule(object):
         end_time:   Time,
         period:     datetime.timedelta,
     ):
-        assert(start_time < end_time)
+        assert start_time < end_time
         self.start_time =   start_time
         self.end_time =     end_time
         self.period =       period
@@ -110,7 +110,7 @@ FireRule = typing.Union[
 class WhenToFire(dict):
     def __getitem__(self,
         item: DayOfTheWeek,
-    ) -> [FireRule]:
+    ) -> typing.List[FireRule]:
         for key in self:
             if item in key:
                 return super().__getitem__(key)

@@ -5,11 +5,11 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import logging
 import scrapy
-import newsbot.items.news_article as news_article
-import newsbot.item_pipelines.item_pipeline as item_pipeline
 import metadata_parser
+
+from newsbot.items import news_article
+from newsbot.item_pipelines import item_pipeline
 
 class OpenGraphExtractor(item_pipeline.ItemPipeline):
     def process_item(self,

@@ -6,12 +6,11 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import typing
-import scrapy.settings
-import newsbot.db_connections.db_connection as db_connection
-import newsbot.db_connections.news_sources_db_connection as news_sources_db_connection
-import newsbot.items.news_article as news_article
-import newsbot.items.news_source as news_source
-import datetime
+
+from newsbot.db_connections import db_connection
+from newsbot.db_connections import news_sources_db_connection
+from newsbot.items import news_article
+from newsbot.items import news_source
 
 
 class NewsArticlesDBConnection(db_connection.DBConnection):

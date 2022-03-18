@@ -5,9 +5,9 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import scrapy.item
-import json
 import abc
+
+import scrapy.item
 
 
 class ItemWithFiles(

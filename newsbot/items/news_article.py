@@ -5,11 +5,11 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import scrapy
-import newsbot.items.emailable_item as emailable_item
-import string
-import pape.utilities
 import urllib.parse
+
+import scrapy
+
+from newsbot.items import emailable_item
 
 
 class NewsArticle(emailable_item.EmailableItem):

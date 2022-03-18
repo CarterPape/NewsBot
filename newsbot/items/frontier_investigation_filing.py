@@ -6,9 +6,10 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import scrapy
-import newsbot.items.emailable_item_with_attachments as emailable_item_with_attachments
-import string
+
 import pape.utilities
+
+from newsbot.items import emailable_item_with_attachments
 
 
 class FrontierInvestigationFiling(emailable_item_with_attachments.EmailableItemWithAttachments):

@@ -8,20 +8,19 @@
 import typing
 import logging
 import urllib.parse
+import datetime
+
 import scrapy
 import scrapy.http
 import scrapy.crawler
-import newsbot.spiders.self_scheduling_spider as self_scheduling_spider
-import newsbot.items.frontier_investigation_filing as frontier_investigation_filing
-import newsbot.tasking.crawl_schedulers.uniformly_random_scheduler as uniformly_random_scheduler
-import newsbot.tasking.crawl_schedulers.crawl_scheduler as crawl_scheduler
-import newsbot.db_connections.news_articles_db_connection as news_articles_db_connection
-import newsbot.db_connections.news_sources_db_connection as news_sources_db_connection
-import newsbot.items.news_source as news_source
-import newsbot.items.news_article as news_article
-import datetime
-import pytz
 import scrapy.selector
+
+from newsbot.spiders import self_scheduling_spider
+from newsbot.tasking.crawl_schedulers import uniformly_random_scheduler
+from newsbot.db_connections import news_articles_db_connection
+from newsbot.db_connections import news_sources_db_connection
+from newsbot.items import news_source
+from newsbot.items import news_article
 
 
 class NewsSourceSpider(self_scheduling_spider.SelfSchedulingSpider):
@@ -68,14 +67,14 @@ class NewsSourceSpider(self_scheduling_spider.SelfSchedulingSpider):
         
         news_source_list = self._news_sources_db_connection.list_all_sources()
         
-        for news_source in news_source_list:
-            for each_search_url in news_source.search_url_list:
+        for each_news_source in news_source_list:
+            for each_search_url in each_news_source.search_url_list:
                 yield scrapy.Request(
                     each_search_url,
-                    headers = news_source.request_headers,
+                    headers = each_news_source.request_headers,
                     callback =  self.parse_article_list,
                     cb_kwargs = {
-                        "the_source": news_source,
+                        "the_source": each_news_source,
                     },
                 )
     

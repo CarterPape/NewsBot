@@ -6,7 +6,6 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import json
-import logging
 import urllib.parse
 import typing
 import scrapy

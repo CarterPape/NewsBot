@@ -14,7 +14,7 @@ sys.path.append(os.getcwd())
 import newsbot.concrete_subclass_loader
 import newsbot.items.emailable_item
 import pape.utilities
-import newsbot.db_connections.email_subscriptions_db_connection as email_subscriptions_db_connection
+from newsbot.db_connections import email_subscriptions_db_connection
 import dotenv
 import scrapy.utils.project
 

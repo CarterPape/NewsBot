@@ -6,8 +6,10 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import logging
+
 import scrapy.logformatter
-import newsbot.exceptions.safe_drop_exception as safe_drop_exception
+
+from newsbot.exceptions import safe_drop_exception
 
 
 class NewsBotLogFormatter(scrapy.logformatter.LogFormatter):

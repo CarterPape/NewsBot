@@ -6,11 +6,13 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import datetime
-import pytz
 import typing
 import logging
-import newsbot.db_connections.db_connection as db_connection
-import newsbot.items.emailable_item as emailable_item
+
+import pytz
+
+from newsbot.db_connections import db_connection
+from newsbot.items import emailable_item
 
 
 class EmailedItemsDBConnection(db_connection.DBConnection):

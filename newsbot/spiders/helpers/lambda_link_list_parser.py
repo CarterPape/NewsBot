@@ -5,9 +5,6 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import json
-import logging
-import urllib.parse
 import typing
 import scrapy.http
 import newsbot.spiders.helpers.link_list_parser as link_list_parser

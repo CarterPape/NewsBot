@@ -8,9 +8,9 @@
 import difflib
 import logging
 import scrapy.settings
-import newsbot.db_connections.db_connection as db_connection
-import newsbot.items.emailable_item as emailable_item
-import newsbot.items.web_element as web_element
+from newsbot.db_connections import db_connection
+from newsbot.items import emailable_item
+from newsbot.items import web_element
 
 
 class WebElementHistoryDBConnection(db_connection.DBConnection):

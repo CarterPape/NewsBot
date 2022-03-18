@@ -6,13 +6,11 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import typing
-import string
-import scrapy
 import os.path
-import pape
-import newsbot.items.emailable_item as emailable_item
-import newsbot.items.item_with_files as item_with_files
 import abc
+
+from newsbot.items import emailable_item
+from newsbot.items import item_with_files
 
 
 class EmailableItemWithAttachments(
@@ -20,7 +18,12 @@ class EmailableItemWithAttachments(
     item_with_files.ItemWithFiles,
     metaclass = abc.ABCMeta,
 ):
-    def gather_email_attachments(self) -> [(str, (str, typing.IO[typing.Any]))]:
+    def gather_email_attachments(self) -> typing.List[
+        (str, (
+            str,
+            typing.IO[typing.Any]
+        ))
+    ]:
         return [
             ("attachment", (
                 os.path.basename(current_file["path"]),

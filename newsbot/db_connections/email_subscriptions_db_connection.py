@@ -5,12 +5,13 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import pytz
 import typing
 import logging
-import newsbot.db_connections.db_connection as db_connection
-import newsbot.items.emailable_item as emailable_item
+
 import pape.utilities
+
+from newsbot.db_connections import db_connection
+from newsbot.items import emailable_item
 
 
 class EmailSubscriptionsDBConnection(db_connection.DBConnection):
@@ -40,7 +41,9 @@ class EmailSubscriptionsDBConnection(db_connection.DBConnection):
             else "NULL"
         )
         
-        logging.info(f"Adding subscription to {item_selection} for \"{addressee_name}\" <{email_address}>")
+        logging.info(
+            f"Adding subscription to {item_selection} for \"{addressee_name}\" <{email_address}>"
+        )
         
         db_cursor = self.cursor()
         db_cursor.execute(f"""
@@ -73,7 +76,7 @@ class EmailSubscriptionsDBConnection(db_connection.DBConnection):
     
     def get_addressees_that_should_receive(self,
         item: emailable_item.EmailableItem,
-    ) -> [tuple]:
+    ) -> typing.List[tuple]:
         full_item_class_name = pape.utilities.full_class_name(
             of_object = item
         )
@@ -90,7 +93,7 @@ class EmailSubscriptionsDBConnection(db_connection.DBConnection):
         db_cursor.close()
         return addressee_list
     
-    def get_all_subscriptions(self) -> [tuple]:
+    def get_all_subscriptions(self) -> typing.List[tuple]:
         logging.debug(f"Getting all subscriptions")
         db_cursor = self.cursor()
         db_cursor.execute(f"""

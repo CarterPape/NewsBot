@@ -5,6 +5,7 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
+import typing
 import collections
 import inspect
 import logging
@@ -12,15 +13,15 @@ import importlib
 import pkgutil
 import types
 
-class ConcreteSubclassLoader(object):
+class ConcreteSubclassLoader:
     def __init__(self, *,
         load_subclasses_of: type,
-        from_modules_named: [str],
+        from_modules_named: typing.List[str],
     ):
         self._load_subclasses_of =      load_subclasses_of
         self._from_modules_named =      from_modules_named
         self._found_classes =           collections.defaultdict(list)
-        self._loaded_concrete_subclasses =  list()
+        self._loaded_concrete_subclasses =  []
         
         self._load_all_subclasses()
     
@@ -42,7 +43,7 @@ class ConcreteSubclassLoader(object):
     
     def walk_modules(self, *,
         at_path: str,
-    ) -> [types.ModuleType]:
+    ) -> typing.List[types.ModuleType]:
         path =  at_path
         mods =  []
         mod =   importlib.import_module(path)
@@ -65,7 +66,9 @@ class ConcreteSubclassLoader(object):
         logging.debug(f"Searching for subclasses of {self._load_subclasses_of} in module {module}")
         
         for concrete_subclass in self.concrete_subclasses(in_module = module):
-            logging.debug(f"Found {concrete_subclass}, a concrete subclass of {self._load_subclasses_of}")
+            logging.debug(
+                f"Found {concrete_subclass}, a concrete subclass of {self._load_subclasses_of}"
+            )
             self._loaded_concrete_subclasses.append(concrete_subclass)
     
     def _load_all_subclasses(self):

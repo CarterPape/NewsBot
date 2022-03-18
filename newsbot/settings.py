@@ -13,13 +13,15 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-import dotenv
-import scrapy.utils.conf
 import os
 import os.path
-import newsbot.items.item_with_files as item_with_files
-import newsbot.tasking.crawl_schedulers.uniformly_random_scheduler as uniformly_random_scheduler
 import datetime
+
+import scrapy.utils.conf
+import dotenv
+
+from newsbot.items import item_with_files
+from newsbot.tasking.crawl_schedulers import uniformly_random_scheduler
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
@@ -44,7 +46,9 @@ _ENVIRONMENT = os.getenv("ENVIRONMENT")
 
 
 if _ENVIRONMENT == "development":
-    USER_AGENT = f"{BOT_NAME}-under-development/{_BOT_VERSION} (+https://github.com/carterpape/newsbot)"
+    USER_AGENT = (
+        f"{BOT_NAME}-under-development/{_BOT_VERSION} (+https://github.com/carterpape/newsbot)"
+    )
 else:
     USER_AGENT = f"{BOT_NAME}/{_BOT_VERSION} (+https://github.com/carterpape/newsbot)"
 

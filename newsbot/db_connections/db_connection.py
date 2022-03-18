@@ -7,13 +7,12 @@
 
 import logging
 import abc
-import scrapy.settings
+import typing
+
 import mysql.connector
 import mysql.connector.connection
 import mysql.connector.cursor
-import dotenv
-import os
-import typing
+import scrapy.settings
 
 class DBConnection(
     mysql.connector.MySQLConnection,

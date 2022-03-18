@@ -5,14 +5,16 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import scrapy
 import logging
 import typing
-import newsbot.items.emailable_item as emailable_item
-import newsbot.item_pipelines.item_pipeline as item_pipeline
-import newsbot.db_connections.emailed_items_db_connection as emailed_items_db_connection
-import newsbot.exceptions.drop_transmitted_item as drop_transmitted_item
-import newsbot.exceptions.drop_duplicate_item as drop_duplicate_item
+
+import scrapy
+
+from newsbot.items import emailable_item
+from newsbot.item_pipelines import item_pipeline
+from newsbot.db_connections import emailed_items_db_connection
+from newsbot.exceptions import drop_transmitted_item
+from newsbot.exceptions import drop_duplicate_item
 
 
 class EmailedItemFilter(item_pipeline.ItemPipeline):

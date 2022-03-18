@@ -6,8 +6,9 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import datetime
-import newsbot.tasking.crawl_schedulers.crawl_scheduler as crawl_scheduler
 import random
+
+from newsbot.tasking.crawl_schedulers import crawl_scheduler
 
 
 class UniformlyRandomScheduler(crawl_scheduler.CrawlScheduler):

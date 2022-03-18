@@ -5,13 +5,11 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
+import copy
+import abc
 import logging
 import scrapy.spiders
 import scrapy.crawler
-import newsbot.tasking.crawl_schedulers.uniformly_random_scheduler as uniformly_random_scheduler
-import datetime
-import copy
-import abc
 
 
 class SelfSchedulingSpider(
@@ -23,7 +21,7 @@ class SelfSchedulingSpider(
         from_crawler: scrapy.crawler.Crawler,
         suggested_scheduler = None
     ):
-        if from_crawler.settings.get("_FORCE_SCHEDULER") != None:
+        if from_crawler.settings.get("_FORCE_SCHEDULER") is not None:
             new_scheduler = copy.copy(
                 from_crawler.settings.get("_FORCE_SCHEDULER")
             )

@@ -5,10 +5,13 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
+import typing
+
+
 class JavascriptQuoteParser(object):
     def __init__(self):
         self._master_string:        str
-        self._completed_matches:    [str]
+        self._completed_matches:    typing.List[str]
         self._current_match:        str
         self._in_quotation:         bool
         self._in_entity:            bool
