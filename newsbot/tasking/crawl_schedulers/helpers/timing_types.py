@@ -9,8 +9,8 @@ import enum
 import datetime
 import typing
 import math
+import zoneinfo
 
-import pytz
 import dateparser
 
 class DayOfTheWeek(enum.Flag):
@@ -78,7 +78,7 @@ class Time(datetime.time):
     def on_date(self,
         the_date: datetime.date,
         *,
-        in_timezone = pytz.timezone("America/Denver"),
+        in_timezone = zoneinfo.ZoneInfo("America/Denver"),
     ) -> datetime.datetime:
         return datetime.datetime(
             year =          the_date.year,

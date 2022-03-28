@@ -10,7 +10,6 @@ pape
 twisted
 python-magic
 python-dotenv
-pytz
 mysql-connector-python
 requests
 dateparser

@@ -8,7 +8,7 @@
 import datetime
 import random
 
-import pytz
+import zoneinfo
 
 from newsbot.tasking.crawl_schedulers import crawl_scheduler
 from newsbot.tasking.crawl_schedulers.helpers.timing_types import \
@@ -49,7 +49,7 @@ _workday_when_to_fire = WhenToFire({
 class TimeConditionalScheduler(crawl_scheduler.CrawlScheduler):
     def __init__(self, *,
         when_to_fire: WhenToFire =          _workday_when_to_fire,
-        working_timezone: datetime.tzinfo = pytz.timezone("America/Denver"),
+        working_timezone: datetime.tzinfo = zoneinfo.ZoneInfo("America/Denver"),
         uniform_relative_deviation =        0.1,
         uniform_absolute_deviation =        datetime.timedelta(minutes = 10),
     ):

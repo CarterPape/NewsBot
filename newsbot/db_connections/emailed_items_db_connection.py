@@ -9,7 +9,7 @@ import datetime
 import typing
 import logging
 
-import pytz
+import zoneinfo
 
 from newsbot.db_connections import db_connection
 from newsbot.items import emailable_item
@@ -73,7 +73,7 @@ class EmailedItemsDBConnection(db_connection.DBConnection):
         else:
             send_datetime = db_cursor.fetchone()[0]
             send_datetime = send_datetime.replace(
-                tzinfo = pytz.timezone("America/Denver")
+                tzinfo = zoneinfo.ZoneInfo("America/Denver")
             )
             db_cursor.close()
             return send_datetime

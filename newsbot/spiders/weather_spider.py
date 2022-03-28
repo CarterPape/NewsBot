@@ -10,7 +10,7 @@ import os
 import urllib.parse
 import requests
 import datetime
-import pytz
+import zoneinfo
 import pape.utilities
 
 dotenv.load_dotenv(dotenv.find_dotenv())
@@ -20,24 +20,24 @@ if __name__ == "__main__":
     synoptic_response_time_format = "%Y-%m-%dT%H:%M:%S%z"
 
     def most_recent_wednesday_midnight():
-        mountain_timezone = pytz.timezone("US/Mountain")
+        mountain_timezone = zoneinfo.ZoneInfo("America/Denver")
         now = datetime.datetime.now()
         wednesday_index = 2
         days_offset = (now.weekday() - wednesday_index) % 7
         time_offset = datetime.datetime.combine(datetime.date.min, now.time()) - datetime.datetime.min
         latest_wednesday = (now - datetime.timedelta(days = days_offset)) - time_offset
-        return mountain_timezone.localize(latest_wednesday)
+        return latest_wednesday.replace(tzinfo = mountain_timezone)
 
     def seven_days_ago(the_datetime):
         naïve_datetime = the_datetime.replace(tzinfo = None)
-        return pytz.timezone("US/Mountain").localize(naïve_datetime - datetime.timedelta(days = 7))
+        return (naïve_datetime - datetime.timedelta(days = 7)).replace(tzinfo = zoneinfo.ZoneInfo("America/Denver"))
 
 
     end_time_locally = most_recent_wednesday_midnight()
-    end_time_as_utc = end_time_locally.astimezone(pytz.utc)
+    end_time_as_utc = end_time_locally.astimezone(datetime.timezone.utc)
     end_time_string = end_time_as_utc.strftime(synoptic_request_time_format)
     start_time_locally = seven_days_ago(end_time_locally)
-    start_time_as_utc = start_time_locally.astimezone(pytz.utc)
+    start_time_as_utc = start_time_locally.astimezone(datetime.timezone.utc)
     start_time_string = start_time_as_utc.strftime(synoptic_request_time_format)
 
 
