@@ -19,10 +19,10 @@ class EmailableItemWithAttachments(
     metaclass = abc.ABCMeta,
 ):
     def gather_email_attachments(self) -> typing.List[
-        (str, (
+        typing.Tuple[str, typing.Tuple[
             str,
             typing.IO[typing.Any]
-        ))
+        ]]
     ]:
         return [
             ("attachment", (
