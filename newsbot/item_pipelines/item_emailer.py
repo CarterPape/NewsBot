@@ -26,8 +26,11 @@ class ItemEmailer(item_pipeline.ItemPipeline):
         item:   emailable_item.EmailableItem,
         spider: scrapy.spiders.Spider,
     ) -> scrapy.Item:
+        try:
+            logging.debug(f"Processing item {item} from spider {spider}")
+        except RecursionError:
+            logging.debug(f"Processing item {item} from a spider with a shitty repl implementation")
         
-        logging.debug(f"Processing item {item} from spider {spider}")
         self._settings = spider.settings
         item["email_response"] = self._email_item(item)
         item["email_sent_datetime"] = datetime.datetime.now()
