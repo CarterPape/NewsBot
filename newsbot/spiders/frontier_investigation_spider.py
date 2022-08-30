@@ -11,10 +11,10 @@ import datetime
 import scrapy
 import scrapy.http
 import scrapy.crawler
-import newsbot.spiders.self_scheduling_spider as self_scheduling_spider
-import newsbot.items.frontier_investigation_filing as frontier_investigation_filing
-import newsbot.tasking.crawl_schedulers.uniformly_random_scheduler as uniformly_random_scheduler
 import scrapy.selector
+from newsbot.spiders import self_scheduling_spider
+from newsbot.items import frontier_investigation_filing
+from newsbot.tasking.crawl_schedulers import uniformly_random_scheduler
 
 
 class FrontierInvestigationSpider(self_scheduling_spider.SelfSchedulingSpider):

@@ -36,7 +36,7 @@ class CrawlJob:
         deferred = self._runner.crawl(self._crawler)
         deferred.addCallback(self.schedule_a_crawl)
     
-    def schedule_a_crawl(self):
+    def schedule_a_crawl(self, _ = None):
         pause_time = self._scheduler.pause_time_in_seconds
         
         logging.info(

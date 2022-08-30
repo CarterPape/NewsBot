@@ -46,18 +46,25 @@ class EmailSubscriptionsDBConnection(db_connection.DBConnection):
         )
         
         db_cursor = self.cursor()
-        db_cursor.execute(f"""
-            INSERT INTO `{self.table_name}` (
-                addressee_name,
+        db_cursor.execute(
+            f"""
+                INSERT INTO `{self.table_name}` (
+                    addressee_name,
+                    email_address,
+                    item_selection
+                )
+                VALUES (
+                    %s,
+                    %s,
+                    %s
+                )
+            """,
+            (
+                addressee_name_with_quotes_or_null,
                 email_address,
                 item_selection
             )
-            VALUES (
-                {addressee_name_with_quotes_or_null},
-                "{email_address}",
-                "{item_selection}"
-            )
-        """)
+        )
         self.commit()
         db_cursor.close()
     
@@ -82,13 +89,18 @@ class EmailSubscriptionsDBConnection(db_connection.DBConnection):
         )
         logging.debug(f"Getting subscriptions for item of class {full_item_class_name}")
         db_cursor = self.cursor()
-        db_cursor.execute(f"""
-            SELECT
-                addressee_name,
-                email_address
-            FROM `{self.table_name}`
-            WHERE "{full_item_class_name}" LIKE item_selection
-        """)
+        db_cursor.execute(
+            f"""
+                SELECT
+                    addressee_name,
+                    email_address
+                FROM `{self.table_name}`
+                WHERE %s LIKE item_selection
+            """,
+            (
+                full_item_class_name,
+            )
+        )
         addressee_list = db_cursor.fetchall()
         db_cursor.close()
         return addressee_list

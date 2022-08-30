@@ -5,12 +5,12 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import dotenv
 import os
 import urllib.parse
-import requests
 import datetime
 import zoneinfo
+import requests
+import dotenv
 import pape.utilities
 
 dotenv.load_dotenv(dotenv.find_dotenv())
@@ -103,15 +103,15 @@ if __name__ == "__main__":
         + "?"
         + urllib.parse.urlencode(history_request_data)
     )
-
+    
     history_data_response = requests.get(history_request_url)
     history_data = history_data_response.json()
-
-
+    
+    
     historic_observations = history_data["STATION"][0]["OBSERVATIONS"]
-
+    
     previous_precipitation_accumulation = 0
-
+    
     for each_observation_index in range(len(historic_observations["date_time"]) - 1):
         each_datetime = datetime.datetime.strptime(
             historic_observations["date_time"][each_observation_index],

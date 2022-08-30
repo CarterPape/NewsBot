@@ -37,18 +37,25 @@ class EmailedItemsDBConnection(db_connection.DBConnection):
         logging.debug(f"Recording item {item_to_record} as emailed")
         
         db_cursor = self.cursor()
-        db_cursor.execute(f"""
-            INSERT INTO `{self.table_name}` (
-                send_datetime,
-                status_code,
-                serialized_item
+        db_cursor.execute(
+            f"""
+                INSERT INTO `{self.table_name}` (
+                    send_datetime,
+                    status_code,
+                    serialized_item
+                )
+                VALUES (
+                    %s,
+                    %s,
+                    %s
+                )
+            """,
+            (
+                item_to_record['email_sent_datetime'].replace(tzinfo = None),
+                item_to_record['email_response'].status_code,
+                item_to_record.serialized(),
             )
-            VALUES (
-                '{item_to_record['email_sent_datetime'].replace(tzinfo = None)}',
-                {item_to_record['email_response'].status_code},
-                '{item_to_record.serialized()}'
-            )
-        """)
+        )
         self.commit()
         db_cursor.close()
     
@@ -59,14 +66,19 @@ class EmailedItemsDBConnection(db_connection.DBConnection):
         logging.debug(f"Getting datetime of transmission (if one exists) for item {item_to_query}")
         
         db_cursor = self.cursor(buffered = True)
-        db_cursor.execute(f"""
-            SELECT
-                send_datetime
-            FROM {self.table_name}
-            WHERE
-                serialized_item like '{item_to_query.serialized()}'
-                AND status_code = 200
-        """)
+        db_cursor.execute(
+            f"""
+                SELECT
+                    send_datetime
+                FROM {self.table_name}
+                WHERE
+                    serialized_item = %s
+                    AND status_code = 200
+            """,
+            (
+                item_to_query.serialized(),
+            ),
+        )
         if db_cursor.rowcount == 0:
             db_cursor.close()
             return None

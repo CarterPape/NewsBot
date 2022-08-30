@@ -5,16 +5,16 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
+import os
+import locale
+import logging
 import twisted.internet.reactor
 import scrapy.utils.log
 import scrapy.utils.project
-import os
 import scrapy.spiderloader
 import dotenv
-import locale
-import logging
-import newsbot.tasking.job_registry as job_registry
-import newsbot.db_builder as db_builder
+from newsbot.tasking import job_registry
+from newsbot import db_builder
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 locale.setlocale(locale.LC_ALL, '')
