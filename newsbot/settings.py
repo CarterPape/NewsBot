@@ -26,7 +26,7 @@ from newsbot.tasking.crawl_schedulers import uniformly_random_scheduler
 dotenv.load_dotenv(dotenv.find_dotenv())
 
 BOT_NAME =      "NewsBot"
-_BOT_VERSION =  "0.5.1"
+_BOT_VERSION =  "0.6.0"
 
 _TOP_LEVEL_MODULES = ["private", "newsbot"]
 

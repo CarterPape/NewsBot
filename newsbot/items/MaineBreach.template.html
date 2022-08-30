@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!--
+    # # # # # # # # # # # # # # # # # # # #
+    # NewsBot, a journalism tool
+    # Copyright 2020 Carter Pape
+    # 
+    # See file LICENSE for licensing terms.
+    # # # # # # # # # # # # # # # # # # # #
+-->
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+        <title>
+            $email_subject
+        </title>
+    </head>
+    <body>
+        <p>
+            $organization_name, $a_an_org_type, reported <a href="$details_url">a data breach</a> affecting $people_person_affected to the Maine Attorney General. The breach occurred $occurred_date, was discovered $discovery_date, was reported to consumers $consumer_notification_date, and was reported to the Maine attorney general on $reported_date.
+        </p>
+        <p>
+            The following information was breached: $breached_information. The following description of the breach was provided:
+        </p>
+        $provided_description
+        <p>
+            $submitter_name, $submitter_relationship for $organization_name, submitted the disclosure. They are reachable at $submitter_email and $submitter_phone_number.
+        </p>
+        <p>
+            The disclosure recently appeared on Maine's <a href="https://apps.web.maine.gov/online/aeviewer/ME/40/list.shtml">data breach list</a>. A copy of <a href="$consumer_notice_url">the notice</a> sent to affected Maine residents is attached to this email.
+        </p>
+    </body>
+</html>
