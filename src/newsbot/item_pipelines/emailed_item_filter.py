@@ -6,7 +6,6 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import logging
-import typing
 
 import scrapy
 
@@ -19,7 +18,7 @@ from newsbot.exceptions import drop_duplicate_item
 
 class EmailedItemFilter(item_pipeline.ItemPipeline):
     def __init__(self):
-        self._serialized_items_seen: typing.Set[str] = set()
+        self._serialized_items_seen: set[str] = set()
     
     def process_item(
         self,

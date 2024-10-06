@@ -195,5 +195,5 @@ class NewsSourcesDefinitions:
     ]
     
     @classmethod
-    def list_all_sources(klass) -> typing.List[news_source.NewsSource]:
+    def list_all_sources(klass) -> list[news_source.NewsSource]:
         return klass._all_sources

@@ -16,7 +16,7 @@ import types
 class ConcreteSubclassLoader:
     def __init__(self, *,
         load_subclasses_of: type,
-        from_modules_named: typing.List[str],
+        from_modules_named: list[str],
     ):
         self._load_subclasses_of =      load_subclasses_of
         self._from_modules_named =      from_modules_named
@@ -43,7 +43,7 @@ class ConcreteSubclassLoader:
     
     def walk_modules(self, *,
         at_path: str,
-    ) -> typing.List[types.ModuleType]:
+    ) -> list[types.ModuleType]:
         path =  at_path
         mods =  []
         mod =   importlib.import_module(path)

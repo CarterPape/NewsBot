@@ -42,7 +42,7 @@ class DBConnection(
         pass
     
     @property
-    def connection_dependencies(self) -> typing.List[type]:
+    def connection_dependencies(self) -> list[type]:
         return []
     
     def table_exists(self) -> bool:
@@ -53,7 +53,7 @@ class DBConnection(
             WHERE table_schema = 'newsbot' 
             AND table_name = '{self.table_name}'
         """)
-        table_count = typing.cast(typing.List[int],
+        table_count = typing.cast(list[int],
             db_cursor.fetchone()
         )[0]
         db_cursor.close()

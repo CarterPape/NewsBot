@@ -39,7 +39,7 @@ class FileDownloader(
         )
     
     def item_completed(self,
-        results:    typing.Tuple[bool, typing.Union[dict, twisted.python.failure.Failure]],
+        results:    tuple[bool, (dict | twisted.python.failure.Failure)],
         item:       item_with_files.ItemWithFiles,
         info:       scrapy.pipelines.media.MediaPipeline.SpiderInfo,
     ):

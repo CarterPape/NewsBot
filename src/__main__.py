@@ -13,6 +13,7 @@ import scrapy.utils.log
 import scrapy.utils.project
 import scrapy.spiderloader
 import dotenv
+
 from newsbot.tasking import job_registry
 from newsbot import db_builder
 

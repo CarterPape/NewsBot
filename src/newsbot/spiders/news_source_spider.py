@@ -5,7 +5,7 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import typing
+import collections.abc
 import logging
 import urllib.parse
 import datetime
@@ -57,7 +57,7 @@ class NewsSourceSpider(self_scheduling_spider.SelfSchedulingSpider):
         
         super().__init__()
     
-    def start_requests(self) -> typing.Iterable[scrapy.http.Request]:
+    def start_requests(self) -> collections.abc.Iterable[scrapy.http.Request]:
         self._news_sources_db_connection =  news_sources_db_connection.NewsSourcesDBConnection(
             settings = self.settings,
         )
@@ -83,7 +83,7 @@ class NewsSourceSpider(self_scheduling_spider.SelfSchedulingSpider):
         response: scrapy.http.HtmlResponse,
         *,
         the_source: news_source.NewsSource,
-    ) -> typing.Iterable[news_article.NewsArticle]:
+    ) -> collections.abc.Iterable[news_article.NewsArticle]:
         
         all_urls = the_source.links_parser.parse_response(response)
         

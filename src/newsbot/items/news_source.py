@@ -6,7 +6,7 @@
 # # # # # # # # # # # # # # # # # # # #
 # pylint: disable=too-many-arguments
 
-import typing
+import collections.abc
 import dataclasses
 
 from newsbot.spiders.helpers import link_list_parser
@@ -17,7 +17,7 @@ class NewsSource:
         source_id: str | None = None,
         name: str,
         home_url: str,
-        search_url_list: typing.Iterable[str],
+        search_url_list: collections.abc.Iterable[str],
         request_method: str = "GET",
         request_headers: dict | None = None,
         links_parser: link_list_parser.LinkListParser,

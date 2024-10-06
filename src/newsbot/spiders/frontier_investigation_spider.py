@@ -56,7 +56,7 @@ class FrontierInvestigationSpider(self_scheduling_spider.SelfSchedulingSpider):
         
         super().__init__()
     
-    def start_requests(self) -> typing.List[scrapy.http.Request]:
+    def start_requests(self) -> list[scrapy.http.Request]:
         return [
             scrapy.Request(
                 "https://psc.utah.gov/2019/05/20/docket-no-19-041-04/",
@@ -66,7 +66,7 @@ class FrontierInvestigationSpider(self_scheduling_spider.SelfSchedulingSpider):
     
     def parse_filing_table(self,
         response: scrapy.http.HtmlResponse
-    ) -> typing.List[frontier_investigation_filing.FrontierInvestigationFiling]:
+    ) -> list[frontier_investigation_filing.FrontierInvestigationFiling]:
         all_filing_rows = response.xpath(self._filing_xpath)
         all_filings = [
             frontier_investigation_filing.FrontierInvestigationFiling(

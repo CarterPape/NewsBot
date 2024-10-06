@@ -5,8 +5,8 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
+import collections.abc
 import os
-import typing
 import dataclasses
 
 import dotenv
@@ -43,7 +43,7 @@ class GoogleCustomSearchNewsSource(news_source.NewsSource):
     
     def generate_search_url_list(self, *,
         cx: str,
-    ) -> typing.Generator[str]:
+    ) -> collections.abc.Iterable[str]:
         key = os.getenv("GOOGLE_CSE_API_KEY")
         
         yield (

@@ -5,7 +5,7 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import typing
+import collections.abc
 import zoneinfo
 import scrapy
 import scrapy.http
@@ -79,7 +79,7 @@ class MaineBreachSpider(self_scheduling_spider.SelfSchedulingSpider):
         
         super().__init__()
     
-    def start_requests(self) -> typing.List[scrapy.http.Request]:
+    def start_requests(self) -> list[scrapy.http.Request]:
         self._breach_exclusion_db_connection = \
             filtered_breaches_db_connection.FilteredBreachesDBConnection(
                 settings = self.settings
@@ -100,7 +100,7 @@ class MaineBreachSpider(self_scheduling_spider.SelfSchedulingSpider):
     
     def _parse_disclosure_table(self,
         response: scrapy.http.HtmlResponse,
-    ) -> typing.Iterable[scrapy.Request]:
+    ) -> collections.abc.Iterable[scrapy.Request]:
         all_disclosure_rows = response.xpath(self._disclosure_xpath)
         
         for each_disclosure in all_disclosure_rows:

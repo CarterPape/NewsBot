@@ -9,10 +9,8 @@ import abc
 
 
 class CrawlScheduler(
-    object,
     metaclass = abc.ABCMeta,
 ):
-    @property
     @abc.abstractmethod
-    def pause_time_in_seconds(self) -> float:
+    def calculate_pause_time_in_seconds(self) -> float:
         pass

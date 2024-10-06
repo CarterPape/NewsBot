@@ -37,7 +37,11 @@ class CrawlJob:
         deferred.addCallback(self.schedule_a_crawl)
     
     def schedule_a_crawl(self, _ = None):
-        pause_time = self._scheduler.pause_time_in_seconds
+        logging.info(
+            f"Attempting to schedule a crawl with a spider of class {self._crawler.spidercls}."
+        )
+        
+        pause_time = self._scheduler.calculate_pause_time_in_seconds()
         
         logging.info(
             f"Scheduling a crawl with a spider of class {self._crawler.spidercls} "

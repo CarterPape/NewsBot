@@ -61,7 +61,7 @@ class EmailedItemsDBConnection(db_connection.DBConnection):
     
     def datetime_item_transmitted(self,
         item_to_query: emailable_item.EmailableItem
-    ) -> typing.Union[datetime.datetime, None]:
+    ) -> (datetime.datetime | None):
         
         logging.debug(f"Getting datetime of transmission (if one exists) for item {item_to_query}")
         
@@ -83,7 +83,7 @@ class EmailedItemsDBConnection(db_connection.DBConnection):
             db_cursor.close()
             return None
         else:
-            send_datetime = typing.cast(typing.List[datetime.datetime],
+            send_datetime = typing.cast(list[datetime.datetime],
                 db_cursor.fetchone()
             )[0]
             send_datetime = send_datetime.replace(

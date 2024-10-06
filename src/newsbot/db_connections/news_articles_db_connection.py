@@ -29,7 +29,7 @@ class NewsArticlesDBConnection(db_connection.DBConnection):
         """
     
     @property
-    def connection_dependencies(self) -> typing.List[type]:
+    def connection_dependencies(self) -> list[type]:
         return [news_sources_db_connection.NewsSourcesDBConnection]
     
     def record_news_article(self,
@@ -63,7 +63,7 @@ class NewsArticlesDBConnection(db_connection.DBConnection):
                 article_clean_url = {article.clean_url}
         """)
         
-        match_count = typing.cast(typing.List[int],
+        match_count = typing.cast(list[int],
             db_cursor.fetchone(),
         )[0]
         db_cursor.close()

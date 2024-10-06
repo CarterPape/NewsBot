@@ -5,8 +5,6 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import typing
-
 import scrapy.crawler
 import scrapy.utils.project
 
@@ -15,7 +13,7 @@ from newsbot.tasking import crawl_job
 
 class NewsBotJobRegistry:
     def __init__(self, *,
-        from_spider_classes: typing.List[type],
+        from_spider_classes: list[type],
     ):
         self._runner: scrapy.crawler.CrawlerRunner = (
             scrapy.crawler.CrawlerRunner(
@@ -23,7 +21,7 @@ class NewsBotJobRegistry:
             )
         )
         
-        self._jobs: typing.List[crawl_job.CrawlJob] = [
+        self._jobs: list[crawl_job.CrawlJob] = [
             crawl_job.CrawlJob(
                 from_runner =       self._runner,
                 spider_class =      each_spider_class,
