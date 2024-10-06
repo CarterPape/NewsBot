@@ -72,6 +72,7 @@ class Time(datetime.time):
             minute =        the_datetime.minute,
             second =        the_datetime.second,
             microsecond =   the_datetime.microsecond,
+            tzinfo =        None,
             *args, **kwargs
         )
     
@@ -80,16 +81,7 @@ class Time(datetime.time):
         *,
         in_timezone = zoneinfo.ZoneInfo("America/Denver"),
     ) -> datetime.datetime:
-        return datetime.datetime(
-            year =          the_date.year,
-            month =         the_date.month,
-            day =           the_date.day,
-            hour =          self.hour,
-            minute =        self.minute,
-            second =        self.second,
-            microsecond =   self.microsecond,
-            fold =          1,
-        ).astimezone(in_timezone)
+        return datetime.datetime.combine(the_date, self, in_timezone)
 
 class IntervalRule:
     def __init__(self, *,
@@ -97,20 +89,29 @@ class IntervalRule:
         end_time:   Time,
         period:     datetime.timedelta,
     ):
-        assert start_time < end_time
+        if not end_time >= start_time:
+            raise ValueError("The end time must be after the start time")
+        
+        if period <= datetime.timedelta(0):
+            raise ValueError("The period must be greater than zero")
+        
+        common_time = datetime.date(2000, 1, 1)
+        if period > (
+            datetime.datetime.combine(common_time, end_time)
+            - datetime.datetime.combine(common_time, start_time)
+        ):
+            raise ValueError("The period must be no longer than the interval")
+        
         self.start_time =   start_time
         self.end_time =     end_time
         self.period =       period
 
-FireRule = typing.Union[
-    Time,
-    IntervalRule,
-]
+FireRule = Time | IntervalRule
 
 class WhenToFire(dict):
     def __getitem__(self,
         item: DayOfTheWeek,
-    ) -> typing.List[FireRule]:
+    ) -> list[FireRule]:
         for key in self:
             if item in key:
                 return super().__getitem__(key)
@@ -124,5 +125,5 @@ class WhenToFire(dict):
                 return True
         return False
 
-class NextFireDatetimeFound(Exception):
+class NextFireDatetimeNotFound(Exception):
     pass
