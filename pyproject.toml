@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "NewsBot"
+dynamic = ["version"]
+authors = [
+    { name="Carter Pape", email="author@newsbot.carterpape.com" },
+]
+description = "A package for scraping news articles from various sources, and doing other useful news tasks."
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
+    "Operating System :: OS Independent",
+    "Private :: Do Not Upload",
+]
+requires-python = ">=3.12"
+
+
+[project.urls]
+Homepage = "https://github.com/CarterPape/NewsBot"
+Issues = "https://github.com/CarterPape/NewsBot/issues"
+
+[tool.pytest.ini_options]
+addopts="-n 4"
