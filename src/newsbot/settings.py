@@ -25,7 +25,7 @@ from newsbot.tasking.crawl_schedulers import uniformly_random_scheduler
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
-BOT_NAME =      "NewsBot"
+BOT_NAME = "NewsBot"
 
 with open("VERSION", "r", encoding="utf-8") as version_file:
     _BOT_VERSION = version_file.read().strip()
@@ -81,7 +81,6 @@ _DATA_DIRECTORY = (
         )
     )
 )
-os.makedirs(_DATA_DIRECTORY, exist_ok = True)
 
 FILES_STORE = (
     os.path.abspath(
@@ -91,7 +90,6 @@ FILES_STORE = (
         )
     )
 )
-os.makedirs(FILES_STORE, exist_ok = True)
 
 FILES_URLS_FIELD = item_with_files.ItemWithFiles.get_files_urls_field()
 FILES_RESULT_FIELD = item_with_files.ItemWithFiles.get_files_result_field()
@@ -110,7 +108,6 @@ _LOG_DIRECTORY = (
         )
     )
 )
-os.makedirs(_LOG_DIRECTORY, exist_ok = True)
 
 LOG_FILE = (
     os.path.abspath(

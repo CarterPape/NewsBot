@@ -31,6 +31,10 @@ logging.getLogger().addHandler(stderr_stream_handler)
 db_builder = db_builder.DBBuilder(from_settings = project_settings)
 db_builder.build_unbuilt_tables()
 
+os.makedirs(project_settings.get("_DATA_DIRECTORY"), exist_ok = True)
+os.makedirs(project_settings.get("FILES_STORE"), exist_ok = True)
+os.makedirs(project_settings.get("_LOG_DIRECTORY"), exist_ok = True)
+
 spider_loader = scrapy.spiderloader.SpiderLoader(project_settings)
 spider_classes = [
     spider_loader.load(spider_name)
