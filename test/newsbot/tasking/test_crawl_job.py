@@ -26,7 +26,7 @@ class TestCrawlJob(unittest.TestCase):
         self.mock_runner = self.runner_patcher.start()
         self.mock_crawler = self.crawler_patcher.start()
         self.mock_scheduler = self.scheduler_patcher.start()
-
+        
         self.addCleanup(self.runner_patcher.stop)
         self.addCleanup(self.crawler_patcher.stop)
         self.addCleanup(self.scheduler_patcher.stop)
@@ -38,22 +38,22 @@ class TestCrawlJob(unittest.TestCase):
     @unittest.mock.patch.object(
         self_scheduling_spider.SelfSchedulingSpider, 'make_a_scheduler', autospec=True
     )
-    def test_init_creates_crawler_and_scheduler(self, mock_make_a_scheduler):
+    def test_init_creates_crawler_and_scheduler(self, mock_make_a_scheduler: unittest.mock.Mock):
         mock_make_a_scheduler.return_value = self.mock_scheduler_instance
         
         job = crawl_job.CrawlJob(
             from_runner=self.mock_runner_instance,
             spider_class=MockSpider
         )
-
+        
         self.mock_crawler.assert_called_once_with(
             MockSpider,
             settings=self.mock_runner_instance.settings
         )
         mock_make_a_scheduler.assert_called_once_with(from_crawler=self.mock_crawler_instance)
-        self.assertEqual(job._runner, self.mock_runner_instance)
-        self.assertEqual(job._crawler, self.mock_crawler_instance)
-        self.assertEqual(job._scheduler, self.mock_scheduler_instance)
+        assert job._runner == self.mock_runner_instance
+        assert job._crawler == self.mock_crawler_instance
+        assert job._scheduler == self.mock_scheduler_instance
     
     @unittest.mock.patch('twisted.internet.reactor.callLater', autospec=True)
     def test_crawl_then_repeat_later(self, _):
@@ -74,7 +74,10 @@ class TestCrawlJob(unittest.TestCase):
     @unittest.mock.patch.object(
         MockSpider, 'make_a_scheduler', autospec=True
     )
-    def test_schedule_a_crawl(self, mock_make_a_scheduler, mock_call_later):
+    def test_schedule_a_crawl(self,
+        mock_make_a_scheduler: unittest.mock.Mock,
+        mock_call_later: unittest.mock.Mock,
+    ):
         mock_make_a_scheduler.return_value = self.mock_scheduler_instance
         
         job = crawl_job.CrawlJob(

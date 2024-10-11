@@ -43,22 +43,39 @@ class TestTimeConditionalScheduler(unittest.TestCase):
         mock_now: unittest.mock.MagicMock,
         mock_random: unittest.mock.MagicMock,
     ):
-        mock_now.return_value = self.example_datetime - datetime.timedelta(minutes = 10)
-        mock_random.return_value = 0.5
+        inputs_and_expected_value_list: list[tuple[
+            str, float, str
+        ]] = [
+            ("Monday, October 2, 2023 at 1:20 p.m.", 0.5, "Monday, October 2, 2023 at 1:50 p.m."),
+            ("Monday, October 2, 2023 at 1:51 p.m.", 0.5, "Monday, October 2, 2023 at 1:51 p.m."),
+        ]
         
-        pause_time = self.common_scheduler.calculate_pause_time_in_seconds()
-        expected_next_firing = typing.cast(datetime.datetime,
-            dateparser.parse(
-                "Monday, October 2, 2023 at 1:50 p.m.",
-                settings = {
-                    "TIMEZONE": "America/Denver",
-                    "RETURN_AS_TIMEZONE_AWARE": True,
-                },
+        for now_str, random_value, expected_next_firing_str in inputs_and_expected_value_list:
+            scheduler = copy.copy(self.common_scheduler)
+            mock_now.return_value = typing.cast(datetime.datetime,
+                dateparser.parse(
+                    now_str,
+                    settings = {
+                        "TIMEZONE": "America/Denver",
+                        "RETURN_AS_TIMEZONE_AWARE": True,
+                    },
+                )
             )
-        )
-        
-        assert self.common_scheduler._datetime_of_next_firing == expected_next_firing
-        assert pause_time == (expected_next_firing - mock_now.return_value).total_seconds()
+            mock_random.return_value = random_value
+            
+            pause_time = scheduler.calculate_pause_time_in_seconds()
+            expected_next_firing = typing.cast(datetime.datetime,
+                dateparser.parse(
+                    expected_next_firing_str,
+                    settings = {
+                        "TIMEZONE": "America/Denver",
+                        "RETURN_AS_TIMEZONE_AWARE": True,
+                    },
+                )
+            )
+            
+            assert scheduler._datetime_of_next_firing == expected_next_firing
+            assert pause_time == (expected_next_firing - mock_now.return_value).total_seconds()
     
     def test_calculate_pause_time_in_seconds_with_bad_rules(
             self, mock_random: unittest.mock.MagicMock
@@ -75,45 +92,37 @@ class TestTimeConditionalScheduler(unittest.TestCase):
     def test_find_next_fire_datetime(self, mock_random: unittest.mock.MagicMock):
         mock_random.return_value = 0.5
         
-        # Test case where the next fire time is found on the same day
-        scheduler = copy.copy(self.common_scheduler)
-        scheduler._datetime_of_previous_firing = typing.cast(datetime.datetime,
-            dateparser.parse(
-                "Monday, October 2, 2023 at 8:01 a.m.",
-                settings = {
-                    "TIMEZONE": "America/Denver",
-                    "RETURN_AS_TIMEZONE_AWARE": True,
-                },
-            )
-        )
+        inputs_and_expected_value_list: list[tuple[
+            str, str
+        ]] = [
+            ("Monday, October 2, 2023 at 8:01 a.m.", "Monday, October 2, 2023 at 8:21 a.m."),
+            ("Monday, October 2, 2023 at 11:59 p.m.", "Tuesday, October 3, 2023 at 12:05 a.m."),
+        ]
         
-        scheduler._find_next_fire_datetime()
-        assert scheduler._datetime_of_next_firing == dateparser.parse(
-            "Monday, October 2, 2023 at 8:21 a.m.",
-            settings = {
-                "TIMEZONE": "America/Denver",
-                "RETURN_AS_TIMEZONE_AWARE": True,
-            },
-        )
-        
-        # Test case where the next fire time is found on the next day
-        scheduler._datetime_of_previous_firing = typing.cast(datetime.datetime,
-            dateparser.parse(
-                "Monday, October 2, 2023 at 11:59 p.m.",
-                settings = {
-                    "TIMEZONE": "America/Denver",
-                    "RETURN_AS_TIMEZONE_AWARE": True,
-                },
+        for previous_firing_str, expected_next_firing_str in inputs_and_expected_value_list:
+            scheduler = copy.copy(self.common_scheduler)
+            scheduler._datetime_of_previous_firing = typing.cast(datetime.datetime,
+                dateparser.parse(
+                    previous_firing_str,
+                    settings = {
+                        "TIMEZONE": "America/Denver",
+                        "RETURN_AS_TIMEZONE_AWARE": True,
+                    },
+                )
             )
-        )
-        scheduler._find_next_fire_datetime()
-        assert scheduler._datetime_of_next_firing == dateparser.parse(
-            "Tuesday, October 3, 2023 at 12:05 a.m.",
-            settings = {
-                "TIMEZONE": "America/Denver",
-                "RETURN_AS_TIMEZONE_AWARE": True,
-            },
-        )
+            
+            scheduler._find_next_fire_datetime()
+            expected_next_firing = typing.cast(datetime.datetime,
+                dateparser.parse(
+                    expected_next_firing_str,
+                    settings = {
+                        "TIMEZONE": "America/Denver",
+                        "RETURN_AS_TIMEZONE_AWARE": True,
+                    },
+                )
+            )
+            
+            assert scheduler._datetime_of_next_firing == expected_next_firing
     
     def test_handle_time_fire_rule(self, mock_random: unittest.mock.MagicMock):
         inputs_and_expected_value_list: list[tuple[
@@ -238,3 +247,6 @@ class TestTimeConditionalScheduler(unittest.TestCase):
                 datetime.timedelta(seconds = 100)
             )
             assert deviation == datetime.timedelta(seconds = expected_deviation)
+    
+    def test_now(self, _: unittest.mock.MagicMock):
+        assert isinstance(self.common_scheduler._now(), datetime.datetime)

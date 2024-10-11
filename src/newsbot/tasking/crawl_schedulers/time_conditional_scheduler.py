@@ -67,7 +67,7 @@ class TimeConditionalScheduler(crawl_scheduler.CrawlScheduler):
     
     @classmethod
     def _now(klass) -> datetime.datetime:
-        return datetime.datetime.now(tz = zoneinfo.ZoneInfo("America/Denver")) # pragma: no cover
+        return datetime.datetime.now(tz = zoneinfo.ZoneInfo("America/Denver"))
     
     def calculate_pause_time_in_seconds(self) -> float:
         self._find_next_fire_datetime()

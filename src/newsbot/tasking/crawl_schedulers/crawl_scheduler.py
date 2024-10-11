@@ -13,4 +13,6 @@ class CrawlScheduler(
 ):
     @abc.abstractmethod
     def calculate_pause_time_in_seconds(self) -> float:
-        pass # pragma: no cover
+        raise NotImplementedError(
+            f"{self.__class__.__name__}.calculate_pause_time_in_seconds is not defined"
+        )
