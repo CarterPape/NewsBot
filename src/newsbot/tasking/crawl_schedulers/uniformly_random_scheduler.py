@@ -17,7 +17,8 @@ class UniformlyRandomScheduler(crawl_scheduler.CrawlScheduler):
         maximum_interval: datetime.timedelta,
         first_call_is_immediate = False,
     ):
-        assert minimum_interval <= maximum_interval
+        assert minimum_interval <= maximum_interval,\
+            "minimum_interval must be less than or equal to maximum_interval"
         self._minimum_interval = minimum_interval
         self._maximum_interval = maximum_interval
         

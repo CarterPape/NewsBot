@@ -40,6 +40,10 @@ def test_day_of_the_week_this_day_and_the_next_six_days():
         timing_types.DayOfTheWeek.Thursday,
     ]
 
+def test_day_of_the_week_day_index_bad():
+    with pytest.raises(ValueError, match="is not an individual day of the week"):
+        _ = timing_types.DayOfTheWeek.weekdays.day_index
+
 def test_time_creation():
     time = timing_types.Time("2:30 p.m.")
     
@@ -76,28 +80,28 @@ def test_interval_rule():
     assert rule.period == period
 
 def test_bad_interval_rules():
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="The end time must be after the start time"):
         timing_types.IntervalRule(
             start_time = timing_types.Time("9:00 a.m."),
             end_time = timing_types.Time("8:59 a.m."),
             period = datetime.timedelta(hours = 1)
         )
     
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="The end time must be after the start time"):
         timing_types.IntervalRule(
             start_time = timing_types.Time("9:00 a.m."),
             end_time = timing_types.Time("9:00 a.m."),
             period = datetime.timedelta(minutes = 1)
         )
     
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="The period must be greater than zero"):
         timing_types.IntervalRule(
             start_time = timing_types.Time("9:00 a.m."),
             end_time = timing_types.Time("5 p.m."),
             period = datetime.timedelta(minutes = 0)
         )
     
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="The period must be no longer than the interval"):
         timing_types.IntervalRule(
             start_time = timing_types.Time("9:00 a.m."),
             end_time = timing_types.Time("10 a.m."),

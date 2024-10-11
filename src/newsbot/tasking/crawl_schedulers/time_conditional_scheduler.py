@@ -65,6 +65,10 @@ class TimeConditionalScheduler(crawl_scheduler.CrawlScheduler):
             datetime_of_previous_firing or datetime.datetime.now(tz = self._working_timezone)
         self._datetime_of_next_firing:              datetime.datetime | None = None
     
+    @classmethod
+    def _now(klass) -> datetime.datetime:
+        return datetime.datetime.now(tz = zoneinfo.ZoneInfo("America/Denver")) # pragma: no cover
+    
     def calculate_pause_time_in_seconds(self) -> float:
         self._find_next_fire_datetime()
         
@@ -75,7 +79,7 @@ class TimeConditionalScheduler(crawl_scheduler.CrawlScheduler):
                 f"This should only happen if the WhenToFire is empty."
             )
         
-        now = datetime.datetime.now(tz = self._working_timezone)
+        now = TimeConditionalScheduler._now()
         
         self._datetime_of_next_firing = max(
             typing.cast(datetime.datetime, self._datetime_of_next_firing),
@@ -109,9 +113,9 @@ class TimeConditionalScheduler(crawl_scheduler.CrawlScheduler):
                         typing.cast(timing_types.IntervalRule, each_fire_rule),
                         on_date = each_date,
                     )
-            
-            if self._datetime_of_next_firing is not None:
-                return
+                
+                if self._datetime_of_next_firing is not None:
+                    return
     
     def _handle_time_fire_rule(self,
         the_time: timing_types.Time,
@@ -175,7 +179,7 @@ class TimeConditionalScheduler(crawl_scheduler.CrawlScheduler):
     def _period_with_relative_random_deviation(self,
         period: datetime.timedelta,
     ) -> datetime.timedelta:
-        return period * random.uniform(
+        return period * random.Random().uniform(
             1 - self._uniform_relative_deviation,
             1 + self._uniform_relative_deviation,
         )

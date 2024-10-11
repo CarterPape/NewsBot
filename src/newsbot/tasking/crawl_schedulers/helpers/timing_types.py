@@ -89,7 +89,7 @@ class IntervalRule:
         end_time:   Time,
         period:     datetime.timedelta,
     ):
-        if not end_time >= start_time:
+        if end_time <= start_time:
             raise ValueError("The end time must be after the start time")
         
         if period <= datetime.timedelta(0):

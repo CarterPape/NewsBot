@@ -13,4 +13,4 @@ class CrawlScheduler(
 ):
     @abc.abstractmethod
     def calculate_pause_time_in_seconds(self) -> float:
-        pass
+        pass # pragma: no cover
