@@ -30,7 +30,7 @@ BOT_NAME = "NewsBot"
 with open("VERSION", "r", encoding="utf-8") as version_file:
     _BOT_VERSION = version_file.read().strip()
 
-_TOP_LEVEL_MODULES = ["private", "newsbot"]
+_TOP_LEVEL_MODULES = ["newsbot"]
 
 SPIDER_MODULES = [
     top_level_module + ".spiders"

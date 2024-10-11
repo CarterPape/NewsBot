@@ -1,3 +1,0 @@
-[submodule "private"]
-    path = src/private
-    url = git@github.com:CarterPape/NewsBot-private.git
