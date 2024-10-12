@@ -1,5 +1,6 @@
+# # # # # # # # # # # # # # # # # # # #
 # NewsBot, a journalism tool
-# Copyright 2020 Carter Pape
+# Copyright 2024 Carter Pape
 # 
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
@@ -29,7 +30,7 @@ class TestDispatchCallLogSpider(unittest.TestCase):
         assert \
             requests[0].body \
             == b'ddl-state=UT&ddl-county=Grand&ddl-company=ALL&ddl-limit=ALL'
-        assert requests[0].callback == self.spider.parse_call_log
+        assert requests[0].callback == self.spider.parse_call_log # pylint: disable=comparison-with-callable
     
     def test_parse_call_log(self):
         html_content = """
