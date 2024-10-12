@@ -24,11 +24,15 @@ class EmailableItem(
     
     @abc.abstractmethod
     def synthesize_email_subject(self) -> str:
-        pass
+        raise NotImplementedError(
+            f"{self.__class__.__name__}.synthesize_email_subject is not defined"
+        )
     
     @abc.abstractmethod
     def synthesize_html_email_body(self) -> str:
-        pass
+        raise NotImplementedError(
+            f"{self.__class__.__name__}.synthesize_html_email_body is not defined"
+        )
     
     def _get_email_template(self) -> string.Template:
         email_template_path = (

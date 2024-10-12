@@ -34,12 +34,16 @@ class DBConnection(
     @property
     @abc.abstractmethod
     def table_name(self) -> str:
-        pass
+        raise NotImplementedError(
+            f"{self.__class__.__name__}.table_name is not defined"
+        )
     
     @property
     @abc.abstractmethod
     def table_definition(self) -> str:
-        pass
+        raise NotImplementedError(
+            f"{self.__class__.__name__}.table_definition is not defined"
+        )
     
     @property
     def connection_dependencies(self) -> list[type]:

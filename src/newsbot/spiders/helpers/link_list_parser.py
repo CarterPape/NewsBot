@@ -6,14 +6,15 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import abc
-import typing
 import urllib.parse
 import scrapy.http
 
 class LinkListParser(metaclass = abc.ABCMeta):
     @abc.abstractmethod
     def parse_response(self, response: scrapy.http.Response) -> list[str]:
-        pass
+        raise NotImplementedError(
+            f"{self.__class__.__name__}.parse_response is not defined"
+        )
     
     def _join_urls_with_common_base(self, *,
         common_base: str,

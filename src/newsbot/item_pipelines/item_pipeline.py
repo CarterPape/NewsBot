@@ -21,4 +21,6 @@ class ItemPipeline(metaclass = abc.ABCMeta):
         | dict
         | twisted.internet.defer.Deferred
     ):
-        pass
+        raise NotImplementedError(
+            f"{self.__class__.__name__}.process_item is not defined"
+        )
