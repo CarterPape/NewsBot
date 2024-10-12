@@ -25,15 +25,33 @@ project_settings = scrapy.utils.project.get_project_settings()
 
 scrapy.utils.log.configure_logging(settings = project_settings)
 stderr_stream_handler = logging.StreamHandler()
-stderr_stream_handler.setLevel("WARNING")
+stderr_stream_handler.setLevel(project_settings.get("LOG_LEVEL"))
 logging.getLogger().addHandler(stderr_stream_handler)
+
+logging.debug(
+    "Logging configured with log level "
+    f"{logging.getLevelName(stderr_stream_handler.level)} "
+    f"({stderr_stream_handler.level})"
+)
+
+logging.debug("Settings loaded:")
+for key, value in project_settings.items():
+    logging.debug(f"{key} = {value}")
 
 db_builder = db_builder.DBBuilder(from_settings = project_settings)
 db_builder.build_unbuilt_tables()
 
-os.makedirs(project_settings.get("_DATA_DIRECTORY"), exist_ok = True)
-os.makedirs(project_settings.get("FILES_STORE"), exist_ok = True)
-os.makedirs(project_settings.get("_LOG_DIRECTORY"), exist_ok = True)
+DATA_DIRECTORY = project_settings.get("_DATA_DIRECTORY")
+logging.debug(f"Making data directory {DATA_DIRECTORY}")
+os.makedirs(DATA_DIRECTORY, exist_ok = True)
+
+FILES_STORE = project_settings.get("FILES_STORE")
+logging.debug(f"Making files store {FILES_STORE}")
+os.makedirs(FILES_STORE, exist_ok = True)
+
+LOG_DIRECTORY = project_settings.get("_LOG_DIRECTORY")
+logging.debug(f"Making log directory {LOG_DIRECTORY}")
+os.makedirs(LOG_DIRECTORY, exist_ok = True)
 
 spider_loader = scrapy.spiderloader.SpiderLoader(project_settings)
 spider_classes = [

@@ -25,9 +25,24 @@ from newsbot.tasking.crawl_schedulers import uniformly_random_scheduler
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
+_PROJECT_DIRECTORY = (
+    os.path.abspath(
+        os.path.dirname(
+            scrapy.utils.conf.closest_scrapy_cfg(
+                path = os.path.realpath(__file__)
+            )
+        )
+    )
+)
+
 BOT_NAME = "NewsBot"
 
-with open("VERSION", "r", encoding="utf-8") as version_file:
+with open(os.path.abspath(
+    os.path.join(
+        _PROJECT_DIRECTORY,
+        "VERSION",
+    )
+), "r", encoding="utf-8") as version_file:
     _BOT_VERSION = version_file.read().strip()
 
 _TOP_LEVEL_MODULES = ["newsbot"]
@@ -62,16 +77,6 @@ COOKIES_ENABLED = True
 
 # Disable Telnet Console (enabled by default)
 TELNETCONSOLE_ENABLED = True
-
-_PROJECT_DIRECTORY = (
-    os.path.abspath(
-        os.path.dirname(
-            scrapy.utils.conf.closest_scrapy_cfg(
-                path = os.path.realpath(__file__)
-            )
-        )
-    )
-)
 
 _DATA_DIRECTORY = (
     os.path.abspath(
