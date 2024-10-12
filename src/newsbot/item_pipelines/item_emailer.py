@@ -73,7 +73,7 @@ class ItemEmailer(item_pipeline.ItemPipeline):
             
             logging.warning(
                 "Logging email at level INFO rather than "
-                "sending them (check setting _PRINT_INSTEAD_OF_EMAIL)"
+                "sending it (as per setting _PRINT_INSTEAD_OF_EMAIL)"
             )
             class _FakeResponse(requests.Response):
                 @property

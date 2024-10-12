@@ -5,7 +5,6 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import typing
 import dataclasses
 
 from newsbot.spiders.helpers import css_link_list_parser

@@ -5,7 +5,6 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import typing
 import logging
 
 from newsbot.db_connections import db_connection

@@ -5,7 +5,6 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import typing
 import collections
 import inspect
 import logging

@@ -5,7 +5,7 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import newsbot.spiders.helpers.lambda_link_list_parser as lambda_link_list_parser
+from newsbot.spiders.helpers import lambda_link_list_parser
 
 class XPathLinkListParser(lambda_link_list_parser.LambdaLinkListParser):
     def __init__(self, link_xpath: str):
