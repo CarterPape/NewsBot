@@ -27,9 +27,10 @@ class TestDispatchCallLogSpider(unittest.TestCase):
         assert len(requests) == 1
         assert isinstance(requests[0], scrapy.http.FormRequest)
         assert requests[0].url == "https://call-log-api.edispatches.com/calls/"
-        assert \
-            requests[0].body \
+        assert (
+            requests[0].body
             == b'ddl-state=UT&ddl-county=Grand&ddl-company=ALL&ddl-limit=ALL'
+        )
         assert requests[0].callback == self.spider.parse_call_log # pylint: disable=comparison-with-callable
     
     def test_parse_call_log(self):
@@ -65,16 +66,17 @@ class TestDispatchCallLogSpider(unittest.TestCase):
         assert len(dispatches) == 2
         assert dispatches[0]["file_URLs"] == ["audio1.mp3"]
         assert dispatches[0]["dispatched_agency"] == "Agency1"
-        assert \
-            dispatches[0]["datetime_dispatched"] \
+        assert (
+            dispatches[0]["datetime_dispatched"]
             == datetime.datetime(2023, 10, 1, 12, 0, 0, tzinfo=zoneinfo.ZoneInfo("America/Denver"))
+        )
         
         assert dispatches[1]["file_URLs"] == ["audio2.mp3"]
         assert dispatches[1]["dispatched_agency"] == "Agency2"
-        assert \
-            dispatches[1]["datetime_dispatched"] == \
-            datetime.datetime(2023, 10, 1, 13, 0, 0, tzinfo=zoneinfo.ZoneInfo("America/Denver"))
-        
+        assert (
+            dispatches[1]["datetime_dispatched"]
+            == datetime.datetime(2023, 10, 1, 13, 0, 0, tzinfo=zoneinfo.ZoneInfo("America/Denver"))
+        )
     def test_make_a_scheduler_default(self):
         crawler = scrapy.crawler.Crawler(spidercls=dispatch_call_log_spider.DispatchCallLogSpider)
         scheduler = self.spider.make_a_scheduler(from_crawler=crawler)

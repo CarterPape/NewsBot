@@ -14,7 +14,7 @@ import scrapy.selector
 from newsbot.spiders import self_scheduling_spider
 from newsbot.items import maine_breach
 from newsbot.tasking.crawl_schedulers import time_conditional_scheduler
-from newsbot.db_connections import\
+from newsbot.db_connections import \
     emailed_items_db_connection, \
     filtered_breaches_db_connection, \
     bank_breaches_db_connection

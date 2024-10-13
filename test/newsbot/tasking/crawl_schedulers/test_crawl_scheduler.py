@@ -20,8 +20,6 @@ def test_crawl_scheduler_not_implemented():
     
     with pytest.raises(
         NotImplementedError,
-        match=(
-            "MockCrawlScheduler.calculate_pause_time_in_seconds is not defined"
-        ),
+        match="MockCrawlScheduler.calculate_pause_time_in_seconds is not defined",
     ):
         MockCrawlScheduler().calculate_pause_time_in_seconds()

@@ -43,14 +43,14 @@ class TestTimeConditionalScheduler(unittest.TestCase):
         mock_now: unittest.mock.MagicMock,
         mock_random: unittest.mock.MagicMock,
     ):
-        inputs_and_expected_value_list: list[tuple[
-            str, float, str
-        ]] = [
-            ("Monday, October 2, 2023 at 1:20 p.m.", 0.5, "Monday, October 2, 2023 at 1:50 p.m."),
-            ("Monday, October 2, 2023 at 1:51 p.m.", 0.5, "Monday, October 2, 2023 at 1:51 p.m."),
+        mock_random.return_value = 0.5
+        
+        inputs_and_expected_value_list = [
+            ("Monday, October 2, 2023 at 1:20 p.m.", "Monday, October 2, 2023 at 1:50 p.m."),
+            ("Monday, October 2, 2023 at 1:51 p.m.", "Monday, October 2, 2023 at 1:51 p.m."),
         ]
         
-        for now_str, random_value, expected_next_firing_str in inputs_and_expected_value_list:
+        for now_str, expected_next_firing_str in inputs_and_expected_value_list:
             scheduler = copy.copy(self.common_scheduler)
             mock_now.return_value = typing.cast(datetime.datetime,
                 dateparser.parse(
@@ -61,7 +61,6 @@ class TestTimeConditionalScheduler(unittest.TestCase):
                     },
                 )
             )
-            mock_random.return_value = random_value
             
             pause_time = scheduler.calculate_pause_time_in_seconds()
             expected_next_firing = typing.cast(datetime.datetime,
@@ -92,9 +91,7 @@ class TestTimeConditionalScheduler(unittest.TestCase):
     def test_find_next_fire_datetime(self, mock_random: unittest.mock.MagicMock):
         mock_random.return_value = 0.5
         
-        inputs_and_expected_value_list: list[tuple[
-            str, str
-        ]] = [
+        inputs_and_expected_value_list = [
             ("Monday, October 2, 2023 at 8:01 a.m.", "Monday, October 2, 2023 at 8:21 a.m."),
             ("Monday, October 2, 2023 at 11:59 p.m.", "Tuesday, October 3, 2023 at 12:05 a.m."),
         ]
@@ -125,9 +122,7 @@ class TestTimeConditionalScheduler(unittest.TestCase):
             assert scheduler._datetime_of_next_firing == expected_next_firing
     
     def test_handle_time_fire_rule(self, mock_random: unittest.mock.MagicMock):
-        inputs_and_expected_value_list: list[tuple[
-            timing_types.Time, float, (datetime.datetime | None)
-        ]] = [
+        inputs_and_expected_value_list = [
             (timing_types.Time("1:30 a.m."), 0.5, None),
             (timing_types.Time("1:29:59 p.m."), 0, None),
             (
@@ -193,7 +188,7 @@ class TestTimeConditionalScheduler(unittest.TestCase):
             ),
         ]
         
-        for previous_firing, random_value, expected_datetime_of_next_firing\
+        for previous_firing, random_value, expected_datetime_of_next_firing \
         in inputs_and_expected_value_list:
             the_scheduler = copy.copy(self.common_scheduler)
             the_scheduler._datetime_of_previous_firing = previous_firing

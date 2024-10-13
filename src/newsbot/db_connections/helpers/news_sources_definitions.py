@@ -60,7 +60,7 @@ class NewsSourcesDefinitions:
                 ),
                 item_url_selector = (
                     lambda each_result: each_result["canonical_url"]
-                )
+                ),
             ),
         ),
         #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #
@@ -106,7 +106,7 @@ class NewsSourcesDefinitions:
                 item_url_selector = (
                     lambda each_result: each_result["link"]
                 ),
-            )
+            ),
         ),
         # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
         news_source.NewsSource(
@@ -131,7 +131,7 @@ class NewsSourcesDefinitions:
                 item_url_selector = (
                     lambda result_object: result_object["url"]
                 ),
-            )
+            ),
         ),
         # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
         news_source.NewsSource(

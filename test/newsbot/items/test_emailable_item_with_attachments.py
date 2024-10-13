@@ -21,26 +21,28 @@ class TestEmailableItemWithAttachments(unittest.TestCase):
     @unittest.mock.patch(
         "newsbot.items.emailable_item_with_attachments.open",
         new_callable=unittest.mock.mock_open,
-        read_data=b"file content"
+        read_data=b"file content",
     )
-    @unittest.mock.patch("newsbot.items.emailable_item_with_attachments.os.path.basename")
     def test_gather_email_attachments(self,
-            mock_basename: unittest.mock.MagicMock,
             mock_open: unittest.mock.MagicMock,
         ):
-        mock_basename.side_effect = lambda x: x.split("/")[-1]
+        def simplified_basename(path: str) -> str:
+            return path.split("/")[-1]
         
         item = TestEmailableItemWithAttachments.MockEmailableItemWithAttachments()
-        item["files"] = [{"path": "/path/to/file1.txt"}, {"path": "/path/to/file2.txt"}]
+        item["files"] = [
+            {"path": "/fake/absolute/path/to/file1.txt"},
+            {"path": "relative/path/to/file2.txt"}
+        ]
         
         expected_attachments = [
-            ("attachment", ("file1.txt", b"file content")),
-            ("attachment", ("file2.txt", b"file content"))
+            ("attachment", (simplified_basename(item["files"][0]["path"]), b"file content")),
+            ("attachment", (simplified_basename(item["files"][1]["path"]), b"file content"))
         ]
         
         attachments = item.gather_email_attachments()
         
         assert attachments == expected_attachments
         assert mock_open.call_count == 2
-        mock_open.assert_any_call("/path/to/file1.txt", "rb")
-        mock_open.assert_any_call("/path/to/file2.txt", "rb")
+        mock_open.assert_any_call(item["files"][0]["path"], "rb")
+        mock_open.assert_any_call(item["files"][1]["path"], "rb")

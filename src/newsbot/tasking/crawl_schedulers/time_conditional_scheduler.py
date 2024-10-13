@@ -60,10 +60,12 @@ class TimeConditionalScheduler(crawl_scheduler.CrawlScheduler):
         self._uniform_absolute_deviation =  uniform_absolute_deviation
         
         # In cases where the datetime of the previous firing is not set, assuming it to be the current datetime ensures that the scheduler schedules the next firing as though the most recent firing just happened, because it might have, and even if it didn't, we still don't want to fire too often.
-        # Once the first scheduled pause time is calculated, _datetime_of_previous_firing will become the actual time of the most recent firing.
-        self._datetime_of_previous_firing:          datetime.datetime = \
-            datetime_of_previous_firing or datetime.datetime.now(tz = self._working_timezone)
-        self._datetime_of_next_firing:              datetime.datetime | None = None
+        # Once the first pause time is calculated, `_datetime_of_previous_firing` will become the actual time of the most recent firing. Note that this is done at the time of the calculation, not the time of the firing.
+        self._datetime_of_previous_firing: datetime.datetime = (
+            datetime_of_previous_firing
+            or datetime.datetime.now(tz = self._working_timezone)
+        )
+        self._datetime_of_next_firing: datetime.datetime | None = None
     
     @classmethod
     def _now(klass) -> datetime.datetime:

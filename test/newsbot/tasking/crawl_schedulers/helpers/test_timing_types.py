@@ -20,10 +20,14 @@ def test_day_of_the_week_from_index_value():
     assert timing_types.DayOfTheWeek.from_index_value(6) == timing_types.DayOfTheWeek.Sunday
 
 def test_day_of_the_week_next_day():
-    assert timing_types.DayOfTheWeek.Monday.next_day_of_the_week() == \
-        timing_types.DayOfTheWeek.Tuesday
-    assert timing_types.DayOfTheWeek.Sunday.next_day_of_the_week() == \
-        timing_types.DayOfTheWeek.Monday
+    assert (
+        timing_types.DayOfTheWeek.Monday.next_day_of_the_week()
+        == timing_types.DayOfTheWeek.Tuesday
+    )
+    assert (
+        timing_types.DayOfTheWeek.Sunday.next_day_of_the_week()
+        == timing_types.DayOfTheWeek.Monday
+    )
 
 def test_day_of_the_week_this_day_and_the_next_six_days():
     days = list(

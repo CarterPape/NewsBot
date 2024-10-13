@@ -5,7 +5,6 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import typing
 import logging
 import datetime
 import scrapy
