@@ -12,6 +12,7 @@ import unittest.mock
 import string
 
 from newsbot.items import dispatch
+from newsbot.items import emailable_item_with_attachments
 
 
 class TestDispatch(unittest.TestCase):
@@ -25,7 +26,9 @@ class TestDispatch(unittest.TestCase):
         expected_subject = "Call to Fire Department Thursday at 2:30 PM"
         assert self.dispatch_instance.synthesize_email_subject() == expected_subject
 
-    @unittest.mock.patch.object(dispatch.Dispatch, '_get_email_template')
+    @unittest.mock.patch.object(
+        emailable_item_with_attachments.EmailableItemWithAttachments, '_get_email_template'
+    )
     def test_synthesize_html_email_body(self, mock_get_email_template):
         template_string = string.Template(
             "<html><body><h1>${email_subject}</h1><p>Dispatched at ${dispatch_time} on "
