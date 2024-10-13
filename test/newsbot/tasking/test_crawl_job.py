@@ -10,52 +10,46 @@ import unittest
 import unittest.mock
 
 from newsbot.tasking import crawl_job
+from newsbot.tasking.crawl_schedulers import crawl_scheduler
 from newsbot.spiders import self_scheduling_spider
 
 class MockSpider(self_scheduling_spider.SelfSchedulingSpider):
-    pass
+    mock_scheduler = unittest.mock.create_autospec(crawl_scheduler.CrawlScheduler)
+    
+    @classmethod
+    def make_a_scheduler(klass, **_) -> crawl_scheduler.CrawlScheduler:
+        return klass.mock_scheduler
 
 class TestCrawlJob(unittest.TestCase):
     def setUp(self):
-        self.runner_patcher = unittest.mock.patch('scrapy.crawler.CrawlerRunner')
-        self.crawler_patcher = unittest.mock.patch('scrapy.crawler.Crawler')
-        self.scheduler_patcher = unittest.mock.patch(
-            'newsbot.tasking.crawl_schedulers.crawl_scheduler.CrawlScheduler'
-        )
+        self.runner_instantiator_patch = unittest.mock.patch("scrapy.crawler.CrawlerRunner")
+        self.crawler_instantiator_patch = unittest.mock.patch("scrapy.crawler.Crawler")
         
-        self.mock_runner = self.runner_patcher.start()
-        self.mock_crawler = self.crawler_patcher.start()
-        self.mock_scheduler = self.scheduler_patcher.start()
+        self.mock_runner_instantiator = self.runner_instantiator_patch.start()
+        self.mock_crawler_instantiator = self.crawler_instantiator_patch.start()
         
-        self.addCleanup(self.runner_patcher.stop)
-        self.addCleanup(self.crawler_patcher.stop)
-        self.addCleanup(self.scheduler_patcher.stop)
+        self.addCleanup(self.runner_instantiator_patch.stop)
+        self.addCleanup(self.crawler_instantiator_patch.stop)
         
-        self.mock_runner_instance = self.mock_runner.return_value
-        self.mock_crawler_instance = self.mock_crawler.return_value
-        self.mock_scheduler_instance = self.mock_scheduler.return_value
+        self.mock_runner_instance = self.mock_runner_instantiator.return_value
+        self.mock_crawler_instance = self.mock_crawler_instantiator.return_value
     
-    @unittest.mock.patch.object(
-        self_scheduling_spider.SelfSchedulingSpider, 'make_a_scheduler', autospec=True
-    )
-    def test_init_creates_crawler_and_scheduler(self, mock_make_a_scheduler: unittest.mock.Mock):
-        mock_make_a_scheduler.return_value = self.mock_scheduler_instance
-        
+    def test_init(self):
         job = crawl_job.CrawlJob(
-            from_runner=self.mock_runner_instance,
-            spider_class=MockSpider
+            from_runner = self.mock_runner_instance,
+            spider_class = MockSpider
         )
         
-        self.mock_crawler.assert_called_once_with(
+        self.mock_crawler_instantiator.assert_called_once_with(
             MockSpider,
-            settings=self.mock_runner_instance.settings
+            settings = self.mock_runner_instance.settings
         )
-        mock_make_a_scheduler.assert_called_once_with(from_crawler=self.mock_crawler_instance)
+        
         assert job._runner == self.mock_runner_instance
         assert job._crawler == self.mock_crawler_instance
-        assert job._scheduler == self.mock_scheduler_instance
+        assert job._scheduler == MockSpider.mock_scheduler
     
-    @unittest.mock.patch('twisted.internet.reactor.callLater', autospec=True)
+    @unittest.mock.patch("twisted.internet.reactor.callLater", autospec=True)
     def test_crawl_then_repeat_later(self, _):
         job = crawl_job.CrawlJob(
             from_runner=self.mock_runner_instance,
@@ -70,25 +64,19 @@ class TestCrawlJob(unittest.TestCase):
         self.mock_runner_instance.crawl.assert_called_once_with(self.mock_crawler_instance)
         mock_deferred.addCallback.assert_called_once_with(job.schedule_a_crawl)
         
-    @unittest.mock.patch('twisted.internet.reactor.callLater', autospec=True)
-    @unittest.mock.patch.object(
-        MockSpider, 'make_a_scheduler', autospec=True
-    )
+    @unittest.mock.patch("twisted.internet.reactor.callLater", autospec=True)
     def test_schedule_a_crawl(self,
-        mock_make_a_scheduler: unittest.mock.Mock,
         mock_call_later: unittest.mock.Mock,
     ):
-        mock_make_a_scheduler.return_value = self.mock_scheduler_instance
-        
         job = crawl_job.CrawlJob(
             from_runner=self.mock_runner_instance,
             spider_class=MockSpider
         )
         
         pause_time = 10
-        self.mock_scheduler_instance.calculate_pause_time_in_seconds.return_value = pause_time
+        MockSpider.mock_scheduler.calculate_pause_time_in_seconds.return_value = pause_time
         
         job.schedule_a_crawl()
         
-        self.mock_scheduler_instance.calculate_pause_time_in_seconds.assert_called_once()
+        MockSpider.mock_scheduler.calculate_pause_time_in_seconds.assert_called_once()
         mock_call_later.assert_called_once_with(pause_time, job.crawl_then_repeat_later)
