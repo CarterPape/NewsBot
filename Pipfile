@@ -13,11 +13,11 @@ mysql-connector-python = "*"
 requests = "*"
 dateparser = "*"
 metadata-parser = "*"
-pytest-xdist = "*"
 
 [dev-packages]
-pytest = "*"
 pylint = "*"
+pytest = "*"
+pytest-xdist = "*"
 pytest-cov = "*"
 
 [requires]
