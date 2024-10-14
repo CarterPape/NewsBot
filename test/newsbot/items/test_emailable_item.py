@@ -26,7 +26,7 @@ class MockEmailableItem(EmailableItem):
 
 class TestEmailableItem(unittest.TestCase):
     @unittest.mock.patch(
-        'newsbot.items.emailable_item.open',
+        "newsbot.items.emailable_item.open",
         new_callable=unittest.mock.mock_open,
         read_data="fake file $content"
     )

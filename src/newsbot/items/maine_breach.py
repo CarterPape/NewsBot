@@ -34,7 +34,7 @@ class MaineBreach(emailable_item_with_attachments.EmailableItemWithAttachments):
     file_URLs = scrapy.Field(ignore_when_serializing = True)
     
     def __init__(self, *args, **kwargs):
-        locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+        locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
         super().__init__(*args, **kwargs)
     
     def synthesize_email_subject(self) -> str:
@@ -48,29 +48,29 @@ class MaineBreach(emailable_item_with_attachments.EmailableItemWithAttachments):
             return pape.utilities.pluralize(
                 singular_form = "person",
                 plural_form = "people",
-                count = locale.atoi(self['people_affected']),
+                count = locale.atoi(self["people_affected"]),
             )
         except ValueError:
-            return self['people_affected']
+            return self["people_affected"]
     
     def synthesize_html_email_body(self) -> str:
         a_an_org_type = f"a {str.lower(self['org_type'])} organization"
         
         return self._get_email_template().safe_substitute({
             "email_subject": self.synthesize_email_subject(),
-            "organization_name": self['organization_name'],
+            "organization_name": self["organization_name"],
             "a_an_org_type": a_an_org_type,
-            "details_url": self['details_url'],
+            "details_url": self["details_url"],
             "people_person_affected": self._people_person_affected(),
-            "occurred_date": self['occurred_date'],
-            "discovery_date": self['discovery_date'],
-            "consumer_notification_date": self['consumer_notification_date'],
-            "reported_date": self['reported_date'],
-            "breached_information": self['breached_information'],
-            "provided_description": self['provided_description'],
-            "submitter_name": self['submitter_name'],
-            "submitter_relationship": self['submitter_relationship'],
-            "submitter_email": self['submitter_email'],
-            "submitter_phone_number": self['submitter_phone_number'],
-            "consumer_notice_url": self['file_URLs'][0],
+            "occurred_date": self["occurred_date"],
+            "discovery_date": self["discovery_date"],
+            "consumer_notification_date": self["consumer_notification_date"],
+            "reported_date": self["reported_date"],
+            "breached_information": self["breached_information"],
+            "provided_description": self["provided_description"],
+            "submitter_name": self["submitter_name"],
+            "submitter_relationship": self["submitter_relationship"],
+            "submitter_email": self["submitter_email"],
+            "submitter_phone_number": self["submitter_phone_number"],
+            "consumer_notice_url": self["file_URLs"][0],
         })

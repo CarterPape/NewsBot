@@ -19,7 +19,7 @@ from newsbot import db_builder
 
 def main():
     dotenv.load_dotenv(dotenv.find_dotenv())
-    locale.setlocale(locale.LC_ALL, '')
+    locale.setlocale(locale.LC_ALL, "")
     
     os.environ["SCRAPY_SETTINGS_MODULE"] = "newsbot.settings"
     project_settings = scrapy.utils.project.get_project_settings()

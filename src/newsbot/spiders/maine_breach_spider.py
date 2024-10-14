@@ -58,19 +58,19 @@ class MaineBreachSpider(self_scheduling_spider.SelfSchedulingSpider):
         self._org_type_xpath = "//*[@id='maincontent3']/ul[1]/li[1]/strong/text()"
         self._people_affected_xpath = "//*[@id='maincontent3']/ul[3]/li[1]/strong/text()"
         
-        self._occurred_date_xpath = '//*[@id="maincontent3"]/ul[3]/li[4]/strong/text()'
-        self._discovery_date_xpath = '//*[@id="maincontent3"]/ul[3]/li[5]/strong/text()'
-        self._consumer_notification_date_xpath = '//*[@id="maincontent3"]/ul[4]/li[2]/strong/text()'
+        self._occurred_date_xpath = "//*[@id='maincontent3']/ul[3]/li[4]/strong/text()"
+        self._discovery_date_xpath = "//*[@id='maincontent3']/ul[3]/li[5]/strong/text()"
+        self._consumer_notification_date_xpath = "//*[@id='maincontent3']/ul[4]/li[2]/strong/text()"
         
-        self._breached_information_xpath = '//*[@id="maincontent3"]/ul[3]/li[7]/strong/text()'
-        self._provided_description_xpath = '//*[@id="maincontent3"]/ul[3]/li[6]/ul'
+        self._breached_information_xpath = "//*[@id='maincontent3']/ul[3]/li[7]/strong/text()"
+        self._provided_description_xpath = "//*[@id='maincontent3']/ul[3]/li[6]/ul"
         
-        self._submitter_name_xpath = '//*[@id="maincontent3"]/ul[2]/li[1]/strong/text()'
-        self._submitter_relationship_xpath = '//*[@id="maincontent3"]/ul[2]/li[6]/strong/text()'
-        self._submitter_email_xpath = '//*[@id="maincontent3"]/ul[2]/li[5]/strong/text()'
-        self._submitter_phone_number_xpath = '//*[@id="maincontent3"]/ul[2]/li[4]/strong/text()'
+        self._submitter_name_xpath = "//*[@id='maincontent3']/ul[2]/li[1]/strong/text()"
+        self._submitter_relationship_xpath = "//*[@id='maincontent3']/ul[2]/li[6]/strong/text()"
+        self._submitter_email_xpath = "//*[@id='maincontent3']/ul[2]/li[5]/strong/text()"
+        self._submitter_phone_number_xpath = "//*[@id='maincontent3']/ul[2]/li[4]/strong/text()"
         
-        self._consumer_notice_url_xpath = '//*[@id="maincontent3"]/ul[4]/li[3]/strong/a/@href'
+        self._consumer_notice_url_xpath = "//*[@id='maincontent3']/ul[4]/li[3]/strong/a/@href"
         
         self._breach_exclusion_db_connection: \
             filtered_breaches_db_connection.FilteredBreachesDBConnection
@@ -120,7 +120,7 @@ class MaineBreachSpider(self_scheduling_spider.SelfSchedulingSpider):
                 )
             ):
                 yield scrapy.Request(
-                    each_breach['details_url'],
+                    each_breach["details_url"],
                     callback = self._parse_details_page,
                     cb_kwargs = {
                         "breach_partial": each_breach
@@ -132,33 +132,33 @@ class MaineBreachSpider(self_scheduling_spider.SelfSchedulingSpider):
         *,
         breach_partial: maine_breach.MaineBreach,
     ) -> maine_breach.MaineBreach | list:
-        breach_partial['org_type'] = response.xpath(self._org_type_xpath).get()
-        breach_partial['people_affected'] = response.xpath(self._people_affected_xpath).get()
+        breach_partial["org_type"] = response.xpath(self._org_type_xpath).get()
+        breach_partial["people_affected"] = response.xpath(self._people_affected_xpath).get()
         
         if self._include_breach(breach_partial):
-            breach_partial['occurred_date'] = response.xpath(self._occurred_date_xpath).get()
-            breach_partial['discovery_date'] = response.xpath(self._discovery_date_xpath).get()
-            breach_partial['consumer_notification_date'] = (
+            breach_partial["occurred_date"] = response.xpath(self._occurred_date_xpath).get()
+            breach_partial["discovery_date"] = response.xpath(self._discovery_date_xpath).get()
+            breach_partial["consumer_notification_date"] = (
                 response.xpath(self._consumer_notification_date_xpath).get()
             )
             
-            breach_partial['breached_information'] = (
+            breach_partial["breached_information"] = (
                 response.xpath(self._breached_information_xpath).get()
             )
-            breach_partial['provided_description'] = (
+            breach_partial["provided_description"] = (
                 response.xpath(self._provided_description_xpath).get()
             )
             
-            breach_partial['submitter_name'] = response.xpath(self._submitter_name_xpath).get()
-            breach_partial['submitter_relationship'] = (
+            breach_partial["submitter_name"] = response.xpath(self._submitter_name_xpath).get()
+            breach_partial["submitter_relationship"] = (
                 response.xpath(self._submitter_relationship_xpath).get()
             )
-            breach_partial['submitter_email'] = response.xpath(self._submitter_email_xpath).get()
-            breach_partial['submitter_phone_number'] = (
+            breach_partial["submitter_email"] = response.xpath(self._submitter_email_xpath).get()
+            breach_partial["submitter_phone_number"] = (
                 response.xpath(self._submitter_phone_number_xpath).get()
             )
             
-            breach_partial['file_URLs'] = [response.urljoin(
+            breach_partial["file_URLs"] = [response.urljoin(
                 response.xpath(self._consumer_notice_url_xpath).get()
             )]
             
@@ -166,10 +166,10 @@ class MaineBreachSpider(self_scheduling_spider.SelfSchedulingSpider):
                 self._bank_breach_db_connection.record_breach(breach_partial)
             
             return breach_partial
-        
-        self._breach_exclusion_db_connection.record_breach_exclusion(breach_partial)
-        return []
+        else:
+            self._breach_exclusion_db_connection.record_breach_exclusion(breach_partial)
+            return []
     
     @staticmethod
     def _include_breach(breach_partial: maine_breach.MaineBreach) -> bool:
-        return str.casefold(breach_partial['org_type']) == str.casefold("Financial Services")
+        return str.casefold(breach_partial["org_type"]) == str.casefold("Financial Services")

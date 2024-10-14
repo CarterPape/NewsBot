@@ -29,7 +29,7 @@ class TestDispatchCallLogSpider(unittest.TestCase):
         assert requests[0].url == "https://call-log-api.edispatches.com/calls/"
         assert (
             requests[0].body
-            == b'ddl-state=UT&ddl-county=Grand&ddl-company=ALL&ddl-limit=ALL'
+            == b"ddl-state=UT&ddl-county=Grand&ddl-company=ALL&ddl-limit=ALL"
         )
         assert requests[0].callback == self.spider.parse_call_log # pylint: disable=comparison-with-callable
     
@@ -59,7 +59,7 @@ class TestDispatchCallLogSpider(unittest.TestCase):
         response = scrapy.http.HtmlResponse(
             url="https://call-log-api.edispatches.com/calls/",
             body=html_content,
-            encoding='utf-8'
+            encoding="utf-8"
         )
         dispatches = self.spider.parse_call_log(response)
         

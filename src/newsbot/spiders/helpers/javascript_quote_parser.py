@@ -33,7 +33,7 @@ class JavascriptQuoteParser:
             self._current_character = self._master_string[self._current_index]
             
             if (
-                self._current_character == '\\'
+                self._current_character == "\\"
             ) and (
                 self._in_entity is False
             ):

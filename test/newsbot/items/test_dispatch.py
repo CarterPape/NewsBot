@@ -18,16 +18,16 @@ from newsbot.items import emailable_item_with_attachments
 class TestDispatch(unittest.TestCase):
     def setUp(self):
         self.dispatch_instance = dispatch.Dispatch()
-        self.dispatch_instance['dispatched_agency'] = 'Fire Department'
-        self.dispatch_instance['datetime_dispatched'] = datetime.datetime(2023, 10, 5, 14, 30)
-        self.dispatch_instance['files'] = [{'url': 'http://example.com/audio.mp3'}]
+        self.dispatch_instance["dispatched_agency"] = "Fire Department"
+        self.dispatch_instance["datetime_dispatched"] = datetime.datetime(2023, 10, 5, 14, 30)
+        self.dispatch_instance["files"] = [{"url": "http://example.com/audio.mp3"}]
         
     def test_synthesize_email_subject(self):
         expected_subject = "Call to Fire Department Thursday at 2:30 PM"
         assert self.dispatch_instance.synthesize_email_subject() == expected_subject
 
     @unittest.mock.patch.object(
-        emailable_item_with_attachments.EmailableItemWithAttachments, '_get_email_template'
+        emailable_item_with_attachments.EmailableItemWithAttachments, "_get_email_template"
     )
     def test_synthesize_html_email_body(self, mock_get_email_template):
         template_string = string.Template(

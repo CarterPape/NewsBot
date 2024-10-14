@@ -53,8 +53,8 @@ class DBConnection(
         db_cursor = self.cursor()
         db_cursor.execute(f"""
             SELECT COUNT(*)
-            FROM information_schema.tables 
-            WHERE table_schema = 'newsbot' 
+            FROM information_schema.tables
+            WHERE table_schema = 'newsbot'
             AND table_name = '{self.table_name}'
         """)
         table_count = typing.cast(list[int],

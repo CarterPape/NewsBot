@@ -62,7 +62,7 @@ class Time(datetime.time):
             dateparser.parse(
                 time_string,
                 settings = {
-                    'RETURN_AS_TIMEZONE_AWARE': False,
+                    "RETURN_AS_TIMEZONE_AWARE": False,
                 },
             )
         )

@@ -69,7 +69,7 @@ class FrontierInvestigationFiling(emailable_item_with_attachments.EmailableItemW
                 </li>
             """
             for each_name, each_link
-            in self['filing_name_map'].items()
+            in self["filing_name_map"].items()
         ])
         
         return f"""

@@ -20,7 +20,7 @@ class EmailableItemWithAttachments(
 ):
     def gather_email_attachments(self) -> list[
         tuple[
-            typing.Literal['attachment'],
+            typing.Literal["attachment"],
             tuple[str, bytes]
         ]
     ]:

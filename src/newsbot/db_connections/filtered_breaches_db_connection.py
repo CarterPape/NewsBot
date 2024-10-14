@@ -50,11 +50,11 @@ class FilteredBreachesDBConnection(db_connection.DBConnection):
                 )
             """,
             (
-                breach['organization_name'],
-                breach['org_type'],
-                breach['people_affected'],
-                breach['reported_date'],
-                breach['details_url'],
+                breach["organization_name"],
+                breach["org_type"],
+                breach["people_affected"],
+                breach["reported_date"],
+                breach["details_url"],
             )
         )
         self.commit()
@@ -73,7 +73,7 @@ class FilteredBreachesDBConnection(db_connection.DBConnection):
                     details_url = %s
             """,
             (
-                breach['details_url'],
+                breach["details_url"],
             )
         )
         

@@ -77,20 +77,20 @@ class BankBreachesDBConnection(db_connection.DBConnection):
                 )
             """,
             (
-                breach['organization_name'],
-                breach['org_type'],
-                breach['people_affected'],
-                breach['reported_date'],
-                breach['occurred_date'],
-                breach['discovery_date'],
-                breach['consumer_notification_date'],
-                breach['breached_information'],
-                breach['provided_description'],
-                breach['submitter_name'],
-                breach['submitter_relationship'],
-                breach['submitter_email'],
-                breach['submitter_phone_number'],
-                breach['details_url'],
+                breach["organization_name"],
+                breach["org_type"],
+                breach["people_affected"],
+                breach["reported_date"],
+                breach["occurred_date"],
+                breach["discovery_date"],
+                breach["consumer_notification_date"],
+                breach["breached_information"],
+                breach["provided_description"],
+                breach["submitter_name"],
+                breach["submitter_relationship"],
+                breach["submitter_email"],
+                breach["submitter_phone_number"],
+                breach["details_url"],
             )
         )
         self.commit()
@@ -109,7 +109,7 @@ class BankBreachesDBConnection(db_connection.DBConnection):
                     details_url = %s
             """,
             (
-                breach['details_url'],
+                breach["details_url"],
             )
         )
         
