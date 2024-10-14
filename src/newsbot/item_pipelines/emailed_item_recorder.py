@@ -19,10 +19,12 @@ class EmailedItemRecorder(item_pipeline.ItemPipeline):
         self,
         item: emailable_item.EmailableItem,
         spider: scrapy.Spider
-    ):
+    ) -> emailable_item.EmailableItem:
         logging.debug(f"Recording item {item} as emailed")
         db_connection = emailed_items_db_connection.EmailedItemsDBConnection(
             settings = spider.settings,
         )
         db_connection.record_emailed_item(item)
         db_connection.close()
+        
+        return item
