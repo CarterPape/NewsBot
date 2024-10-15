@@ -10,7 +10,6 @@ twisted = "*"
 python-magic = "*"
 python-dotenv = "*"
 mysql-connector-python = "*"
-requests = "*"
 dateparser = "*"
 metadata-parser = "*"
 

@@ -7,11 +7,15 @@
 
 import datetime
 import logging
-import typing
+import types
 
 import scrapy.spiders
 import scrapy.settings
-import requests
+import scrapy.mail
+import scrapy.utils.defer
+import scrapy.exceptions
+import twisted.internet.defer
+import twisted.python.failure
 
 from newsbot.db_connections import email_subscriptions_db_connection
 from newsbot.items import emailable_item
@@ -26,29 +30,33 @@ class ItemEmailer(item_pipeline.ItemPipeline):
     def process_item(self,
         item:   emailable_item.EmailableItem,
         spider: scrapy.spiders.Spider,
-    ) -> scrapy.Item:
+    ) -> scrapy.Item | twisted.internet.defer.Deferred:
         try:
             logging.debug(f"Processing item {item} from spider {spider}")
         except RecursionError:
             logging.debug(f"Processing item {item} from a spider with a shitty repl implementation")
         
         self._settings = spider.settings
-        item["email_response"] = self._email_item(item)
-        item["email_sent_datetime"] = datetime.datetime.now()
         
-        return item
+        item["email_sent_datetime"] = datetime.datetime.now()
+        possible_deferred = self._try_to_email_item(item)
+        
+        if possible_deferred is None:
+            return item
+        else:
+            possible_deferred.addCallback(self._email_sent, item)
+            possible_deferred.addErrback(self._email_failed, item)
+            return possible_deferred
     
-    def _email_item(self,
+    def _try_to_email_item(self,
         item: emailable_item.EmailableItem,
-    ):
-        if issubclass(
-            type(item),
+    ) -> twisted.internet.defer.Deferred | None:
+        if isinstance(
+            item,
             emailable_item_with_attachments.EmailableItemWithAttachments,
         ):
-            attachments = typing.cast(
-                emailable_item_with_attachments.EmailableItemWithAttachments,
-                item.gather_email_attachments()
-            )
+            
+            attachments = item.gather_email_attachments()
         else:
             attachments = None
         
@@ -69,68 +77,28 @@ class ItemEmailer(item_pipeline.ItemPipeline):
             in addressee_list
         ]
         
-        if self._settings.getbool("_PRINT_INSTEAD_OF_EMAIL"):
-            
-            logging.warning(
-                "Logging email at level INFO rather than "
-                "sending it (as per setting _PRINT_INSTEAD_OF_EMAIL)"
-            )
-            class _FakeResponse(requests.Response):
-                @property
-                def status_code(self) -> int:
-                    return 200
-                    
-                @status_code.setter
-                def status_code(self, new_value):
-                    pass
-                
-                @status_code.deleter
-                def status_code(self):
-                    pass
-            
-            faux_email_message = (
-                "From:"
-                    + self._settings.get("_EMAIL_SENDER") + "\n"
-                + "To:"
-                    + ", ".join(formatted_addressee_list) + "\n"
-                + "Subject:"
-                    + item.synthesize_email_subject() + "\n"
-                + "———————————\n"
-                + item.synthesize_html_email_body() + "\n"
-            )
-            
-            if issubclass(
-                type(item),
-                emailable_item_with_attachments.EmailableItemWithAttachments
-            ):
-                attachment_paths = "\n".join([
-                    f"    {attachment[1][0]}"
-                    for attachment in typing.cast(list, attachments)
-                ])
-                faux_email_message += (
-                    "- - - - - -\n"
-                    + "Attachments:\n"
-                    + attachment_paths + "\n"
-                )
-            
-            faux_email_message += "———————————\n\n"
-            
-            logging.info(f"Email intentionally not sent:\n{faux_email_message}")
-            return _FakeResponse()
+        emailer = scrapy.mail.MailSender.from_settings(self._settings)
+        emailer.debug = self._settings.getbool("_PRINT_INSTEAD_OF_EMAIL")
         
-        else:
-            response = requests.post(
-                f"https://api.mailgun.net/v3/{self._settings.get('_EMAIL_SENDER_DOMAIN')}/messages",
-                auth = ("api",  self._settings.get("_MAILGUN_API_KEY")),
-                files =         attachments,
-                data = {
-                    "from":     self._settings.get("_EMAIL_SENDER"),
-                    "to":       ", ".join(formatted_addressee_list),
-                    "subject":  item.synthesize_email_subject(),
-                    "html":     item.synthesize_html_email_body(),
-                },
-                timeout = 30
-            )
-            
-            logging.debug(f"Email attempt yielded {response}")
-            return response
+        return emailer.send(
+            to = formatted_addressee_list,
+            subject = item.synthesize_email_subject(),
+            body = item.synthesize_html_email_body(),
+            mimetype = "text/html",
+            charset = "utf-8",
+            attachs = attachments,
+        )
+    
+    def _email_sent(self,
+        _: types.NoneType,
+        item: emailable_item.EmailableItem,
+    ) -> scrapy.Item:
+        logging.debug(f"Email sent for item {item}")
+        return item
+    
+    def _email_failed(self,
+        failure: twisted.python.failure.Failure,
+        item: emailable_item.EmailableItem,
+    ) -> twisted.python.failure.Failure:
+        logging.error(f"Email failed for item {item}.\nThe failure was:\n{failure}")
+        raise scrapy.exceptions.DropItem(f"Email failed for item {item} with failure {failure}")

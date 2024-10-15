@@ -5,8 +5,9 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
-import typing
+import mimetypes
 import os.path
+import io
 import abc
 
 from newsbot.items import emailable_item
@@ -20,15 +21,15 @@ class EmailableItemWithAttachments(
 ):
     def gather_email_attachments(self) -> list[
         tuple[
-            typing.Literal["attachment"],
-            tuple[str, bytes]
+            str, str, io.BufferedReader
         ]
     ]:
         return [
-            ("attachment", (
+            (
                 os.path.basename(current_file["path"]),
-                open(current_file["path"], "rb").read()
-            ))
+                mimetypes.guess_type(current_file["path"])[0] or "application/octet-stream",
+                open(current_file["path"], "rb"),
+            )
             for current_file
             in self["files"] or []
         ]
