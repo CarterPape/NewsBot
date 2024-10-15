@@ -6,7 +6,6 @@
 # # # # # # # # # # # # # # # # # # # #
 
 import datetime
-import typing
 import logging
 
 import zoneinfo
@@ -83,9 +82,12 @@ class EmailedItemsDBConnection(db_connection.DBConnection):
             db_cursor.close()
             return None
         else:
-            send_datetime = typing.cast(list[datetime.datetime],
-                db_cursor.fetchone()
-            )[0]
+            the_row = db_cursor.fetchone()
+            assert isinstance(the_row, tuple)
+            
+            send_datetime = the_row[0]
+            assert isinstance(send_datetime, datetime.datetime)
+            
             send_datetime = send_datetime.replace(
                 tzinfo = zoneinfo.ZoneInfo("America/Denver")
             )

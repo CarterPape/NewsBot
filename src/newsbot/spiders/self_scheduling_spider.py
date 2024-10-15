@@ -30,11 +30,12 @@ class SelfSchedulingSpider(
                 from_crawler.settings.get("_FORCE_SCHEDULER")
             )
         else:
+            assert isinstance(suggested_scheduler, crawl_scheduler.CrawlScheduler)
             new_scheduler = suggested_scheduler
         
         logging.debug(f"Using scheduler {new_scheduler} for a spider of class {klass}")
         
-        return typing.cast(crawl_scheduler.CrawlScheduler, new_scheduler)
+        return new_scheduler
     
     def parse(self,
         response: scrapy.http.Response,

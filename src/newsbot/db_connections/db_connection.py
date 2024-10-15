@@ -7,7 +7,6 @@
 
 import logging
 import abc
-import typing
 
 import mysql.connector
 import mysql.connector.connection
@@ -57,9 +56,12 @@ class DBConnection(
             WHERE table_schema = 'newsbot'
             AND table_name = '{self.table_name}'
         """)
-        table_count = typing.cast(list[int],
-            db_cursor.fetchone()
-        )[0]
+        the_row = db_cursor.fetchone()
+        assert isinstance(the_row, tuple)
+        
+        table_count = the_row[0]
+        assert isinstance(table_count, int)
+        
         db_cursor.close()
         
         exists_or_not = (

@@ -8,7 +8,6 @@
 import logging
 import os.path
 import urllib.parse
-import typing
 
 import scrapy.http.request
 import scrapy.http.response

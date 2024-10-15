@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import enum
 import datetime
-import typing
 import zoneinfo
 
 import dateparser
@@ -58,14 +57,13 @@ class DayOfTheWeek(enum.Flag):
 
 class Time(datetime.time):
     def __new__(klass, time_string: str, *args, **kwargs):
-        the_datetime = typing.cast(datetime.datetime,
-            dateparser.parse(
-                time_string,
-                settings = {
-                    "RETURN_AS_TIMEZONE_AWARE": False,
-                },
-            )
+        the_datetime = dateparser.parse(
+            time_string,
+            settings = {
+                "RETURN_AS_TIMEZONE_AWARE": False,
+            },
         )
+        assert isinstance(the_datetime, datetime.datetime)
         
         return super().__new__(klass,
             hour =          the_datetime.hour,

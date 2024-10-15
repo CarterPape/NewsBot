@@ -6,7 +6,6 @@
 # # # # # # # # # # # # # # # # # # # #
 # pylint: disable=protected-access
 
-import typing
 import datetime
 import copy
 import unittest.mock
@@ -52,26 +51,24 @@ class TestTimeConditionalScheduler(unittest.TestCase):
         
         for now_str, expected_next_firing_str in inputs_and_expected_value_list:
             scheduler = copy.copy(self.common_scheduler)
-            mock_now.return_value = typing.cast(datetime.datetime,
-                dateparser.parse(
-                    now_str,
-                    settings = {
-                        "TIMEZONE": "America/Denver",
-                        "RETURN_AS_TIMEZONE_AWARE": True,
-                    },
-                )
+            mock_now.return_value = dateparser.parse(
+                now_str,
+                settings = {
+                    "TIMEZONE": "America/Denver",
+                    "RETURN_AS_TIMEZONE_AWARE": True,
+                },
             )
+            assert isinstance(mock_now.return_value, datetime.datetime)
             
             pause_time = scheduler.calculate_pause_time_in_seconds()
-            expected_next_firing = typing.cast(datetime.datetime,
-                dateparser.parse(
-                    expected_next_firing_str,
-                    settings = {
-                        "TIMEZONE": "America/Denver",
-                        "RETURN_AS_TIMEZONE_AWARE": True,
-                    },
-                )
+            expected_next_firing = dateparser.parse(
+                expected_next_firing_str,
+                settings = {
+                    "TIMEZONE": "America/Denver",
+                    "RETURN_AS_TIMEZONE_AWARE": True,
+                },
             )
+            assert isinstance(expected_next_firing, datetime.datetime)
             
             assert scheduler._datetime_of_next_firing == expected_next_firing
             assert pause_time == (expected_next_firing - mock_now.return_value).total_seconds()
@@ -98,25 +95,23 @@ class TestTimeConditionalScheduler(unittest.TestCase):
         
         for previous_firing_str, expected_next_firing_str in inputs_and_expected_value_list:
             scheduler = copy.copy(self.common_scheduler)
-            scheduler._datetime_of_previous_firing = typing.cast(datetime.datetime,
-                dateparser.parse(
-                    previous_firing_str,
-                    settings = {
-                        "TIMEZONE": "America/Denver",
-                        "RETURN_AS_TIMEZONE_AWARE": True,
-                    },
-                )
+            previous_firing = dateparser.parse(
+                previous_firing_str,
+                settings = {
+                    "TIMEZONE": "America/Denver",
+                    "RETURN_AS_TIMEZONE_AWARE": True,
+                },
             )
+            assert isinstance(previous_firing, datetime.datetime)
+            scheduler._datetime_of_previous_firing = previous_firing
             
             scheduler._find_next_fire_datetime()
-            expected_next_firing = typing.cast(datetime.datetime,
-                dateparser.parse(
-                    expected_next_firing_str,
-                    settings = {
-                        "TIMEZONE": "America/Denver",
-                        "RETURN_AS_TIMEZONE_AWARE": True,
-                    },
-                )
+            expected_next_firing = dateparser.parse(
+                expected_next_firing_str,
+                settings = {
+                    "TIMEZONE": "America/Denver",
+                    "RETURN_AS_TIMEZONE_AWARE": True,
+                },
             )
             
             assert scheduler._datetime_of_next_firing == expected_next_firing

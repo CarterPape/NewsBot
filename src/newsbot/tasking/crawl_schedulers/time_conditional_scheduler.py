@@ -7,7 +7,6 @@
 
 import datetime
 import random
-import typing
 
 import zoneinfo
 
@@ -84,7 +83,7 @@ class TimeConditionalScheduler(crawl_scheduler.CrawlScheduler):
         now = TimeConditionalScheduler._now()
         
         self._datetime_of_next_firing = max(
-            typing.cast(datetime.datetime, self._datetime_of_next_firing),
+            self._datetime_of_next_firing,
             now,
         )
         
@@ -105,14 +104,14 @@ class TimeConditionalScheduler(crawl_scheduler.CrawlScheduler):
             )
             
             for each_fire_rule in self._when_to_fire[each_day_of_the_week]:
-                if issubclass(type(each_fire_rule), timing_types.Time):
+                if isinstance(each_fire_rule, timing_types.Time):
                     self._handle_time_fire_rule(
-                        typing.cast(timing_types.Time, each_fire_rule),
+                        each_fire_rule,
                         on_date = each_date,
                     )
                 else:
                     self._handle_interval_fire_rule(
-                        typing.cast(timing_types.IntervalRule, each_fire_rule),
+                        each_fire_rule,
                         on_date = each_date,
                     )
                 
