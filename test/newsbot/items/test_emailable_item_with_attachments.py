@@ -5,6 +5,7 @@
 # See file LICENSE for licensing terms.
 # # # # # # # # # # # # # # # # # # # #
 
+import io
 import unittest.mock
 from newsbot.items import emailable_item_with_attachments
 
@@ -18,26 +19,23 @@ class TestEmailableItemWithAttachments(unittest.TestCase):
         def synthesize_html_email_body(self):
             return "Email body"
     
-    @unittest.mock.patch(
-        "newsbot.items.emailable_item_with_attachments.open",
-        new_callable=unittest.mock.mock_open,
-        read_data=b"file content",
-    )
+    @unittest.mock.patch("newsbot.items.emailable_item_with_attachments.open")
     def test_gather_email_attachments(self,
             mock_open: unittest.mock.MagicMock,
         ):
         def simplified_basename(path: str) -> str:
             return path.split("/")[-1]
         
+        mock_open.return_value = unittest.mock.MagicMock(spec=io.BufferedReader)
+        
         item = TestEmailableItemWithAttachments.MockEmailableItemWithAttachments()
         item["files"] = [
             {"path": "/fake/absolute/path/to/file1.txt"},
             {"path": "relative/path/to/file2.txt"}
         ]
-        
         expected_attachments = [
-            ("attachment", (simplified_basename(item["files"][0]["path"]), b"file content")),
-            ("attachment", (simplified_basename(item["files"][1]["path"]), b"file content"))
+            (simplified_basename(item["files"][0]["path"]), "text/plain", mock_open.return_value),
+            (simplified_basename(item["files"][1]["path"]), "text/plain", mock_open.return_value)
         ]
         
         attachments = item.gather_email_attachments()

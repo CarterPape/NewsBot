@@ -24,7 +24,7 @@ if command -v apt-get &>/dev/null; then
 elif command -v brew &>/dev/null; then
     brew list libmagic &>/dev/null || brew install libmagic
     brew list mysql &>/dev/null || brew install mysql
-else 
+else
     printf "This project requires libmagic and MySQL.\n"
     printf "Install them or ensure they are already installed, then hit [Enter] to continue. "
     read
