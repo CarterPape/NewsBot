@@ -10,6 +10,9 @@ out/
 data/
 log/
 
+# custom caches
+test/test_data/requests_cache/
+
 # environment-specific configuration
 .vscode/
 

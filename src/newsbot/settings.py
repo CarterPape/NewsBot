@@ -25,6 +25,8 @@ from newsbot.tasking.crawl_schedulers import uniformly_random_scheduler
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
+_ENVIRONMENT = os.getenv("ENVIRONMENT")
+
 _PROJECT_DIRECTORY = (
     os.path.abspath(
         os.path.dirname(
@@ -34,6 +36,7 @@ _PROJECT_DIRECTORY = (
         )
     )
 )
+
 
 BOT_NAME = "NewsBot"
 
@@ -51,15 +54,12 @@ SPIDER_MODULES = [
     top_level_module + ".spiders"
     for top_level_module in _TOP_LEVEL_MODULES
 ]
-NEWSPIDER_MODULE =  SPIDER_MODULES[0]
+NEWSPIDER_MODULE = SPIDER_MODULES[0]
 
 _DB_CONNECTION_MODULES = [
     top_level_module + ".db_connections"
     for top_level_module in _TOP_LEVEL_MODULES
 ]
-
-
-_ENVIRONMENT = os.getenv("ENVIRONMENT")
 
 
 if _ENVIRONMENT == "development":
@@ -69,14 +69,9 @@ if _ENVIRONMENT == "development":
 else:
     USER_AGENT = f"{BOT_NAME}/{_BOT_VERSION} (+https://github.com/carterpape/newsbot)"
 
-# Obey robots.txt rules
 ROBOTSTXT_OBEY = False
-
-# Disable cookies (enabled by default)
 COOKIES_ENABLED = True
 
-# Disable Telnet Console (enabled by default)
-TELNETCONSOLE_ENABLED = True
 
 _DATA_DIRECTORY = (
     os.path.abspath(
@@ -98,6 +93,8 @@ FILES_STORE = (
 
 FILES_URLS_FIELD = item_with_files.ItemWithFiles.get_files_urls_field()
 FILES_RESULT_FIELD = item_with_files.ItemWithFiles.get_files_result_field()
+
+DOWNLOAD_WARNSIZE = 9 * (10 ** 6)
 
 
 if _ENVIRONMENT == "development":
@@ -125,6 +122,9 @@ LOG_FILE = (
 
 LOG_FORMATTER = "newsbot.log_formatter.NewsBotLogFormatter"
 
+TELNETCONSOLE_ENABLED = True
+
+
 _EMAIL_SENDER =         os.getenv("DEFAULT_EMAIL_SENDER")
 _EMAIL_SENDER_DOMAIN =  os.getenv("EMAIL_SENDER_DOMAIN")
 
@@ -136,19 +136,17 @@ _MYSQL_PASSWORD =       os.getenv("MYSQL_PASSWORD")
 
 _PRINT_INSTEAD_OF_EMAIL = (_ENVIRONMENT == "development")
 
-DOWNLOAD_WARNSIZE = 9 * (10 ** 6)
 
-# Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 AUTOTHROTTLE_ENABLED = True
-# The initial download delay
 AUTOTHROTTLE_START_DELAY = 5
-# The maximum download delay to be set in case of high latencies
 AUTOTHROTTLE_MAX_DELAY = 60
-# The average number of requests Scrapy should be sending in parallel to each remote server
 AUTOTHROTTLE_TARGET_CONCURRENCY = 0.5
-# Enable showing throttling stats for every response received:
 AUTOTHROTTLE_DEBUG = True
+
+DOWNLOAD_DELAY = 1
+CONCURRENT_REQUESTS = 1
+
 
 if _ENVIRONMENT == "development":
     _FORCE_SCHEDULER = (
@@ -158,5 +156,3 @@ if _ENVIRONMENT == "development":
             first_call_is_immediate =   True,
         )
     )
-    
-    _MAKE_NO_PURCHASE = True

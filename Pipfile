@@ -18,6 +18,8 @@ pylint = "*"
 pytest = "*"
 pytest-xdist = "*"
 pytest-cov = "*"
+requests = "*"
+requests-cache = "*"
 
 [requires]
-python_version = "3.12"
+python_version = "3.13"

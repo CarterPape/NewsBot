@@ -16,7 +16,7 @@ classifiers = [
     "Operating System :: OS Independent",
     "Private :: Do Not Upload",
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 
 
 [project.urls]
@@ -24,4 +24,7 @@ Homepage = "https://github.com/CarterPape/NewsBot"
 Issues = "https://github.com/CarterPape/NewsBot/issues"
 
 [tool.pytest.ini_options]
-addopts="-n 4"
+addopts = "-n 4 -m 'not webtest'"
+python_files = "test_*.py"
+log_cli_level = "INFO"
+log_file = "log/pytest.log"
